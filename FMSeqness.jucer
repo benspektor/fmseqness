@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="PPaDId" name="FMSeqness" projectType="audioplug" jucerVersion="5.4.7">
+  <MAINGROUP id="VzqHyu" name="FMSeqness">
+    <GROUP id="{4B8A1AE8-F34E-2E20-DE12-E0DD399F2A48}" name="Source">
+      <GROUP id="{C2F9B38F-87AD-A07A-5DED-405DFDE3E345}" name="DataModels">
+        <FILE id="TbIvXD" name="StepperSequencerDataModel.h" compile="0" resource="0"
+              file="Source/DataModels/StepperSequencerDataModel.h"/>
+      </GROUP>
+      <GROUP id="{CD3EDA95-1AA2-AFE3-057A-27C30A7C1883}" name="GUI_Modules">
+        <GROUP id="{897927FC-C832-5A23-E380-CFD8907A1687}" name="StepperSequencerModule">
+          <GROUP id="{7191A115-5406-49E1-F1E9-C311500B106A}" name="AnimatedSelector">
+            <FILE id="StG1Yy" name="AnimatedSelector.cpp" compile="1" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/AnimatedSelector/AnimatedSelector.cpp"/>
+            <FILE id="jlXuA3" name="AnimatedSelector.h" compile="0" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/AnimatedSelector/AnimatedSelector.h"/>
+          </GROUP>
+          <GROUP id="{7219AA1D-A9E3-789C-861A-753218B4CD6B}" name="StepGateStateEditor">
+            <FILE id="CtqQIm" name="StepGateStateEditor.cpp" compile="1" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepGateStateEditor/StepGateStateEditor.cpp"/>
+            <FILE id="CcSgy7" name="StepGateStateEditor.h" compile="0" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepGateStateEditor/StepGateStateEditor.h"/>
+          </GROUP>
+          <GROUP id="{AD57617D-3BF6-2DFA-9DCE-469220CC9793}" name="StepperSequencerControllers">
+            <FILE id="mnwKZ9" name="Bar.h" compile="0" resource="0" file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/Bar.h"/>
+            <FILE id="nluzEy" name="BarsController.cpp" compile="1" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/BarsController.cpp"/>
+            <FILE id="gOzcjU" name="BarsController.h" compile="0" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/BarsController.h"/>
+            <FILE id="Sohrlt" name="BarsMouseArea.h" compile="0" resource="0" file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/BarsMouseArea.h"/>
+            <FILE id="bI5QWH" name="PitchController.cpp" compile="1" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/PitchController.cpp"/>
+            <FILE id="NgMN3U" name="PitchController.h" compile="0" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/PitchController.h"/>
+            <FILE id="rHTm1G" name="PitchLineScreen.h" compile="0" resource="0"
+                  file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/PitchLineScreen.h"/>
+          </GROUP>
+          <FILE id="k3HQit" name="StepperSequencerConstants.h" compile="0" resource="0"
+                file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerConstants.h"/>
+          <FILE id="n489Pm" name="StepperSequencerModule.cpp" compile="1" resource="0"
+                file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerModule.cpp"/>
+          <FILE id="AiU1P9" name="StepperSequencerModule.h" compile="0" resource="0"
+                file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerModule.h"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="Klt9ry" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="aA2ro8" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="QqdPrD" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="jvKxvz" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../JUCE_Master_Folder/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <XCODE_IPHONE targetFolder="Builds/iOS">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE_Master_Folder/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../JUCE_Master_Folder/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_IPHONE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>
