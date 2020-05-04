@@ -3,7 +3,25 @@
 <JUCERPROJECT id="PPaDId" name="FMSeqness" projectType="audioplug" jucerVersion="5.4.7">
   <MAINGROUP id="VzqHyu" name="FMSeqness">
     <GROUP id="{4B8A1AE8-F34E-2E20-DE12-E0DD399F2A48}" name="Source">
+      <GROUP id="{32AB6F7F-6314-00F6-6A7C-1FB5B4E7E16E}" name="Supporting_Files">
+        <FILE id="ypRt1z" name="Constants.h" compile="0" resource="0" file="Source/Supporting_Files/Constants.h"/>
+        <FILE id="F1Lc72" name="Enums.h" compile="0" resource="0" file="Source/Supporting_Files/Enums.h"/>
+        <FILE id="OJoDDa" name="FMUtilities.h" compile="0" resource="0" file="Source/Supporting_Files/FMUtilities.h"/>
+      </GROUP>
+      <GROUP id="{798E969C-B36A-2370-712D-89748EDFDAE6}" name="DSP_Modules">
+        <FILE id="ALIYgN" name="AHDEnv.cpp" compile="1" resource="0" file="Source/DSP_Modules/AHDEnv.cpp"/>
+        <FILE id="kSp5de" name="AHDEnv.h" compile="0" resource="0" file="Source/DSP_Modules/AHDEnv.h"/>
+        <FILE id="ydWvKN" name="StepSequencer.cpp" compile="1" resource="0"
+              file="Source/DSP_Modules/StepSequencer.cpp"/>
+        <FILE id="ZptJUZ" name="StepSequencer.h" compile="0" resource="0" file="Source/DSP_Modules/StepSequencer.h"/>
+        <FILE id="CWw0bk" name="FM2SineOscsGenerator.cpp" compile="1" resource="0"
+              file="Source/DSP_Modules/FM2SineOscsGenerator.cpp"/>
+        <FILE id="XPmE3X" name="FM2SineOscsGenerator.h" compile="0" resource="0"
+              file="Source/DSP_Modules/FM2SineOscsGenerator.h"/>
+      </GROUP>
       <GROUP id="{C2F9B38F-87AD-A07A-5DED-405DFDE3E345}" name="DataModels">
+        <FILE id="A7TLEa" name="AHDEnvDataModel.h" compile="0" resource="0"
+              file="Source/DataModels/AHDEnvDataModel.h"/>
         <FILE id="TbIvXD" name="StepperSequencerDataModel.h" compile="0" resource="0"
               file="Source/DataModels/StepperSequencerDataModel.h"/>
       </GROUP>
@@ -42,6 +60,16 @@
           <FILE id="AiU1P9" name="StepperSequencerModule.h" compile="0" resource="0"
                 file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerModule.h"/>
         </GROUP>
+        <FILE id="rpicWT" name="AHDEnvWindow.cpp" compile="1" resource="0"
+              file="Source/GUI_Modules/AHDEnvWindow.cpp"/>
+        <FILE id="NwdT9m" name="AHDEnvWindow.h" compile="0" resource="0" file="Source/GUI_Modules/AHDEnvWindow.h"/>
+        <FILE id="s0sV3Y" name="FMSinesGUI.cpp" compile="1" resource="0" file="Source/GUI_Modules/FMSinesGUI.cpp"/>
+        <FILE id="ZogSOo" name="FMSinesGUI.h" compile="0" resource="0" file="Source/GUI_Modules/FMSinesGUI.h"/>
+        <FILE id="Xny06C" name="GUI_Modules.h" compile="0" resource="0" file="Source/GUI_Modules/GUI_Modules.h"/>
+        <FILE id="sovPdm" name="SequencerControlGUI.cpp" compile="1" resource="0"
+              file="Source/GUI_Modules/SequencerControlGUI.cpp"/>
+        <FILE id="DoXi3j" name="SequencerControlGUI.h" compile="0" resource="0"
+              file="Source/GUI_Modules/SequencerControlGUI.h"/>
       </GROUP>
       <FILE id="Klt9ry" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

@@ -12,7 +12,7 @@
 #include "StepperSequencerModule.h"
 
 //==============================================================================
-StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataModel) : mDataModel(dataModel)
+StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters) : mDataModel(dataModel), mParameters(parameters)
 {
     String array[] = {"Pitch","Level","Mod Amnt"};
     selector.reset (new AnimatedSelector (array, 3, true));
@@ -125,13 +125,13 @@ void StepperSequencerModule::timerTic()
         switch (displayedController)
         {
             case Controller::pitchController:
-                return pitchController->timerCallback(currentStep);
+                pitchController->timerCallback(currentStep->load());
                 break;
             case Controller::levelController:
-                return levelController->timerCallback(currentStep);
+                levelController->timerCallback(currentStep->load());
                 break;
             case Controller::modController:
-                return modController->timerCallback(currentStep);
+                modController->timerCallback(currentStep->load());
                 break;
         }
     }
@@ -163,5 +163,5 @@ void StepperSequencerModule::play()
 
 void StepperSequencerModule::switchStepTo (int step)
 {
-    currentStep = step;
+//    currentStep = step->load();
 }

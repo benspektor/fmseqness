@@ -12,6 +12,13 @@
 
 #include <JuceHeader.h>
 #include "DataModels/StepperSequencerDataModel.h"
+#include "DataModels/AHDEnvDataModel.h"
+#include "DSP_Modules/FM2SineOscsGenerator.h"
+#include "DSP_Modules/AHDEnv.h"
+#include "DSP_Modules/StepSequencer.h"
+#include "Supporting_Files/Constants.h"
+
+
 
 //==============================================================================
 /**
@@ -56,10 +63,23 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    void trigger();
     StepperSequencerDataModel& getStepperDataModel();
+    AudioProcessorValueTreeState& getParametersTree();
+    AHDEnvDataModel& getAmpAHDEnvDataModel();
 
 private:
+    AudioProcessorValueTreeState mParameters;
+    AHDEnvDataModel mAmpAHDEnvModel;
+    AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel };
+    StepSequencer seq { mParameters };
+    FM2SineOscsGenerator sines { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
+    double amp, mod = 0.0;
+    double currentSampleRate = 0.0;
+    std::atomic<float>* currentStep    { mParameters.getRawParameterValue("currentStep") };
+    std::atomic<float>* numberOfSteps  { mParameters.getRawParameterValue("steps") };
+    std::atomic<float>* isPlayingFloat { mParameters.getRawParameterValue("play") };
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)
 };

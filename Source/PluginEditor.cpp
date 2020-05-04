@@ -15,14 +15,24 @@
 FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    stepSeqModule.reset ( new StepperSequencerModule ( processor.getStepperDataModel() ) );
-    addAndMakeVisible(*stepSeqModule);
-    setSize (600, 400);
+    stepSeqModule.reset ( new StepperSequencerModule ( processor.getStepperDataModel(),
+                                                      processor.getParametersTree() ) );
+    
+    sinesGUI     .reset ( new FMSinesGUI (processor.getParametersTree()));
+    seqGUI       .reset ( new SequencerControlGUI (processor.getParametersTree()));
+    ampAhdEnvWindow.reset (new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
+    addAndMakeVisible (*stepSeqModule);
+    addAndMakeVisible (*sinesGUI);
+    addAndMakeVisible (*seqGUI);
+    addAndMakeVisible(*ampAhdEnvWindow);
     setResizable(true, true);
+    setSize (800, 600);
+    processor.addListener(this);
 }
 
 FmseqnessAudioProcessorEditor::~FmseqnessAudioProcessorEditor()
 {
+    
 }
 
 //==============================================================================
@@ -36,5 +46,38 @@ void FmseqnessAudioProcessorEditor::paint (Graphics& g)
 
 void FmseqnessAudioProcessorEditor::resized()
 {
-    stepSeqModule->setBounds ( getLocalBounds() );
+    sinesGUI->setBounds(10, 10, 230, 160);
+    seqGUI->setBounds(250, 10, 300, 160);
+    ampAhdEnvWindow->setBounds(560, 10, 300, 160);
+    stepSeqModule->setBounds ( 10, 180, getWidth() - 20, getHeight() - 180 );
 }
+
+void FmseqnessAudioProcessorEditor::timerCallback()
+{
+    stepSeqModule->timerTic();
+}
+
+void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcessor* processor,
+                                                int parameterIndex,
+                                                float newValue)
+{
+
+    if (parameterIndex == 4)
+    {
+        if (newValue == 1.0f)
+        {
+            startTimerHz(60);
+            stepSeqModule->play();
+        }
+            
+        else
+        {
+            stopTimer();
+            stepSeqModule->stop();
+        }
+            
+    }
+}
+
+ 
+void FmseqnessAudioProcessorEditor::audioProcessorChanged (AudioProcessor* processor) {}

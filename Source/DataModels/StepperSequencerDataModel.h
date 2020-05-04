@@ -42,4 +42,19 @@ struct StepperSequencerDataModel
     BarsControllerValuesModel  levelValues;
     BarsControllerValuesModel  modValues;
     StepGateStateValuesModel   gateStateValues;
+    
+    int getStepLength (int stepIndex)
+    {
+        int endIndex = stepIndex + 1;
+        
+        while (gateStateValues.values[endIndex] == glide)
+            endIndex++;
+        
+        return endIndex - stepIndex;
+    }
+    
+    bool isNextStepGlide (int stepIndex)
+    {
+        return gateStateValues.values[stepIndex + 1] == glide;
+    }
 };

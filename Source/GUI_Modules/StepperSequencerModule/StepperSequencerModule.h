@@ -28,7 +28,7 @@ enum Controller
 class StepperSequencerModule    : public Component, public ActionListener
 {
 public:
-    StepperSequencerModule(StepperSequencerDataModel& dataModel);
+    StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters);
     ~StepperSequencerModule();
 
     void paint (Graphics&) override;
@@ -46,12 +46,14 @@ public:
 private:
     float width = 0.0f, height = 0.0f;
     StepperSequencerDataModel& mDataModel;
+    AudioProcessorValueTreeState& mParameters;
+    std::atomic<float>* currentStep  { mParameters.getRawParameterValue("currentStep") };
     std::unique_ptr<AnimatedSelector> selector;
     std::unique_ptr<PitchController> pitchController;
     std::unique_ptr<BarsController> levelController, modController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
     int displayedController = 0;
-    int currentStep = 0;
+//    int currentStep = 0;
     bool isPlaying = false;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepperSequencerModule)
 };

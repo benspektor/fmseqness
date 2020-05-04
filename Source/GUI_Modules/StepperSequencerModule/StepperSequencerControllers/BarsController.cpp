@@ -72,7 +72,7 @@ void BarsController::resizeControllBars()
 void BarsController::resizeControllBar (int stepNumber)
 {
     auto height = barMaxHeight * abs(mDataModdel.values[stepNumber]);
-    auto y = PADDING + barMaxHeight - height;
+    auto y = barMaxHeight - height;
     y = mDataModdel.values[stepNumber] >= 0 ? y : barMaxHeight;
     bars[stepNumber]->setBounds(stepNumber * barWidth, y, barWidth, height);
 }
@@ -112,7 +112,7 @@ void BarsController::turnOfSteps()
 void BarsController::timerCallback ( int currentStep )
 {
     turnOfSteps();
-    
+//    DBG("Tic");
     for (int i = 0; i < 32; ++i)
         if (i == currentStep)
             bars[i]->lightUp();
