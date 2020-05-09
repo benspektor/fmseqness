@@ -67,11 +67,12 @@ public:
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
+    AHDEnvDataModel& getModAHDEnvDataModel();
 
 private:
     AudioProcessorValueTreeState mParameters;
-    AHDEnvDataModel mAmpAHDEnvModel;
-    AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel };
+    AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
+    AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel }, modAhdEnv { mParameters, mModAHDEnvModel };
     StepSequencer seq { mParameters };
     FM2SineOscsGenerator sines { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;

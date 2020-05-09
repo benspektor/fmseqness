@@ -15,19 +15,21 @@
 FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    stepSeqModule.reset ( new StepperSequencerModule ( processor.getStepperDataModel(),
-                                                      processor.getParametersTree() ) );
+    stepSeqModule  .reset ( new StepperSequencerModule ( processor.getStepperDataModel(), processor.getParametersTree()));
+    sinesGUI       .reset ( new FMSinesGUI (processor.getParametersTree()));
+    seqGUI         .reset ( new SequencerControlGUI (processor.getParametersTree()));
+    ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
+    modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
     
-    sinesGUI     .reset ( new FMSinesGUI (processor.getParametersTree()));
-    seqGUI       .reset ( new SequencerControlGUI (processor.getParametersTree()));
-    ampAhdEnvWindow.reset (new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     addAndMakeVisible (*stepSeqModule);
     addAndMakeVisible (*sinesGUI);
     addAndMakeVisible (*seqGUI);
-    addAndMakeVisible(*ampAhdEnvWindow);
-    setResizable(true, true);
-    setSize (800, 600);
-    processor.addListener(this);
+    addAndMakeVisible (*ampAhdEnvWindow);
+    addAndMakeVisible (*modAhdEnvWindow);
+    
+    setResizable (true, true);
+    setSize (1200, 600);
+    processor.addListener (this);
 }
 
 FmseqnessAudioProcessorEditor::~FmseqnessAudioProcessorEditor()
@@ -49,6 +51,7 @@ void FmseqnessAudioProcessorEditor::resized()
     sinesGUI->setBounds(10, 10, 230, 160);
     seqGUI->setBounds(250, 10, 300, 160);
     ampAhdEnvWindow->setBounds(560, 10, 300, 160);
+    modAhdEnvWindow->setBounds(870, 10, 300, 160);
     stepSeqModule->setBounds ( 10, 180, getWidth() - 20, getHeight() - 180 );
 }
 

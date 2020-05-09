@@ -46,8 +46,8 @@ float FM2SineOscsGenerator::generate(float externalModulationAmount)
     auto carrierSine = (float) std::sin (currentCarrierAngle);
     currentModulatorAngle += modulatorAngleDelta;
     const float mod = isnan(externalModulationAmount) ? 0 : externalModulationAmount;
-    auto modulationAmount = fmAmount->load() + stepFMModMulti * mod * 0.1;
-//    DBG(modulationAmount);
+    auto modulationAmount = fmAmount->load() + stepFMModMulti * mod;
+    modulationAmount = jmax (modulationAmount, 0.0);
     currentCarrierAngle += carrierAngleDelta + modulatorSine * modulationAmount;
     return carrierSine;
 }

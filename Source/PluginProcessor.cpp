@@ -170,14 +170,19 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
     {
         if (isPlayingFloat->load() == 0.0f)
+        {
             ampAhdEnv.startDecay();
+            modAhdEnv.startDecay();
+        }
         
         if (seq.processToGetTrigger(currentSampleRate))
             trigger();
         
         amp = ampAhdEnv.process(currentSampleRate);
-        //            mod = modAhdEnv.process(currentSampleRate);
+        mod = modAhdEnv.process(currentSampleRate);
+
         auto currentSample = sines.generate(mod) * amp * level;
+        
         leftBuffer[sample]  = currentSample;
         rightBuffer[sample] = currentSample;
     }
@@ -254,9 +259,17 @@ void FmseqnessAudioProcessor::trigger()
     
     ampAhdEnv.reset (amp, currentSampleRate, isNextStepGlide);
     ampAhdEnv.state = PlayState::play;
+    
+    modAhdEnv.reset (amp, currentSampleRate, isNextStepGlide);
+    modAhdEnv.state = PlayState::play;
 }
 
 AHDEnvDataModel& FmseqnessAudioProcessor::getAmpAHDEnvDataModel()
 {
     return mAmpAHDEnvModel;
+}
+
+AHDEnvDataModel& FmseqnessAudioProcessor::getModAHDEnvDataModel()
+{
+    return mModAHDEnvModel;
 }
