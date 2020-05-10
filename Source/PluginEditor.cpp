@@ -27,9 +27,12 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     addAndMakeVisible (*ampAhdEnvWindow);
     addAndMakeVisible (*modAhdEnvWindow);
     
+    
+    
     setResizable (true, true);
-    setSize (1200, 600);
+    setSize (1200, 800);
     processor.addListener (this);
+    processor.addListener (stepSeqModule.get());
 }
 
 FmseqnessAudioProcessorEditor::~FmseqnessAudioProcessorEditor()
@@ -53,6 +56,8 @@ void FmseqnessAudioProcessorEditor::resized()
     ampAhdEnvWindow->setBounds(560, 10, 300, 160);
     modAhdEnvWindow->setBounds(870, 10, 300, 160);
     stepSeqModule->setBounds ( 10, 180, getWidth() - 20, getHeight() - 180 );
+    
+//    stepSeqModule->drawGreyedOut();
 }
 
 void FmseqnessAudioProcessorEditor::timerCallback()

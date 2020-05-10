@@ -33,6 +33,7 @@ public:
                                          int parameterIndex,
                                          float newValue) override;
     void audioProcessorChanged (AudioProcessor* processor) override;
+    
 private:
     AudioProcessorValueTreeState& mParameters;
     

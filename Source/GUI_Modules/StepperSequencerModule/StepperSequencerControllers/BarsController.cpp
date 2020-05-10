@@ -32,6 +32,8 @@ BarsController::~BarsController()
 void BarsController::paint (Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+    g.setColour(Colours::grey);
+    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 }
 
 
@@ -41,11 +43,11 @@ void BarsController::resized()
     width  = getWidth();
     height = getHeight();
    
-    barWidth = width / TOTAL_NUMBER_OF_STEPS;
-    barMaxHeight = isBidirectional ? height / 2 : height;
+    barWidth = (width - PADDING * 2) / TOTAL_NUMBER_OF_STEPS;
+    barMaxHeight = isBidirectional ? (height - PADDING * 2) / 2 : (height - PADDING * 2);
     
     resizeControllBars();
-    mouseArea.setBounds(0, 0, width, height);
+    mouseArea.setBounds(PADDING, PADDING, width - PADDING * 2, height - PADDING * 2);
 }
 
 void BarsController::addControllBars()
@@ -72,9 +74,9 @@ void BarsController::resizeControllBars()
 void BarsController::resizeControllBar (int stepNumber)
 {
     auto height = barMaxHeight * abs(mDataModdel.values[stepNumber]);
-    auto y = barMaxHeight - height;
-    y = mDataModdel.values[stepNumber] >= 0 ? y : barMaxHeight;
-    bars[stepNumber]->setBounds(stepNumber * barWidth, y, barWidth, height);
+    auto y = barMaxHeight - height + PADDING;
+    y = mDataModdel.values[stepNumber] >= 0 ? y : barMaxHeight + PADDING;
+    bars[stepNumber]->setBounds ( PADDING + stepNumber * barWidth, y, barWidth, height);
 }
 
 void BarsController::actionListenerCallback(const String &message)

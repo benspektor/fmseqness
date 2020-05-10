@@ -16,6 +16,7 @@
 #include "StepperSequencerControllers/PitchController.h"
 #include "../../DataModels/StepperSequencerDataModel.h"
 #include "StepGateStateEditor/StepGateStateEditor.h"
+#include "GreyScreen.h"
 
 //==============================================================================
 /*
@@ -23,9 +24,10 @@
 
 enum Controller
 {
-    pitchController, levelController, modController };
+    pitchController, levelController, modController
+};
 
-class StepperSequencerModule    : public Component, public ActionListener
+class StepperSequencerModule : public Component, public ActionListener, public AudioProcessorListener
 {
 public:
     StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters);
@@ -34,6 +36,13 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
+    //AudioProcessorListener
+    void audioProcessorParameterChanged (AudioProcessor* processor,
+                                         int parameterIndex,
+                                         float newValue) override;
+    void audioProcessorChanged (AudioProcessor* processor) override;
+    
+    
     void actionListenerCallback (const String& message) override;
     
     void switchViewTo (Controller controllerToDisplay);
@@ -41,19 +50,22 @@ public:
     void stop();
     void play();
     void switchStepTo (int step);
+    void drawGreyedOut();
     
 
 private:
-    float width = 0.0f, height = 0.0f;
+    float width = 0.0f, height = 0.0f, barLength = 0.0f, leftScreenX = 0.0f, leftScreenWidth = 0.0f, rightScreenX = 0.0f, rightScreenWidth = 0.0f;
     StepperSequencerDataModel& mDataModel;
     AudioProcessorValueTreeState& mParameters;
     std::atomic<float>* currentStep  { mParameters.getRawParameterValue("currentStep") };
+    std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue("firstStepIndex") };
+    std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue("lastStepIndex") };
     std::unique_ptr<AnimatedSelector> selector;
     std::unique_ptr<PitchController> pitchController;
     std::unique_ptr<BarsController> levelController, modController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
     int displayedController = 0;
-//    int currentStep = 0;
     bool isPlaying = false;
+    GreyScreen leftGreyedOut, rightGreyedOut;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepperSequencerModule)
 };

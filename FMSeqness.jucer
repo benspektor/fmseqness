@@ -53,6 +53,7 @@
             <FILE id="rHTm1G" name="PitchLineScreen.h" compile="0" resource="0"
                   file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/PitchLineScreen.h"/>
           </GROUP>
+          <FILE id="OK5rQ4" name="GreyScreen.h" compile="0" resource="0" file="Source/GUI_Modules/StepperSequencerModule/GreyScreen.h"/>
           <FILE id="k3HQit" name="StepperSequencerConstants.h" compile="0" resource="0"
                 file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerConstants.h"/>
           <FILE id="n489Pm" name="StepperSequencerModule.cpp" compile="1" resource="0"

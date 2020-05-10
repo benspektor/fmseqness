@@ -16,7 +16,10 @@ StepSequencer::~StepSequencer() {}
 bool StepSequencer::processToGetTrigger (double currentSampleRate)
 {
     bool isPlaying = isPlayingFloat->load();
-    int numOfSteps = numOfStepsFloat->load();
+    
+    int numOfSteps = firstStepIndex->load() <= lastStepIndex->load() ?
+                     lastStepIndex->load() - firstStepIndex->load() + 1 :
+                     MAX_NUM_OF_STEPS - firstStepIndex->load() + lastStepIndex->load() + 1;
     
     if (isPlaying == false)
     {
@@ -43,5 +46,5 @@ bool StepSequencer::processToGetTrigger (double currentSampleRate)
 
 int StepSequencer::getCurrentStepIndex()
 {
-    return currentStep;
+    return int(currentStep + firstStepIndex->load()) % MAX_NUM_OF_STEPS;
 }

@@ -32,8 +32,13 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     addChildComponent (*pitchController);
     addChildComponent (*levelController);
     
+    addAndMakeVisible (leftGreyedOut);
+    addAndMakeVisible (rightGreyedOut);
+    
     pitchController->setVisible(true);
 
+    leftGreyedOut.setAlpha(0.5);
+    rightGreyedOut.setAlpha(0.5);
 }
 
 StepperSequencerModule::~StepperSequencerModule()
@@ -48,14 +53,17 @@ void StepperSequencerModule::resized()
 {
     width  = getWidth();
     height = getHeight();
+    barLength = (width - PADDING * 2) / TOTAL_NUMBER_OF_STEPS;
     
-    const float controllerHeight = height - PADDING * 2 - SELECTOR_HEIGHT - GATE_EDITOR_HEIGHT;
+    const float controllerHeight = height - PADDING * 3 - SELECTOR_HEIGHT - GATE_EDITOR_HEIGHT;
     
     selector->setBounds(0, 0, width, SELECTOR_HEIGHT);
-    pitchController->setBounds ( PADDING, SELECTOR_HEIGHT + PADDING, width - PADDING * 2 , controllerHeight );
-    levelController->setBounds ( PADDING, SELECTOR_HEIGHT + PADDING, width - PADDING * 2 , controllerHeight );
-    modController  ->setBounds ( PADDING, SELECTOR_HEIGHT + PADDING, width - PADDING * 2 , controllerHeight );
-    gateStateEditor->setBounds (0, controllerHeight + SELECTOR_HEIGHT + PADDING * 2, width, GATE_EDITOR_HEIGHT);
+    
+    pitchController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    levelController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    modController  ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    
+    gateStateEditor->setBounds ( 0, controllerHeight + SELECTOR_HEIGHT + PADDING * 2, width, GATE_EDITOR_HEIGHT);
 }
 
 void StepperSequencerModule::actionListenerCallback (const String& message)
@@ -69,19 +77,28 @@ void StepperSequencerModule::actionListenerCallback (const String& message)
     }
     else if (broadcaster == "StepGateStateEditor")
     {
-        const auto first = content.upToFirstOccurrenceOf("_", false, true);
-        const auto second = content.fromFirstOccurrenceOf("_", false, true);
-        pitchController->gateStateChanged (first.getIntValue());
-        levelController->gateStateChanged (first.getIntValue());
-        modController  ->gateStateChanged (first.getIntValue());
+        const auto action = content.upToFirstOccurrenceOf("_", false, true);
+        const auto data = content.fromFirstOccurrenceOf("_", false, true);
         
-        if (second != "")
+        if (action == "GateChanged")
         {
-            pitchController->gateStateChanged (second.getIntValue());
-            levelController->gateStateChanged (second.getIntValue());
-            modController  ->gateStateChanged (second.getIntValue());
-        }
+            const auto first = data.upToFirstOccurrenceOf("_", false, true);
+            const auto second = data.fromFirstOccurrenceOf("_", false, true);
+            pitchController->gateStateChanged (first.getIntValue());
+            levelController->gateStateChanged (first.getIntValue());
+            modController  ->gateStateChanged (first.getIntValue());
             
+            if (second != "")
+            {
+                pitchController->gateStateChanged (second.getIntValue());
+                levelController->gateStateChanged (second.getIntValue());
+                modController  ->gateStateChanged (second.getIntValue());
+            }
+        }
+        else if (action == "StepsChanged")
+        {
+            drawGreyedOut();
+        }
     }
 }
 
@@ -165,3 +182,51 @@ void StepperSequencerModule::switchStepTo (int step)
 {
 //    currentStep = step->load();
 }
+
+void StepperSequencerModule::drawGreyedOut()
+{
+    auto firstStepIndex = this->firstStepIndex->load();
+    auto lastStepIndex  = this->lastStepIndex ->load();
+    
+    auto screenY      = SELECTOR_HEIGHT + PADDING * 2;
+    auto screenHeight = height - PADDING * 5 - SELECTOR_HEIGHT - GATE_EDITOR_HEIGHT;
+    
+    
+    if (firstStepIndex <= lastStepIndex)
+    {
+        leftScreenX      = PADDING;
+        leftScreenWidth  = barLength * firstStepIndex;
+        rightScreenX     = PADDING + barLength * (lastStepIndex + 1);
+        rightScreenWidth = barLength * (TOTAL_NUMBER_OF_STEPS - lastStepIndex - 1);
+    }
+    else
+    {
+        leftScreenX      = 0.0f;
+        leftScreenWidth  = 0.0f;
+        rightScreenX     = PADDING + barLength * (lastStepIndex + 1);
+        rightScreenWidth = barLength * (firstStepIndex - lastStepIndex - 1);
+    }
+    
+    
+    leftGreyedOut.setBounds  (leftScreenX, screenY, leftScreenWidth, screenHeight);
+    rightGreyedOut.setBounds (rightScreenX, screenY, rightScreenWidth, screenHeight);
+    
+    
+}
+
+void StepperSequencerModule::audioProcessorParameterChanged (AudioProcessor* processor,
+                                     int parameterIndex,
+                                     float newValue)
+{
+    switch (parameterIndex)
+    {
+        case 6: case 7:
+            drawGreyedOut();
+            break;
+        default:
+            break;
+    }
+}
+
+void StepperSequencerModule::audioProcessorChanged (AudioProcessor* processor) {}
+

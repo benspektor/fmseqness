@@ -29,6 +29,8 @@ PitchController::~PitchController()
 void PitchController::paint (Graphics& g)
 {
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+    g.setColour(Colours::grey);
+    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
     paintPianoRoll(g);
 }
 
@@ -36,27 +38,28 @@ void PitchController::resized()
 {
     width     = getWidth();
     height    = getHeight();
-    barWidth  = width / TOTAL_NUMBER_OF_STEPS;
-    barHeight = height / PIANO_ROLL_LENGTH;
+    barWidth  = (width - PADDING * 2) / TOTAL_NUMBER_OF_STEPS;
+    barHeight = (height - PADDING * 2) / PIANO_ROLL_LENGTH;
     
     for (int stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        auto yPosition = -1 * (mPitchDataModel.values[stepNumber] - OCTAVE) * barHeight;
-        recs[stepNumber].setBounds ( stepNumber * barWidth, yPosition, barWidth, barHeight);
-        bars[stepNumber]->setBounds ( stepNumber * barWidth, yPosition, barWidth, barHeight);
+        auto yPosition = -1 * (mPitchDataModel.values[stepNumber] - OCTAVE) * barHeight + PADDING + 1;
+        auto xPsition  = PADDING + stepNumber * barWidth;
+        recs[stepNumber].setBounds  ( xPsition, yPosition, barWidth, barHeight);
+        bars[stepNumber]->setBounds ( xPsition, yPosition, barWidth, barHeight);
     }
     
     lineScreen.setBounds (0, 0, width, height);
-    mouseArea.setBounds  (0, 0, width, height);
+    mouseArea.setBounds  (PADDING, PADDING, width - PADDING * 2, height - PADDING * 2);
     
 
 }
 
 void PitchController::paintPianoRoll(juce::Graphics &g)
 {
-    for (int line = 0; line < PIANO_ROLL_LENGTH; line++)
+    for (int lineIndex = 0; lineIndex < PIANO_ROLL_LENGTH; lineIndex++)
     {
-        switch (line)
+        switch (lineIndex)
         {
             case 0: case 12: case 24:
                 g.setColour((Colour((uint8)255, (uint8)255, (uint8)255, 0.1f)));
@@ -69,10 +72,10 @@ void PitchController::paintPianoRoll(juce::Graphics &g)
                 break;
         }
         
-        auto rect = Rectangle<float>(0, line * barHeight, getWidth(), barHeight);
+        auto rect = Rectangle<float>(PADDING, PADDING + lineIndex * barHeight, getWidth() - PADDING * 2, barHeight);
         g.fillRect(rect);
         g.setColour((Colour((uint8)0, (uint8)0, (uint8)0, 0.3f)));
-        g.drawLine(0, line * barHeight, getWidth(), line * barHeight);
+        g.drawLine (PADDING, PADDING + lineIndex * barHeight, getWidth() - PADDING, PADDING + lineIndex * barHeight);
     }
 }
 
@@ -103,9 +106,10 @@ void PitchController::actionListenerCallback(const String &message)
         value = jlimit(-11.99f, 12.0f, value * PIANO_ROLL_LENGTH - OCTAVE);
         int pitch = value < 0 ? value - 1 : value;
         mPitchDataModel.values[bar] = pitch;
-        auto y = -1 * (pitch - 12) * barHeight;
-        bars[bar]->setBounds(bar * barWidth, y, barWidth, barHeight);
-        recs[bar].setBounds(bar * barWidth, y, barWidth, barHeight);
+        auto yPosition = -1 * (pitch - 12) * barHeight + PADDING;
+        auto xPsition  = PADDING + bar * barWidth;
+        bars[bar]->setBounds (xPsition, yPosition, barWidth, barHeight);
+        recs[bar].setBounds  (xPsition, yPosition, barWidth, barHeight);
         lineScreen.repaint();
         this->message = "PitchController_";
         this->message << bar << "_" << pitch;

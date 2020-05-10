@@ -12,7 +12,7 @@
 
 const float PADDING = 10.0f;
 const float SELECTOR_HEIGHT = 50.0F;
-const float GATE_EDITOR_HEIGHT = 40.0f;
+const float GATE_EDITOR_HEIGHT = 60.0f;
 const float PITCH_LINE_THIKNESS = 3;
 
 const int TOTAL_NUMBER_OF_STEPS = 32;
