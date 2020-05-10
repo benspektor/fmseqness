@@ -20,7 +20,7 @@
 class StepGateStateEditor    : public Component, public ActionBroadcaster
 {
 public:
-    StepGateStateEditor (StepGateStateValuesModel& dataModel);
+    StepGateStateEditor (AudioProcessorValueTreeState& parameters, StepGateStateValuesModel& dataModel);
     ~StepGateStateEditor();
 
     void paint (Graphics&) override;
@@ -35,9 +35,12 @@ public:
 void mouseDown (const MouseEvent& e) override;
 
 private:
+    AudioProcessorValueTreeState& mParameters;
     String messege = "";
     float width, height, recWidth, recHeight;
     juce::Point<float> clickLocation;
     StepGateStateValuesModel& gateStatesDataModel;
+    std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue("firstStepIndex") };
+    std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue("lastStepIndex") };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepGateStateEditor)
 };

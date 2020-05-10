@@ -112,10 +112,27 @@ void BarsController::turnOfSteps()
 void BarsController::timerCallback ( int currentStep )
 {
     turnOfSteps();
-//    DBG("Tic");
+
     for (int i = 0; i < 32; ++i)
+    {
         if (i == currentStep)
-            bars[i]->lightUp();
+        {
+            if (mGateModel.values[i] == on)
+            {
+                bars[i]->lightUp();
+            }
+            else if (mGateModel.values[i] == glide)
+            {
+                auto gate = i;
+                
+                while (mGateModel.values[gate] != on)
+                    gate--;
+                
+                bars[gate]->lightUp();
+            }
+        }
+            
+    }
 }
 
 void BarsController::gateStateChanged (int step)

@@ -29,9 +29,11 @@ public:
 private:
     AudioProcessorValueTreeState& mParameters;
     
-    std::atomic<float>* tempo { mParameters.getRawParameterValue("tempo") };
-    std::atomic<float>* isPlayingFloat { mParameters.getRawParameterValue("play") };
-    std::atomic<float>* numOfStepsFloat { mParameters.getRawParameterValue("steps") };
+    std::atomic<float>* tempo           { mParameters.getRawParameterValue ("tempo") };
+    std::atomic<float>* isPlayingFloat  { mParameters.getRawParameterValue ("play") };
+    std::atomic<float>* numOfStepsFloat { mParameters.getRawParameterValue ("steps") };
+    std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue ("firstStepIndex") };
+    std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue ("lastStepIndex") };
     
     double ramp = 0.0;
     int prevStep = MAX_NUM_OF_STEPS;

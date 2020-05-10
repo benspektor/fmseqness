@@ -27,7 +27,9 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
                                            TEMPO_SET_VALUE),
     std::make_unique<AudioParameterInt> ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
     std::make_unique<AudioParameterBool> ("play", "Play", false),
-    std::make_unique<AudioParameterFloat> ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS)
+    std::make_unique<AudioParameterFloat> ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
+    std::make_unique<AudioParameterInt> ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
+    std::make_unique<AudioParameterInt> ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1)
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
@@ -164,11 +166,14 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+    
     auto level = 0.250f;
     auto* leftBuffer  = buffer.getWritePointer (0, buffer.getSample(0, 0));
     auto* rightBuffer = buffer.getWritePointer (1, buffer.getSample(1, 0));
+    
     for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
     {
+        //Stops sound when sequencer is stopped
         if (isPlayingFloat->load() == 0.0f)
         {
             ampAhdEnv.startDecay();
@@ -181,7 +186,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
 
-        auto currentSample = sines.generate(mod) * amp * level;
+        auto currentSample = sines.generate(mod) * amp * level * currentStepLevel;
         
         leftBuffer[sample]  = currentSample;
         rightBuffer[sample] = currentSample;
@@ -202,9 +207,6 @@ AudioProcessorEditor* FmseqnessAudioProcessor::createEditor()
 //==============================================================================
 void FmseqnessAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
     auto state = mParameters.copyState();
     std::unique_ptr<XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
@@ -212,8 +214,6 @@ void FmseqnessAudioProcessor::getStateInformation (MemoryBlock& destData)
 
 void FmseqnessAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
     std::unique_ptr<XmlElement> xmlState (getXmlFromBinary(data, sizeInBytes));
     
     if (xmlState.get() != nullptr && xmlState->hasTagName (mParameters.state.getType()))
@@ -248,6 +248,7 @@ void FmseqnessAudioProcessor::trigger()
     
     const float pitch = mStepperDataModel->pitchValues.values[stepIndex] + BASE_PITCH;
     const float StepFMModValue = mStepperDataModel->modValues.values[stepIndex];
+    
     sines.setCurrentPitch(pitch);
     sines.setStepFMModMulti(StepFMModValue);
     sines.updateAngleDelta();
@@ -259,9 +260,9 @@ void FmseqnessAudioProcessor::trigger()
     
     ampAhdEnv.reset (amp, currentSampleRate, isNextStepGlide);
     ampAhdEnv.state = PlayState::play;
-    
-    modAhdEnv.reset (amp, currentSampleRate, isNextStepGlide);
+    modAhdEnv.reset (amp, currentSampleRate, false);
     modAhdEnv.state = PlayState::play;
+    currentStepLevel = mStepperDataModel->levelValues.values[int(currentStep->load())];
 }
 
 AHDEnvDataModel& FmseqnessAudioProcessor::getAmpAHDEnvDataModel()

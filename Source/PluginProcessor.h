@@ -76,8 +76,9 @@ private:
     StepSequencer seq { mParameters };
     FM2SineOscsGenerator sines { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
-    double amp, mod = 0.0;
+    double amp = 0.0, mod = 0.0;
     double currentSampleRate = 0.0;
+    float currentStepLevel = 0.0f;
     std::atomic<float>* currentStep    { mParameters.getRawParameterValue("currentStep") };
     std::atomic<float>* numberOfSteps  { mParameters.getRawParameterValue("steps") };
     std::atomic<float>* isPlayingFloat { mParameters.getRawParameterValue("play") };

@@ -12,7 +12,7 @@
 #include "StepGateStateEditor.h"
 
 //==============================================================================
-StepGateStateEditor::StepGateStateEditor (StepGateStateValuesModel& dataModel) : gateStatesDataModel(dataModel)
+StepGateStateEditor::StepGateStateEditor (AudioProcessorValueTreeState& parameters, StepGateStateValuesModel& dataModel) : mParameters (parameters), gateStatesDataModel (dataModel)
 {
 }
 
@@ -33,6 +33,14 @@ void StepGateStateEditor::paint (Graphics& g)
     
     drawStepRectangles(g);
     drawGateStateIcons(g);
+    
+    g.setColour(Colours::lightblue);
+    auto startRectangleX = PADDING + recWidth * mFirstStepIndex->load();
+//    DBG(mFirstStepIndex->load());
+    auto endRectangeleX = PADDING + recWidth * mLastStepIndex->load();
+    g.fillRect(startRectangleX, 0.0f, recWidth, PADDING);
+    g.fillRect(endRectangeleX, height - PADDING, recWidth, PADDING);
+    
 }
 
 void StepGateStateEditor::resized()
@@ -58,6 +66,20 @@ void StepGateStateEditor::mouseDown (const MouseEvent& e)
         resetMessage (stepNumber);
         toggleStepGateState (stepNumber);
         sendActionMessage (messege);
+        repaint();
+    }
+    
+    else if (clickLocation.y < PADDING && clickLocation.x > PADDING && clickLocation.x < width - PADDING)
+    {
+        int firstStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
+        mFirstStepIndex->store(firstStep);
+        repaint();
+    }
+    
+    else if (clickLocation.y > height - PADDING && clickLocation.x > PADDING && clickLocation.x < width - PADDING)
+    {
+        int lastStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
+        mLastStepIndex->store(lastStep);
         repaint();
     }
 }

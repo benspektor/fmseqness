@@ -21,7 +21,7 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     pitchController.reset ( new PitchController     ( mDataModel.pitchValues, mDataModel.gateStateValues));
     levelController.reset ( new BarsController      ( false, mDataModel.levelValues, mDataModel.gateStateValues) );
     modController  .reset ( new BarsController      ( true,  mDataModel.modValues, mDataModel.gateStateValues  ) );
-    gateStateEditor.reset ( new StepGateStateEditor ( mDataModel.gateStateValues) );
+    gateStateEditor.reset ( new StepGateStateEditor ( mParameters, mDataModel.gateStateValues) );
     
     gateStateEditor->addActionListener(this);
     
