@@ -64,6 +64,8 @@ void StepperSequencerModule::resized()
     modController  ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
     
     gateStateEditor->setBounds ( 0, controllerHeight + SELECTOR_HEIGHT + PADDING * 2, width, GATE_EDITOR_HEIGHT);
+    
+    drawGreyedOut();
 }
 
 void StepperSequencerModule::actionListenerCallback (const String& message)
