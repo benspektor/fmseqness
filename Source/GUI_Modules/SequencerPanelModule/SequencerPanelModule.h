@@ -15,6 +15,7 @@
 #include "../../Supporting_Files/Constants.h"
 #include "SwingController.h"
 
+
 //==============================================================================
 /*
 */
@@ -31,6 +32,7 @@ public:
 private:
     AudioProcessorValueTreeState& mParameters;
     PlayStopButton playStopButton;
+    
     std::unique_ptr<ButtonAttachment> playStopAttachment;
     
     SwingController swingController {mParameters};

@@ -27,6 +27,7 @@
       </GROUP>
       <GROUP id="{CD3EDA95-1AA2-AFE3-057A-27C30A7C1883}" name="GUI_Modules">
         <GROUP id="{7C62E5B2-B981-7723-6272-1C29772D5A7F}" name="SequencerPanelModule">
+          <FILE id="pGPYP8" name="LabelButton.h" compile="0" resource="0" file="Source/GUI_Modules/SequencerPanelModule/LabelButton.h"/>
           <FILE id="KN2JCh" name="PlayStopButton.h" compile="0" resource="0"
                 file="Source/GUI_Modules/SequencerPanelModule/PlayStopButton.h"/>
           <FILE id="h99gPP" name="SequencerPanelModule.cpp" compile="1" resource="0"
