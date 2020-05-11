@@ -44,7 +44,7 @@ void SequencerPanelModule::paint (Graphics& g)
 
 void SequencerPanelModule::resized()
 {
-    playStopButton.setBounds(0, 0, getHeight(), getHeight());
+    playStopButton.setBounds( getWidth() - getHeight(), 0, getHeight(), getHeight());
 }
 
 
