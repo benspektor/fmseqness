@@ -26,6 +26,14 @@
               file="Source/DataModels/StepperSequencerDataModel.h"/>
       </GROUP>
       <GROUP id="{CD3EDA95-1AA2-AFE3-057A-27C30A7C1883}" name="GUI_Modules">
+        <GROUP id="{7C62E5B2-B981-7723-6272-1C29772D5A7F}" name="SequencerPanelModule">
+          <FILE id="KN2JCh" name="PlayStopButton.h" compile="0" resource="0"
+                file="Source/GUI_Modules/SequencerPanelModule/PlayStopButton.h"/>
+          <FILE id="h99gPP" name="SequencerPanelModule.cpp" compile="1" resource="0"
+                file="Source/GUI_Modules/SequencerPanelModule/SequencerPanelModule.cpp"/>
+          <FILE id="lqjIn8" name="SequencerPanelModule.h" compile="0" resource="0"
+                file="Source/GUI_Modules/SequencerPanelModule/SequencerPanelModule.h"/>
+        </GROUP>
         <GROUP id="{897927FC-C832-5A23-E380-CFD8907A1687}" name="StepperSequencerModule">
           <GROUP id="{7191A115-5406-49E1-F1E9-C311500B106A}" name="AnimatedSelector">
             <FILE id="StG1Yy" name="AnimatedSelector.cpp" compile="1" resource="0"

@@ -20,17 +20,19 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     seqGUI         .reset ( new SequencerControlGUI (processor.getParametersTree()));
     ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
+    seqPanel       .reset ( new SequencerPanelModule( processor.getParametersTree() ));
     
     addAndMakeVisible (*stepSeqModule);
     addAndMakeVisible (*sinesGUI);
     addAndMakeVisible (*seqGUI);
     addAndMakeVisible (*ampAhdEnvWindow);
     addAndMakeVisible (*modAhdEnvWindow);
+    addAndMakeVisible (*seqPanel);
     
     
     
     setResizable (true, true);
-    setSize (1200, 800);
+    setSize (1200, 900);
     processor.addListener (this);
     processor.addListener (stepSeqModule.get());
 }
@@ -51,11 +53,18 @@ void FmseqnessAudioProcessorEditor::paint (Graphics& g)
 
 void FmseqnessAudioProcessorEditor::resized()
 {
-    sinesGUI->setBounds(10, 10, 230, 160);
-    seqGUI->setBounds(250, 10, 300, 160);
-    ampAhdEnvWindow->setBounds(560, 10, 300, 160);
-    modAhdEnvWindow->setBounds(870, 10, 300, 160);
-    stepSeqModule->setBounds ( 10, 180, getWidth() - 20, getHeight() - 180 );
+    float innerWidth          = getWidth() - PADDING * 2;
+    float stepSeqModuleY      = PADDING * 2 + ENVELOPE_WINDOW_HEIGHT;
+    float stepSeqModuleHeight = getHeight() - PADDING * 3 - ENVELOPE_WINDOW_HEIGHT - SEQUENCER_PANEL_HEIGHT;
+    float seqPanelY           = getHeight() - SEQUENCER_PANEL_HEIGHT - PADDING;
+    
+    sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
+    seqGUI->setBounds(250, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
+    ampAhdEnvWindow->setBounds(560, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
+    modAhdEnvWindow->setBounds(870, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
+    stepSeqModule->setBounds ( PADDING, stepSeqModuleY, innerWidth ,stepSeqModuleHeight );
+    seqPanel->setBounds(PADDING, seqPanelY, innerWidth, SEQUENCER_PANEL_HEIGHT);
+    
     
 //    stepSeqModule->drawGreyedOut();
 }
