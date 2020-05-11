@@ -29,13 +29,18 @@ bool StepSequencer::processToGetTrigger (double currentSampleRate)
     }
     
     auto stepDelta = tempo->load() / 60*4 / currentSampleRate;
+    
     ramp = ramp < numOfSteps ? ramp + stepDelta : 0.0;
     ramp = ramp < numOfSteps ? ramp : 0.0;
     
-    if (ramp > 0.0 && currentStep % 2 == 0)
+    bool isNextStepSwingCandidate = ramp > 0.0 && currentStep % 2 == 0;
+    
+    if (isNextStepSwingCandidate)
     {
-        if (ramp >= currentStep + SWING_VALUE)
-            currentStep = SWING_VALUE >= 1.0 ? ramp : ramp + 1;
+        bool isNextStepSwingArrived = ramp >= currentStep + swingValue->load();
+        
+        if (isNextStepSwingArrived)
+            currentStep = ramp;
     }
     else
     {
@@ -57,5 +62,5 @@ bool StepSequencer::processToGetTrigger (double currentSampleRate)
 
 int StepSequencer::getCurrentStepIndex()
 {
-    return int(currentStep + firstStepIndex->load()) % MAX_NUM_OF_STEPS;
+    return int (currentStep + firstStepIndex->load()) % MAX_NUM_OF_STEPS;
 }

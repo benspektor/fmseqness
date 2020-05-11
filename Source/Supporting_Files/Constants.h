@@ -14,50 +14,65 @@
 typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
 
+const float PADDING = 10.0f;
+const float SELECTOR_HEIGHT = 50.0F;
+const float GATE_EDITOR_HEIGHT = 60.0f;
+const float PITCH_LINE_THIKNESS = 3;
+
+const int TOTAL_NUMBER_OF_STEPS = 32;
+const int PIANO_ROLL_LENGTH = 25;
+const int OCTAVE = 12;
+const int QUARTER_DIVEDER = 4;
+
 constexpr int BASE_PITCH = 60;
 
 constexpr int MIN_NUM_OF_STEPS = 4;
 constexpr int MAX_NUM_OF_STEPS = 32;
 constexpr int DEF_NUM_OF_STEPS = 16;
 
-constexpr double MILLISECONDS_IN_SECOND = 1000.0;
+constexpr float MILLISECONDS_IN_SECOND = 1000.0;
 
-constexpr double RESTART_TIME = 0.01;
+constexpr float RESTART_TIME = 0.01;
 
-constexpr double FM_AMNT_MIN_VALUE = 0.0;
-constexpr double FM_AMNT_MAX_VALUE = 8.0;
-constexpr double FM_AMNT_SKEW_VALUE = 0.4;
-constexpr double FM_AMNT_SET_VALUE = 0.1;
+constexpr float FM_AMNT_MIN_VALUE = 0.0;
+constexpr float FM_AMNT_MAX_VALUE = 8.0;
+constexpr float FM_AMNT_SKEW_VALUE = 0.4;
+constexpr float FM_AMNT_SET_VALUE = 0.1;
 
-constexpr double MOD_MULTI_MIN_VALUE = 0.25;
-constexpr double MOD_MULTI_MAX_VALUE = 8.0;
-constexpr double MOD_MULTI_SKEW_VALUE = 0.5;
-constexpr double MOD_MULTI_SET_VALUE = 0.5;
+constexpr float MOD_MULTI_MIN_VALUE = 0.25;
+constexpr float MOD_MULTI_MAX_VALUE = 8.0;
+constexpr float MOD_MULTI_SKEW_VALUE = 0.5;
+constexpr float MOD_MULTI_SET_VALUE = 0.5;
 
 constexpr int TEMPO_MIN_VALUE = 50;
 constexpr int TEMPO_MAX_VALUE = 200;
 constexpr int TEMPO_SKEW_VALUE = 1.0;
 constexpr int TEMPO_SET_VALUE = 120;
 
-constexpr double ATTACK_KNOB_MIN_VALUE = 10.0;
-constexpr double ATTACK_KNOB_MAX_VALUE = 1000.0;
-constexpr double ATTACK_KNOB_SKEW_VALUE = 0.5;
-constexpr double ATTACK_KNOB_SET_VALUE = 10.0;
+constexpr float ATTACK_KNOB_MIN_VALUE = 10.0;
+constexpr float ATTACK_KNOB_MAX_VALUE = 1000.0;
+constexpr float ATTACK_KNOB_SKEW_VALUE = 0.5;
+constexpr float ATTACK_KNOB_SET_VALUE = 10.0;
 
-constexpr double HOLD_KNOB_MIN_VALUE = 0.0;
-constexpr double HOLD_KNOB_MAX_VALUE = 3000.0;
-constexpr double HOLD_KNOB_SKEW_VALUE = 0.5;
-constexpr double HOLD_KNOB_SET_VALUE = 10.0;
+constexpr float HOLD_KNOB_MIN_VALUE = 0.0;
+constexpr float HOLD_KNOB_MAX_VALUE = 3000.0;
+constexpr float HOLD_KNOB_SKEW_VALUE = 0.5;
+constexpr float HOLD_KNOB_SET_VALUE = 10.0;
 
-constexpr double DECAY_KNOB_MIN_VALUE = 10.0;
-constexpr double DECAY_KNOB_MAX_VALUE = 3000.0;
-constexpr double DECAY_KNOB_SKEW_VALUE = 0.5;
-constexpr double DECAY_KNOB_SET_VALUE = 300.0;
+constexpr float DECAY_KNOB_MIN_VALUE = 10.0;
+constexpr float DECAY_KNOB_MAX_VALUE = 3000.0;
+constexpr float DECAY_KNOB_SKEW_VALUE = 0.5;
+constexpr float DECAY_KNOB_SET_VALUE = 300.0;
 
-constexpr double FM_CONTROL_MIN_VALUE = 0.0;
-constexpr double FM_CONTROL_MAX_VALUE = 16.0;
-constexpr double FM_CONTROL_SKEW_VALUE = 1.0;
-constexpr double FM_CONTROL_SET_VALUE = 1.0;
+constexpr float FM_CONTROL_MIN_VALUE = 0.0;
+constexpr float FM_CONTROL_MAX_VALUE = 16.0;
+constexpr float FM_CONTROL_SKEW_VALUE = 1.0;
+constexpr float FM_CONTROL_SET_VALUE = 1.0;
+
+constexpr float SWING_MIN_VALUE = 1.0;
+constexpr float SWING_MAX_VALUE = 1.75;
+constexpr float SWING_DOT_VALUE = 1.5;
+constexpr float SWING_TRIPLET_VALUE = 1.3333333334;
 
 //constexpr double FM_CONTROL_MIN_VALUE = 0.0;
 //constexpr double FM_CONTROL_MAX_VALUE = 1.0;
@@ -74,5 +89,5 @@ constexpr int HARD_CODED_NOTES[32] = {48,60,72,67,65,60,48,72,48,60,72,67,65,60,
 constexpr float SEQUENCER_PANEL_HEIGHT = 80;
 constexpr float ENVELOPE_WINDOW_HEIGHT = 160;
 
-constexpr float SWING_VALUE = 1.3334f;
+constexpr float SWING_VALUE = 1.5f;
 

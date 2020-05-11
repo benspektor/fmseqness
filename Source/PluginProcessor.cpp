@@ -29,7 +29,8 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     std::make_unique<AudioParameterBool> ("play", "Play", false),
     std::make_unique<AudioParameterFloat> ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
     std::make_unique<AudioParameterInt> ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
-    std::make_unique<AudioParameterInt> ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1)
+    std::make_unique<AudioParameterInt> ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
+    std::make_unique<AudioParameterFloat> ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE)
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );

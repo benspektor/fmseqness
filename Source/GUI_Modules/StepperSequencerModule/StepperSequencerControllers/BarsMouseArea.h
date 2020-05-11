@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "../StepperSequencerConstants.h"
+#include "../../../Supporting_Files/Constants.h"
 
 //==============================================================================
 /*

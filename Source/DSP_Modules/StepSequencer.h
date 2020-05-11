@@ -33,8 +33,9 @@ private:
     std::atomic<float>* numOfStepsFloat { mParameters.getRawParameterValue ("steps") };
     std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue ("firstStepIndex") };
     std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue ("lastStepIndex") };
+    std::atomic<float>* swingValue      { mParameters.getRawParameterValue ("swingValue") };
     
-    double ramp = 0.0;
+    float ramp = 0.0;
     int prevStep = MAX_NUM_OF_STEPS;
     int currentStep = 0;
 };

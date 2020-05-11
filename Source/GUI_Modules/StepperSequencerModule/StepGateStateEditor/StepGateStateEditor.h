@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include "../../../DataModels/StepperSequencerDataModel.h"
 #include "../StepperSequencerConstants.h"
+#include "../../../Supporting_Files/Constants.h"
 
 //==============================================================================
 /*
@@ -40,7 +41,7 @@ private:
     float width, height, recWidth, recHeight;
     juce::Point<float> clickLocation;
     StepGateStateValuesModel& gateStatesDataModel;
-    std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue("firstStepIndex") };
-    std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue("lastStepIndex") };
+    std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue ("firstStepIndex") };
+    std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue ("lastStepIndex") };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepGateStateEditor)
 };
