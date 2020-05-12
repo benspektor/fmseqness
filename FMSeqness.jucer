@@ -36,6 +36,8 @@
                 file="Source/GUI_Modules/SequencerPanelModule/SequencerPanelModule.h"/>
           <FILE id="Tn9TsS" name="SwingController.h" compile="0" resource="0"
                 file="Source/GUI_Modules/SequencerPanelModule/SwingController.h"/>
+          <FILE id="SoDFN7" name="TempoController.h" compile="0" resource="0"
+                file="Source/GUI_Modules/SequencerPanelModule/TempoController.h"/>
         </GROUP>
         <GROUP id="{897927FC-C832-5A23-E380-CFD8907A1687}" name="StepperSequencerModule">
           <GROUP id="{7191A115-5406-49E1-F1E9-C311500B106A}" name="AnimatedSelector">

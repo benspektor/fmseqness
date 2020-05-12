@@ -16,6 +16,7 @@ SequencerPanelModule::SequencerPanelModule (AudioProcessorValueTreeState& parame
 {
     addAndMakeVisible (swingController);
     addAndMakeVisible (playStopButton);
+    addAndMakeVisible (tempoController);
     
     
     playStopAttachment.reset ( new ButtonAttachment (mParameters, "play", playStopButton));
@@ -47,8 +48,16 @@ void SequencerPanelModule::paint (Graphics& g)
 
 void SequencerPanelModule::resized()
 {
-    playStopButton.setBounds( getWidth() - getHeight(), 0, getHeight(), getHeight());
-    swingController.setBounds (0, 0, getHeight() * 2, getHeight());
+    float height = getHeight();
+    float width  = getWidth();
+    
+    float playStopX            = width - height;
+    float swingControllerWidth = height * 2;
+    
+    playStopButton .setBounds ( playStopX, 0, height, height );
+    swingController.setBounds ( 1, 1, swingControllerWidth, height - 2 );
+    tempoController.setBounds ( swingControllerWidth + PADDING, 1, height, height - 2);
+    
 }
 
 

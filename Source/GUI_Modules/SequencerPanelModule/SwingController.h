@@ -35,8 +35,6 @@ public:
         addAndMakeVisible (swingSlider);
         swingSlider.setTextBoxStyle (juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
         swingAttachment.reset ( new SliderAttachment (mParameters, "swingValue", swingSlider));
-
-        
     }
 
     ~SwingController()
@@ -47,8 +45,8 @@ public:
     {
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 
-        g.setColour (Colours::grey);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+//        g.setColour (Colours::grey);
+//        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
         
         
@@ -60,15 +58,15 @@ public:
 
     void resized() override
     {
-        float buttonWidth  = (getWidth() - PADDING * 5)  / 4.0f;
-        float buttonHeight = (getHeight() - PADDING * 2) / 3.0f;
+        float buttonWidth       = (getWidth() - PADDING * 5)  / 4.0f;
+        float buttonHeight      = (getHeight() - PADDING * 2) / 3.0f;
+        float swingSliderHeight = PADDING * 1.5 + buttonHeight;
         
         noneButton   .setBounds (PADDING, PADDING, buttonWidth, buttonHeight);
         tripletButton.setBounds (PADDING * 2 + buttonWidth, PADDING, buttonWidth, buttonHeight);
         dottedButton .setBounds (PADDING * 3 + buttonWidth * 2, PADDING, buttonWidth, buttonHeight);
         insaneButton .setBounds (PADDING * 4 + buttonWidth * 3, PADDING, buttonWidth, buttonHeight);
-        
-        swingSlider.setBounds (PADDING, PADDING * 1.5 + buttonHeight, getWidth() - PADDING * 2, buttonHeight);
+        swingSlider  .setBounds (PADDING, swingSliderHeight, getWidth() - PADDING * 2, buttonHeight);
     }
 
 private:

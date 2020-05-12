@@ -14,6 +14,7 @@
 #include "PlayStopButton.h"
 #include "../../Supporting_Files/Constants.h"
 #include "SwingController.h"
+#include "TempoController.h"
 
 
 //==============================================================================
@@ -34,7 +35,7 @@ private:
     PlayStopButton playStopButton;
     
     std::unique_ptr<ButtonAttachment> playStopAttachment;
-    
+    TempoController tempoController {mParameters};
     SwingController swingController {mParameters};
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SequencerPanelModule)
 };

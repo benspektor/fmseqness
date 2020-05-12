@@ -14,27 +14,27 @@
 //==============================================================================
 SequencerControlGUI::SequencerControlGUI(AudioProcessorValueTreeState& parameters) : mParameters(parameters)
 {
-   addAndMakeVisible(tempoLabel);
-   tempoLabel.setText("Tempo", NotificationType::dontSendNotification);
-   tempoLabel.setFont (Font (16.0f, Font::plain));
-   tempoLabel.setJustificationType(Justification::centred);
-   
-   addAndMakeVisible(numOfStepsLabel);
-   numOfStepsLabel.setText("Steps", NotificationType::dontSendNotification);
-   numOfStepsLabel.setFont (Font (16.0f, Font::plain));
-   numOfStepsLabel.setJustificationType(Justification::centred);
+    addAndMakeVisible(tempoLabel);
+    tempoLabel.setText("Tempo", NotificationType::dontSendNotification);
+    tempoLabel.setFont (Font (16.0f, Font::plain));
+    tempoLabel.setJustificationType(Justification::centred);
+    
+    addAndMakeVisible(numOfStepsLabel);
+    numOfStepsLabel.setText("Steps", NotificationType::dontSendNotification);
+    numOfStepsLabel.setFont (Font (16.0f, Font::plain));
+    numOfStepsLabel.setJustificationType(Justification::centred);
     
     addAndMakeVisible (tempoKnob);
-    tempoKnob.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    tempoKnob.setSliderStyle(Slider::SliderStyle::IncDecButtons);
     tempoKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50.0, 20.0);
-
+    
     addAndMakeVisible (numOfStepsKnob);
     numOfStepsKnob.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
     numOfStepsKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 50.0, 20.0);
-
+    
     tempoAttachment.reset (new SliderAttachment (mParameters, "tempo", tempoKnob));
     stepsAttachment.reset (new SliderAttachment (mParameters, "steps", numOfStepsKnob));
-
+    
     addAndMakeVisible(playButton);
     playButton.setButtonText("Play");
     playButton.setColour(TextButton::buttonColourId, Colours::black);
