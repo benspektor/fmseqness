@@ -82,6 +82,8 @@ private:
     std::atomic<float>* currentStep    { mParameters.getRawParameterValue ("currentStep") };
     std::atomic<float>* numberOfSteps  { mParameters.getRawParameterValue ("steps") };
     std::atomic<float>* isPlayingFloat { mParameters.getRawParameterValue ("play") };
+    std::atomic<float>* basePitch      { mParameters.getRawParameterValue ("basePitch") };
+
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)

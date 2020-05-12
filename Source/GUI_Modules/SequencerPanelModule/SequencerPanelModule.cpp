@@ -17,7 +17,7 @@ SequencerPanelModule::SequencerPanelModule (AudioProcessorValueTreeState& parame
     addAndMakeVisible (swingController);
     addAndMakeVisible (playStopButton);
     addAndMakeVisible (tempoController);
-    
+    addAndMakeVisible (basePitchPicker);
     
     playStopAttachment.reset ( new ButtonAttachment (mParameters, "play", playStopButton));
 }
@@ -28,22 +28,11 @@ SequencerPanelModule::~SequencerPanelModule()
 
 void SequencerPanelModule::paint (Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
-
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-    g.setColour (Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("SequencerPanelModule", getLocalBounds(),
-                Justification::centred, true);   // draw some placeholder text
 }
 
 void SequencerPanelModule::resized()
@@ -53,11 +42,14 @@ void SequencerPanelModule::resized()
     
     float playStopX            = width - height;
     float swingControllerWidth = height * 2;
+    float tempoControllerX     = swingControllerWidth + PADDING;
+    float basePitchPickerX     = swingControllerWidth + height + PADDING * 2;
     
     playStopButton .setBounds ( playStopX, 0, height, height );
     swingController.setBounds ( 1, 1, swingControllerWidth, height - 2 );
-    tempoController.setBounds ( swingControllerWidth + PADDING, 1, height, height - 2);
+    tempoController.setBounds ( tempoControllerX, 1, height, height - 2 );
     
+    basePitchPicker.setBounds ( basePitchPickerX, PADDING, height, height - PADDING * 2 );
 }
 
 

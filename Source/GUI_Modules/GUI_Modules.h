@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "SequencerControlGUI.h"
 #include "StepperSequencerModule/StepperSequencerModule.h"
 #include "FMSinesGUI.h"
 #include "AHDEnvWindow.h"

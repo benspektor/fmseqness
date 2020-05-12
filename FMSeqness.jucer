@@ -27,6 +27,8 @@
       </GROUP>
       <GROUP id="{CD3EDA95-1AA2-AFE3-057A-27C30A7C1883}" name="GUI_Modules">
         <GROUP id="{7C62E5B2-B981-7723-6272-1C29772D5A7F}" name="SequencerPanelModule">
+          <FILE id="Kfd9tO" name="BasePitchPicker.h" compile="0" resource="0"
+                file="Source/GUI_Modules/SequencerPanelModule/BasePitchPicker.h"/>
           <FILE id="pGPYP8" name="LabelButton.h" compile="0" resource="0" file="Source/GUI_Modules/SequencerPanelModule/LabelButton.h"/>
           <FILE id="KN2JCh" name="PlayStopButton.h" compile="0" resource="0"
                 file="Source/GUI_Modules/SequencerPanelModule/PlayStopButton.h"/>
@@ -80,10 +82,6 @@
         <FILE id="s0sV3Y" name="FMSinesGUI.cpp" compile="1" resource="0" file="Source/GUI_Modules/FMSinesGUI.cpp"/>
         <FILE id="ZogSOo" name="FMSinesGUI.h" compile="0" resource="0" file="Source/GUI_Modules/FMSinesGUI.h"/>
         <FILE id="Xny06C" name="GUI_Modules.h" compile="0" resource="0" file="Source/GUI_Modules/GUI_Modules.h"/>
-        <FILE id="sovPdm" name="SequencerControlGUI.cpp" compile="1" resource="0"
-              file="Source/GUI_Modules/SequencerControlGUI.cpp"/>
-        <FILE id="DoXi3j" name="SequencerControlGUI.h" compile="0" resource="0"
-              file="Source/GUI_Modules/SequencerControlGUI.h"/>
       </GROUP>
       <FILE id="Klt9ry" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

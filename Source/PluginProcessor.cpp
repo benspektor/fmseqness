@@ -25,12 +25,13 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     std::make_unique<AudioParameterFloat> ("tempo", "Tempo",
                                            NormalisableRange<float>(TEMPO_MIN_VALUE, TEMPO_MAX_VALUE, 1.0, TEMPO_SKEW_VALUE),
                                            TEMPO_SET_VALUE),
-    std::make_unique<AudioParameterInt> ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
-    std::make_unique<AudioParameterBool> ("play", "Play", false),
+    std::make_unique<AudioParameterInt>   ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
+    std::make_unique<AudioParameterBool>  ("play", "Play", false),
     std::make_unique<AudioParameterFloat> ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
-    std::make_unique<AudioParameterInt> ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
-    std::make_unique<AudioParameterInt> ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
-    std::make_unique<AudioParameterFloat> ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE)
+    std::make_unique<AudioParameterInt>   ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
+    std::make_unique<AudioParameterInt>   ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
+    std::make_unique<AudioParameterFloat> ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
+    std::make_unique<AudioParameterInt>   ("basePitch", "Base Pitch", 36, 84, 60)
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
@@ -247,7 +248,7 @@ void FmseqnessAudioProcessor::trigger()
     if (mStepperDataModel->gateStateValues.values[stepIndex] == StepGateState::off)
         return;
     
-    const float pitch = mStepperDataModel->pitchValues.values[stepIndex] + BASE_PITCH;
+    const float pitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
     const float StepFMModValue = mStepperDataModel->modValues.values[stepIndex];
     
     sines.setCurrentPitch(pitch);

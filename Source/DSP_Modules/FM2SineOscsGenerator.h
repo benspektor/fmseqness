@@ -37,7 +37,7 @@ public:
 private:
     AudioProcessorValueTreeState& mParameters;
     
-    std::atomic<float>* fmAmount { mParameters.getRawParameterValue ("globalFMAmount") };
+    std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
     std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
     
     double currentCarrierAngle = 0.0, carrierAngleDelta = 0.0;

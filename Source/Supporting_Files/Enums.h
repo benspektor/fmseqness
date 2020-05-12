@@ -13,3 +13,5 @@
 enum class PlayState { play, stop };
 
 enum class EnvelopeControl { attack, hold, decay, attackCurve, decayCurve, none };
+
+
