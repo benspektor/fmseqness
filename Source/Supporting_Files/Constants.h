@@ -25,6 +25,8 @@ const int OCTAVE = 12;
 const int QUARTER_DIVEDER = 4;
 
 constexpr int BASE_PITCH = 60;
+constexpr int MINIMUM_PITCH = 36;
+constexpr int MAXIMUM_PITCH = 96;
 
 constexpr int MIN_NUM_OF_STEPS = 4;
 constexpr int MAX_NUM_OF_STEPS = 32;

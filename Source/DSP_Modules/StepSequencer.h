@@ -37,5 +37,6 @@ private:
     
     float ramp = 0.0;
     int prevStep = MAX_NUM_OF_STEPS;
+    int currentNumOfSteps = 0;
     int currentStep = 0;
 };

@@ -17,23 +17,22 @@ bool StepSequencer::processToGetTrigger (double currentSampleRate)
 {
     bool isPlaying = isPlayingFloat->load();
     
-    int numOfSteps = firstStepIndex->load() <= lastStepIndex->load() ?
-                     lastStepIndex->load() - firstStepIndex->load() + 1 :
-                     MAX_NUM_OF_STEPS - firstStepIndex->load() + lastStepIndex->load() + 1;
+    currentNumOfSteps = firstStepIndex->load() <= lastStepIndex->load() ?
+                        lastStepIndex->load() - firstStepIndex->load() + 1 :
+                        MAX_NUM_OF_STEPS - firstStepIndex->load() + lastStepIndex->load() + 1;
     
     if (isPlaying == false)
     {
-        ramp = numOfSteps;
-        currentStep = numOfSteps;
+        ramp = 0.0;
+        currentStep = 0;
         return false;
     }
     
-    auto stepDelta = tempo->load() / 60*4 / currentSampleRate;
+    auto stepDelta = tempo->load() / 60*8 / currentSampleRate;
     
-    ramp = ramp < numOfSteps ? ramp + stepDelta : 0.0;
-    ramp = ramp < numOfSteps ? ramp : 0.0;
-    
-    bool isNextStepSwingCandidate = ramp > 0.0 && currentStep % 2 == 0;
+    ramp = ramp + stepDelta;
+ 
+    bool isNextStepSwingCandidate = currentStep % 2 == 0;
     
     if (isNextStepSwingCandidate)
     {
@@ -62,5 +61,6 @@ bool StepSequencer::processToGetTrigger (double currentSampleRate)
 
 int StepSequencer::getCurrentStepIndex()
 {
-    return int (currentStep + firstStepIndex->load()) % MAX_NUM_OF_STEPS;
+//    return int (currentStep + firstStepIndex->load()) % MAX_NUM_OF_STEPS;
+    return int (currentStep % currentNumOfSteps + firstStepIndex->load()) % MAX_NUM_OF_STEPS;
 }

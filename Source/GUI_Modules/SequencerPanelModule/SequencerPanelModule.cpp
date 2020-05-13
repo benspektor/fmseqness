@@ -48,8 +48,7 @@ void SequencerPanelModule::resized()
     playStopButton .setBounds ( playStopX, 0, height, height );
     swingController.setBounds ( 1, 1, swingControllerWidth, height - 2 );
     tempoController.setBounds ( tempoControllerX, 1, height, height - 2 );
-    
-    basePitchPicker.setBounds ( basePitchPickerX, PADDING, height, height - PADDING * 2 );
+    basePitchPicker.setBounds ( basePitchPickerX, 1, height, height - 2 );
 }
 
 
