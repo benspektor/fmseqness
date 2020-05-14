@@ -31,7 +31,7 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     std::make_unique<AudioParameterInt>   ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
     std::make_unique<AudioParameterInt>   ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
     std::make_unique<AudioParameterFloat> ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
-    std::make_unique<AudioParameterInt>   ("basePitch", "Base Pitch", 36, 84, 60)
+    std::make_unique<AudioParameterInt>   ("basePitch", "Base Pitch", 36, 84, 60),
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
@@ -259,10 +259,12 @@ void FmseqnessAudioProcessor::trigger()
         return;
     
     auto isNextStepGlide = stepIndex == numberOfSteps->load() - 1 ? false : mStepperDataModel->isNextStepGlide(stepIndex);
+    auto stepLength = mStepperDataModel->getStepLength (stepIndex);
+    DBG(stepLength);
     
-    ampAhdEnv.reset (amp, currentSampleRate, isNextStepGlide);
+    ampAhdEnv.reset (amp, currentSampleRate, isNextStepGlide, stepLength);
     ampAhdEnv.state = PlayState::play;
-    modAhdEnv.reset (amp, currentSampleRate, false);
+    modAhdEnv.reset (amp, currentSampleRate, false, stepLength);
     modAhdEnv.state = PlayState::play;
     currentStepLevel = mStepperDataModel->levelValues.values[int(currentStep->load())];
 }

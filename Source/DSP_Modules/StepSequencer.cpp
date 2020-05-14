@@ -28,7 +28,7 @@ bool StepSequencer::processToGetTrigger (double currentSampleRate)
         return false;
     }
     
-    auto stepDelta = tempo->load() / 60*8 / currentSampleRate;
+    auto stepDelta = tempo->load() / 60 * 4 / currentSampleRate;
     
     ramp = ramp + stepDelta;
  

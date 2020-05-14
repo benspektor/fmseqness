@@ -91,5 +91,5 @@ constexpr int HARD_CODED_NOTES[32] = {48,60,72,67,65,60,48,72,48,60,72,67,65,60,
 constexpr float SEQUENCER_PANEL_HEIGHT = 80;
 constexpr float ENVELOPE_WINDOW_HEIGHT = 160;
 
-constexpr float SWING_VALUE = 1.5f;
+//constexpr float SWING_VALUE = 1.5f;
 

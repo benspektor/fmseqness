@@ -23,19 +23,20 @@ public:
     ~AHDEnv();
     PlayState state = PlayState::stop;
     double process (double currentSampleRate);
-    void reset (double currentSample, double currentSampleRate, bool isNextStepGlide);
+    void reset (double currentSample, double currentSampleRate, bool isNextStepGlide, int length);
     void startDecay();
     
 private:
     AudioProcessorValueTreeState& mParameters;
     AHDEnvDataModel& mModel;
     
-    std::atomic<float>* attackTime {mParameters.getRawParameterValue("attack")};
-    std::atomic<float>* holdTime {mParameters.getRawParameterValue("hold")};
-    std::atomic<float>* decayTime {mParameters.getRawParameterValue("decay")};
+//    std::atomic<float>* attackTime {mParameters.getRawParameterValue("attack")};
+//    std::atomic<float>* holdTime {mParameters.getRawParameterValue("hold")};
+//    std::atomic<float>* decayTime {mParameters.getRawParameterValue("decay")};
     std::atomic<float>* tempo {mParameters.getRawParameterValue("tempo")};
     
     float restart = 0.0 ,attack = 0.0, hold = 0.0, decay = 0.0;
     bool retrigger = true;
+    int currentStepLength = 1;
     bool isNextStepGlide = false;
 };

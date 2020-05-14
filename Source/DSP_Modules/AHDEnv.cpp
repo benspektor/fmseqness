@@ -21,7 +21,7 @@ double AHDEnv::process(double currentSampleRate)
     if (state == PlayState::stop)
         return 0.0;
 
-    float stepLength = 60 / tempo->load() / 4;
+    float stepLength = 60 / tempo->load() / 4 * currentStepLength;
     
     auto restartDelta = FMUtilities::convertTimeToFrequency(RESTART_TIME , currentSampleRate);
     auto attackDelta  = FMUtilities::convertTimeToFrequency((mModel.attack.load() + 0.01) * stepLength , currentSampleRate);
@@ -49,15 +49,16 @@ double AHDEnv::process(double currentSampleRate)
     if (decay == 0.0)
     {
         state = PlayState::stop;
-        reset(0.0, currentSampleRate, false);
+        reset(0.0, currentSampleRate, false, 1);
     }
     
     return amp;
 }
 
-void AHDEnv::reset (double currentSample, double currentSampleRate, bool isNextStepGlide)
+void AHDEnv::reset (double currentSample, double currentSampleRate, bool isNextStepGlide, int length)
 {
     this->isNextStepGlide = isNextStepGlide;
+    currentStepLength = length;
     
     if (retrigger)
     {
