@@ -34,7 +34,8 @@ public:
 private:
     AudioProcessorValueTreeState& mParameters;
     PlayStopButton playStopButton;
-    
+    Slider portamentoSlider;
+    std::unique_ptr<SliderAttachment> portamentoAttachment;
     std::unique_ptr<ButtonAttachment> playStopAttachment;
     TempoController tempoController { mParameters };
     SwingController swingController { mParameters };

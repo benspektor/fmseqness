@@ -39,6 +39,7 @@ private:
     
     std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
     std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
+    std::atomic<float>* portamento     { mParameters.getRawParameterValue ("portamento") };
     
     double currentCarrierAngle = 0.0, carrierAngleDelta = 0.0;
     double currentModulatorAngle = 0.0, modulatorAngleDelta = 0.0, stepFMModMulti = 1.0;

@@ -46,7 +46,7 @@ constexpr float MOD_MULTI_MAX_VALUE = 8.0;
 constexpr float MOD_MULTI_SKEW_VALUE = 0.5;
 constexpr float MOD_MULTI_SET_VALUE = 0.5;
 
-constexpr int TEMPO_MIN_VALUE = 50;
+constexpr int TEMPO_MIN_VALUE = 1;
 constexpr int TEMPO_MAX_VALUE = 200;
 constexpr int TEMPO_SKEW_VALUE = 1.0;
 constexpr int TEMPO_SET_VALUE = 120;

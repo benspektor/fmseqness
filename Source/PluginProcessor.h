@@ -64,11 +64,19 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     void trigger();
+    int getNumberOfSamplesInStep();
+    float getNextStepPitch();
+    bool getNextStepGlide();
+//    float calculateCurrentPitch();
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
 
+    float portamentoPitchUnit = 0.0f;
+    float pitch = 0;
+    float targetPitch = 0;
+    int portamentoCountDown = 0;
 private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
@@ -79,11 +87,20 @@ private:
     double amp = 0.0, mod = 0.0;
     double currentSampleRate = 0.0;
     float currentStepLevel = 0.0f;
+    bool isNextStepGlide = false;
+    bool isPortamentoActive = false;
+    
+    
     std::atomic<float>* currentStep    { mParameters.getRawParameterValue ("currentStep") };
     std::atomic<float>* numberOfSteps  { mParameters.getRawParameterValue ("steps") };
     std::atomic<float>* isPlayingFloat { mParameters.getRawParameterValue ("play") };
     std::atomic<float>* basePitch      { mParameters.getRawParameterValue ("basePitch") };
-
+    std::atomic<float>* tempo          { mParameters.getRawParameterValue ("tempo") };
+    std::atomic<float>* portamento     { mParameters.getRawParameterValue ("portamento") };
+    std::atomic<float>* firstStepIndex { mParameters.getRawParameterValue ("firstStepIndex") };
+    std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue ("lastStepIndex") };
+    std::atomic<float>* swingValue     { mParameters.getRawParameterValue ("swingValue") };
+    
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)

@@ -18,6 +18,8 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     selector.reset (new AnimatedSelector (array, 3, true));
     selector->addActionListener(this);
     
+   
+    
     pitchController.reset ( new PitchController     ( mDataModel.pitchValues, mDataModel.gateStateValues));
     levelController.reset ( new BarsController      ( false, mDataModel.levelValues, mDataModel.gateStateValues) );
     modController  .reset ( new BarsController      ( true,  mDataModel.modValues, mDataModel.gateStateValues  ) );
@@ -62,6 +64,7 @@ void StepperSequencerModule::resized()
     pitchController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
     levelController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
     modController  ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    
     
     gateStateEditor->setBounds ( 0, controllerHeight + SELECTOR_HEIGHT + PADDING * 2, width, GATE_EDITOR_HEIGHT);
     

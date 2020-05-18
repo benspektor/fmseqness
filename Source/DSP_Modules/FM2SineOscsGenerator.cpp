@@ -37,7 +37,7 @@ void FM2SineOscsGenerator::setCurrentPitch (double pitch)
 {
     auto hzValue = MidiMessage::getMidiNoteInHertz (pitch);
 //    DBG(hzValue);
-    normalizedCurrentCarrierFrequency = hzValue / currentSampleRate;;
+    normalizedCurrentCarrierFrequency = hzValue / currentSampleRate;
 }
 
 float FM2SineOscsGenerator::generate(float externalModulationAmount)
@@ -51,6 +51,8 @@ float FM2SineOscsGenerator::generate(float externalModulationAmount)
     currentCarrierAngle += carrierAngleDelta + modulatorSine * modulationAmount;
     return carrierSine;
 }
+
+
 
 void FM2SineOscsGenerator::audioProcessorParameterChanged (AudioProcessor* processor,
                                      int parameterIndex,

@@ -15,7 +15,7 @@ class FMUtilities {
 public:
     static double convertTimeToFrequency (double timeInSeconds, double sampleRate)
     {
-        return 1 / timeInSeconds * 2 / sampleRate;
+        return 1 / (timeInSeconds * sampleRate);
     }
 };
 

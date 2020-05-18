@@ -24,6 +24,7 @@ public:
 
     bool processToGetTrigger (double currentSampleRate);
     int getCurrentStepIndex();
+    float getCurrentPitch();
     
 private:
     AudioProcessorValueTreeState& mParameters;

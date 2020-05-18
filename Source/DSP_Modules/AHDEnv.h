@@ -23,7 +23,7 @@ public:
     ~AHDEnv();
     PlayState state = PlayState::stop;
     double process (double currentSampleRate);
-    void reset (double currentSample, double currentSampleRate, bool isNextStepGlide, int length);
+    void reset (double currentSample, double currentSampleRate, bool isNextStepGlide, float length);
     void startDecay();
     
 private:
@@ -37,6 +37,6 @@ private:
     
     float restart = 0.0 ,attack = 0.0, hold = 0.0, decay = 0.0;
     bool retrigger = true;
-    int currentStepLength = 1;
+    float currentStepLength = 1.0f;
     bool isNextStepGlide = false;
 };

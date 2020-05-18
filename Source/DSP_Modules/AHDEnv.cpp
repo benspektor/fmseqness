@@ -16,12 +16,12 @@ AHDEnv::AHDEnv (AudioProcessorValueTreeState& parameters, AHDEnvDataModel& model
 
 AHDEnv::~AHDEnv() {}
 
-double AHDEnv::process(double currentSampleRate)
+double AHDEnv::process (double currentSampleRate)
 {
     if (state == PlayState::stop)
         return 0.0;
 
-    float stepLength = 60 / tempo->load() / 4 * currentStepLength;
+    float stepLength = ((60 / tempo->load()) / 4) * currentStepLength;
     
     auto restartDelta = FMUtilities::convertTimeToFrequency(RESTART_TIME , currentSampleRate);
     auto attackDelta  = FMUtilities::convertTimeToFrequency((mModel.attack.load() + 0.01) * stepLength , currentSampleRate);
@@ -36,7 +36,7 @@ double AHDEnv::process(double currentSampleRate)
         attack = attack < 1.0 ? attack + attackDelta : 1.0;
     
     //Hold stage:
-    if (isNextStepGlide == false && attack == 1.0 && hold > 0.0)
+    if ( attack == 1.0 && hold > 0.0)
         hold = hold > 0.0 ? hold - holdDelta : 0.0;
     
     //Decay stage:
@@ -55,7 +55,7 @@ double AHDEnv::process(double currentSampleRate)
     return amp;
 }
 
-void AHDEnv::reset (double currentSample, double currentSampleRate, bool isNextStepGlide, int length)
+void AHDEnv::reset (double currentSample, double currentSampleRate, bool isNextStepGlide, float length)
 {
     this->isNextStepGlide = isNextStepGlide;
     currentStepLength = length;

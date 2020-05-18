@@ -69,6 +69,12 @@ void FmseqnessAudioProcessorEditor::resized()
 void FmseqnessAudioProcessorEditor::timerCallback()
 {
     stepSeqModule->timerTic();
+    String message = "CountDown: ";
+    message << processor.portamentoCountDown;
+    DBG(message);
+    String message2 = "Pitch: ";
+    message2 << processor.pitch;
+    DBG(message2);
 }
 
 void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcessor* processor,
