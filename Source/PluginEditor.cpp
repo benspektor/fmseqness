@@ -75,6 +75,9 @@ void FmseqnessAudioProcessorEditor::timerCallback()
     String message2 = "Pitch: ";
     message2 << processor.pitch;
     DBG(message2);
+    String message3 = "Target Pitch: ";
+    message3 << processor.targetPitch;
+    DBG(message3);
 }
 
 void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcessor* processor,

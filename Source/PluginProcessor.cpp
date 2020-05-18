@@ -150,25 +150,6 @@ bool FmseqnessAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 
 void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
     
     auto level = 0.250f;
     auto* leftBuffer  = buffer.getWritePointer (0, buffer.getSample(0, 0));
@@ -188,33 +169,30 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         
         portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
         
-//        DBG(portamentoCountDown);
-
         if (isNextStepGlide && portamentoCountDown == 0)
         {
-            float distance = abs(pitch - targetPitch);
 
-            if (distance == 0.0f)
+            float distance = pitch - targetPitch;
+            
+            if (distance != 0.0)
             {
-//                continue;
+                if ( abs(distance) < abs(portamentoPitchUnit) || distance * portamentoPitchUnit > 0)
+                {
+                    pitch = targetPitch;
+                    sines.setCurrentPitch(pitch);
+                    sines.updateAngleDelta();
+                }
+                else
+                {
+                    pitch += portamentoPitchUnit;
+                    sines.setCurrentPitch(pitch);
+                    sines.updateAngleDelta();
+                }
             }
-            if (distance > portamentoPitchUnit)
-            {
-                pitch += portamentoPitchUnit;
-                sines.setCurrentPitch(pitch);
-                sines.updateAngleDelta();
-            }
-            else if (distance < portamentoPitchUnit)
-            {
-                pitch = targetPitch;
-                sines.setCurrentPitch(pitch);
-                sines.updateAngleDelta();
-            }
+            
+            
         }
-        
-        
-        
-        
+
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
 
@@ -276,21 +254,12 @@ void FmseqnessAudioProcessor::trigger()
     currentStep->store(stepIndex);
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
-//    String message = "Next pitch: ";
-//    message << targetPitch;
-//    DBG("------------------------------------");
-//    DBG(message);
+
     
     auto gateState = mStepperDataModel->gateStateValues.values[stepIndex];
 
     if (gateState == StepGateState::off)
-    {
-//        ampAhdEnv.reset (amp, currentSampleRate, isNextStepGlide, 0);
-//        ampAhdEnv.state = PlayState::stop;
-//        modAhdEnv.reset (amp, currentSampleRate, isNextStepGlide, 0);
-//        modAhdEnv.state = PlayState::stop;
         return;
-    }
     
     if (gateState == StepGateState::on)
     {
@@ -314,26 +283,9 @@ void FmseqnessAudioProcessor::trigger()
         sines.setStepFMModMulti(StepFMModValue);
     }
     
-   
-
-    
-//    pitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
-    
-    portamentoPitchUnit = (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep()) * 1.05f;
-    DBG(targetPitch - pitch);
-//    DBG(portamentoPitchUnit);
+    portamentoPitchUnit =  1.05 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
     portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
-//    DBG(portamentoPitchUnit);
-//    String message2 = isNextStepGlide ? "Glide" : "No Glide";
-//    DBG(message2);
     portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
-  
-    
-    
-    
-    
-        
-    
 }
 
 AHDEnvDataModel& FmseqnessAudioProcessor::getAmpAHDEnvDataModel()
