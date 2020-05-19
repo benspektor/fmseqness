@@ -18,12 +18,8 @@ SequencerPanelModule::SequencerPanelModule (AudioProcessorValueTreeState& parame
     addAndMakeVisible (playStopButton);
     addAndMakeVisible (tempoController);
     addAndMakeVisible (basePitchPicker);
+    addAndMakeVisible (portController);
     
-    addAndMakeVisible (portamentoSlider);
-    portamentoSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-    portamentoSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 50.0, 20.0);
-    
-    portamentoAttachment.reset ( new SliderAttachment (mParameters, "portamento", portamentoSlider));
     
     playStopAttachment.reset ( new ButtonAttachment (mParameters, "play", playStopButton));
 }
@@ -46,18 +42,18 @@ void SequencerPanelModule::resized()
     float height = getHeight();
     float width  = getWidth();
     
-    float playStopX            = width - height;
-    float swingControllerWidth = height * 2;
-    float tempoControllerX     = swingControllerWidth + PADDING;
-    float basePitchPickerX     = swingControllerWidth + height + PADDING * 2;
-    float portamentoSliderX    = basePitchPickerX + height + PADDING;
+    float playStopX             = width - height;
+    float swingControllerWidth  = height * 2;
+    float tempoControllerX      = swingControllerWidth + PADDING;
+    float basePitchPickerX      = swingControllerWidth + height + PADDING * 2;
+    float portamentoControllerX = basePitchPickerX + height + PADDING;
     
     playStopButton .setBounds ( playStopX, 0, height, height );
     swingController.setBounds ( 1, 1, swingControllerWidth, height - 2 );
     tempoController.setBounds ( tempoControllerX, 1, height, height - 2 );
     basePitchPicker.setBounds ( basePitchPickerX, 1, height, height - 2 );
+    portController .setBounds ( portamentoControllerX, 1, height, height - 2);
     
-    portamentoSlider.setBounds ( portamentoSliderX, 1, height, height);
 }
 
 

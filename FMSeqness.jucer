@@ -32,6 +32,8 @@
           <FILE id="pGPYP8" name="LabelButton.h" compile="0" resource="0" file="Source/GUI_Modules/SequencerPanelModule/LabelButton.h"/>
           <FILE id="KN2JCh" name="PlayStopButton.h" compile="0" resource="0"
                 file="Source/GUI_Modules/SequencerPanelModule/PlayStopButton.h"/>
+          <FILE id="XPKUd8" name="PortamentoController.h" compile="0" resource="0"
+                file="Source/GUI_Modules/SequencerPanelModule/PortamentoController.h"/>
           <FILE id="h99gPP" name="SequencerPanelModule.cpp" compile="1" resource="0"
                 file="Source/GUI_Modules/SequencerPanelModule/SequencerPanelModule.cpp"/>
           <FILE id="lqjIn8" name="SequencerPanelModule.h" compile="0" resource="0"

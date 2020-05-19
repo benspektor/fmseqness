@@ -53,7 +53,7 @@ private:
     std::vector<Rectangle<float>> labelsRectangles;
     Rectangle<float> highlightRectangle;
     String message;
-    Colour backgroundColour = Colour(323e44), labelColour = Colours::black, highlightColour = Colours::darkolivegreen, fontColour = Colours::white, borderColour = Colours::grey;
+    Colour backgroundColour = Colour(323e44), labelColour = Colours::black, highlightColour = Colour(200,171,0), fontColour = Colours::white, borderColour = Colours::grey;
     float fontSize = 22.0f;
     bool shouldDrawBorder = true;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnimatedSelector)

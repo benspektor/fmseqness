@@ -57,9 +57,10 @@ private:
     float width = 0.0f, height = 0.0f, barLength = 0.0f, leftScreenX = 0.0f, leftScreenWidth = 0.0f, rightScreenX = 0.0f, rightScreenWidth = 0.0f;
     StepperSequencerDataModel& mDataModel;
     AudioProcessorValueTreeState& mParameters;
-    std::atomic<float>* currentStep  { mParameters.getRawParameterValue("currentStep") };
+    std::atomic<float>* currentStep     { mParameters.getRawParameterValue("currentStep") };
     std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue("firstStepIndex") };
-    std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue("lastStepIndex") };
+    std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue("lastStepIndex") };
+    
     std::unique_ptr<AnimatedSelector> selector;
     std::unique_ptr<PitchController> pitchController;
     std::unique_ptr<BarsController> levelController, modController;

@@ -36,7 +36,6 @@ void StepGateStateEditor::paint (Graphics& g)
     
     g.setColour(Colours::lightblue);
     auto startRectangleX = PADDING + recWidth * firstStepIndex->load();
-//    DBG(mFirstStepIndex->load());
     auto endRectangeleX = PADDING + recWidth * lastStepIndex->load();
     g.fillRect(startRectangleX, 0.0f, recWidth, PADDING);
     g.fillRect(endRectangeleX, height - PADDING, recWidth, PADDING);
@@ -54,36 +53,64 @@ void StepGateStateEditor::resized()
 
 
 
+bool StepGateStateEditor::isClickInStartMarkerZone()
+{
+    return clickLocation.y < PADDING && clickLocation.x > PADDING && clickLocation.x < width - PADDING;
+}
 
+bool StepGateStateEditor::isClickInEndMarkerZone()
+{
+    return clickLocation.y > height - PADDING && clickLocation.x > PADDING && clickLocation.x < width - PADDING;
+}
+
+void StepGateStateEditor::moveFirstStepMarker()
+{
+    int firstStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
+    firstStepIndex->store(firstStep);
+    repaint();
+    sendActionMessage("StepGateStateEditor_StepsChanged");
+}
+
+void StepGateStateEditor::moveLastStepMarker()
+{
+    int lastStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
+    lastStepIndex->store(lastStep);
+    repaint();
+    sendActionMessage("StepGateStateEditor_StepsChanged");
+}
+
+void StepGateStateEditor::mouseDrag (const MouseEvent& e)
+{
+    clickLocation.setXY(e.getPosition().getX(), e.getPosition().getY());
+    
+    if (isClickInStartMarkerZone())
+        moveFirstStepMarker();
+    
+    else if (isClickInEndMarkerZone())
+        moveLastStepMarker();
+}
+
+void StepGateStateEditor::sendGateChangeMessage()
+{
+    int stepNumber = (clickLocation.x - PADDING) / (width - PADDING * 2) * TOTAL_NUMBER_OF_STEPS;
+    resetMessage (stepNumber);
+    toggleStepGateState (stepNumber);
+    sendActionMessage (messege);
+    repaint();
+}
 
 void StepGateStateEditor::mouseDown (const MouseEvent& e)
 {
     clickLocation.setXY(e.getMouseDownX(), e.getMouseDownY());
     
     if (isClickInsideBody(clickLocation))
-    {
-        int stepNumber = (clickLocation.x - PADDING) / (width - PADDING * 2) * TOTAL_NUMBER_OF_STEPS;
-        resetMessage (stepNumber);
-        toggleStepGateState (stepNumber);
-        sendActionMessage (messege);
-        repaint();
-    }
+        sendGateChangeMessage();
     
-    else if (clickLocation.y < PADDING && clickLocation.x > PADDING && clickLocation.x < width - PADDING)
-    {
-        int firstStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
-        firstStepIndex->store(firstStep);
-        repaint();
-        sendActionMessage("StepGateStateEditor_StepsChanged");
-    }
+    else if (isClickInStartMarkerZone())
+        moveFirstStepMarker();
     
-    else if (clickLocation.y > height - PADDING && clickLocation.x > PADDING && clickLocation.x < width - PADDING)
-    {
-        int lastStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
-        lastStepIndex->store(lastStep);
-        repaint();
-        sendActionMessage("StepGateStateEditor_StepsChanged");
-    }
+    else if (isClickInEndMarkerZone())
+        moveLastStepMarker();
 }
 
 void StepGateStateEditor::drawStepRectangles(Graphics &g)

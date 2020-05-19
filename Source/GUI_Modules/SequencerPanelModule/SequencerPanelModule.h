@@ -16,6 +16,7 @@
 #include "SwingController.h"
 #include "TempoController.h"
 #include "BasePitchPicker.h"
+#include "PortamentoController.h"
 
 
 //==============================================================================
@@ -34,11 +35,10 @@ public:
 private:
     AudioProcessorValueTreeState& mParameters;
     PlayStopButton playStopButton;
-    Slider portamentoSlider;
-    std::unique_ptr<SliderAttachment> portamentoAttachment;
     std::unique_ptr<ButtonAttachment> playStopAttachment;
-    TempoController tempoController { mParameters };
-    SwingController swingController { mParameters };
-    BasePitchPicker basePitchPicker { mParameters };
+    TempoController tempoController     { mParameters };
+    SwingController swingController     { mParameters };
+    BasePitchPicker basePitchPicker     { mParameters };
+    PortamentoController portController { mParameters };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SequencerPanelModule)
 };

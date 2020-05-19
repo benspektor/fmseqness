@@ -164,7 +164,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
             modAhdEnv.startDecay();
         }
         
-        if (seq.processToGetTrigger(currentSampleRate))
+        if (sequencer.processToGetTrigger(currentSampleRate))
             trigger();
         
         portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
@@ -250,7 +250,8 @@ AudioProcessorValueTreeState& FmseqnessAudioProcessor::getParametersTree()
 
 void FmseqnessAudioProcessor::trigger()
 {
-    const int stepIndex = seq.getCurrentStepIndex();
+    const int stepIndex = sequencer.getCurrentStepIndex();
+    DBG(stepIndex);
     currentStep->store(stepIndex);
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
@@ -269,10 +270,9 @@ void FmseqnessAudioProcessor::trigger()
 
         auto swingFactor = stepIndex % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
         float stepLength = mStepperDataModel->getStepLength (stepIndex);
+        
         if (int(stepLength) % 2 == 1)
-        {
             stepLength = stepLength -  1 + swingFactor;
-        }
         
         ampAhdEnv.reset (amp, currentSampleRate, isNextStepGlide, stepLength);
         ampAhdEnv.state = PlayState::play;
@@ -310,6 +310,9 @@ float FmseqnessAudioProcessor::getNextStepPitch()
     if (currentStep->load() == lastStepIndex->load())
         return mStepperDataModel->pitchValues.values[int(firstStepIndex->load())] + basePitch->load();
     
+    else if (currentStep->load() == MAX_NUM_OF_STEPS - 1)
+        return mStepperDataModel->pitchValues.values[0] + basePitch->load();
+
     return mStepperDataModel->pitchValues.values[int(currentStep->load()) + 1] + basePitch->load();
 }
 
@@ -318,6 +321,8 @@ bool FmseqnessAudioProcessor::getNextStepGlide()
     if (currentStep->load() == lastStepIndex->load())
         return mStepperDataModel->gateStateValues.values[int(firstStepIndex->load())];
     
+    else if (currentStep->load() == MAX_NUM_OF_STEPS - 1)
+        return mStepperDataModel->gateStateValues.values[0] + basePitch->load();
+    
     return mStepperDataModel->gateStateValues.values[int(currentStep->load()) + 1];
-
 }

@@ -81,7 +81,7 @@ private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
     AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel }, modAhdEnv { mParameters, mModAHDEnvModel };
-    StepSequencer seq { mParameters };
+    StepSequencer sequencer { mParameters };
     FM2SineOscsGenerator sines { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     double amp = 0.0, mod = 0.0;
