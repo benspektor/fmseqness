@@ -34,12 +34,11 @@ public:
 
      
     void audioProcessorChanged (AudioProcessor* processor) override;
-
+    
 private:
     
     std::unique_ptr<StepperSequencerModule> stepSeqModule;
     std::unique_ptr<FMSinesGUI> sinesGUI;
-//    std::unique_ptr<SequencerControlGUI> seqGUI;
     std::unique_ptr<AHDEnvWindow> ampAhdEnvWindow, modAhdEnvWindow;
     std::unique_ptr<SequencerPanelModule> seqPanel;
     

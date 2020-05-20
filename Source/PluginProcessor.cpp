@@ -196,7 +196,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
 
-        auto currentSample = sines.generate(mod) * amp * level * currentStepLevel;
+        auto currentSample = sines.generate(mod * mod) * amp * level * currentStepLevel;
         
         leftBuffer[sample]  = currentSample;
         rightBuffer[sample] = currentSample;
@@ -251,7 +251,6 @@ AudioProcessorValueTreeState& FmseqnessAudioProcessor::getParametersTree()
 void FmseqnessAudioProcessor::trigger()
 {
     const int stepIndex = sequencer.getCurrentStepIndex();
-    DBG(stepIndex);
     currentStep->store(stepIndex);
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
@@ -282,8 +281,13 @@ void FmseqnessAudioProcessor::trigger()
         const float StepFMModValue = mStepperDataModel->modValues.values[stepIndex];
         sines.setStepFMModMulti(StepFMModValue);
     }
+    if (pitch != mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load())
+    {
+        DBG(mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load());
+        DBG(pitch);
+    }
     
-    portamentoPitchUnit =  1.05 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
+    portamentoPitchUnit =  1.1 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
     portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
     portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
 }

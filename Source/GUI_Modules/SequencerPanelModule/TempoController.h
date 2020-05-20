@@ -23,6 +23,7 @@ public:
         addAndMakeVisible (tempoKnob);
         tempoKnob.setSliderStyle(Slider::SliderStyle::IncDecButtons);
         tempoKnob.setTextBoxStyle(Slider::TextBoxAbove, false, 50.0, 20.0);
+//        tempoKnob.setIncDecButtonsMode (Slider::IncDecButtonMode::incDecButtonsDraggable_Vertical);
         tempoAttachment.reset (new SliderAttachment (mParameters, "tempo", tempoKnob));
     }
 

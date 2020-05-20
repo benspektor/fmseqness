@@ -17,14 +17,12 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
 {
     stepSeqModule  .reset ( new StepperSequencerModule ( processor.getStepperDataModel(), processor.getParametersTree()));
     sinesGUI       .reset ( new FMSinesGUI (processor.getParametersTree()));
-//    seqGUI         .reset ( new SequencerControlGUI (processor.getParametersTree()));
     ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
     seqPanel       .reset ( new SequencerPanelModule( processor.getParametersTree() ));
     
     addAndMakeVisible (*stepSeqModule);
     addAndMakeVisible (*sinesGUI);
-//    addAndMakeVisible (*seqGUI);
     addAndMakeVisible (*ampAhdEnvWindow);
     addAndMakeVisible (*modAhdEnvWindow);
     addAndMakeVisible (*seqPanel);
@@ -34,6 +32,7 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     
     processor.addListener (this);
     processor.addListener (stepSeqModule.get());
+    
 }
 
 FmseqnessAudioProcessorEditor::~FmseqnessAudioProcessorEditor()
@@ -58,7 +57,6 @@ void FmseqnessAudioProcessorEditor::resized()
     float seqPanelY           = getHeight() - SEQUENCER_PANEL_HEIGHT - PADDING;
     
     sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
-//    seqGUI->setBounds(250, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     ampAhdEnvWindow->setBounds(560, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     modAhdEnvWindow->setBounds(870, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     stepSeqModule->setBounds ( PADDING, stepSeqModuleY, innerWidth ,stepSeqModuleHeight );
@@ -102,3 +100,4 @@ void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcess
 
  
 void FmseqnessAudioProcessorEditor::audioProcessorChanged (AudioProcessor* processor) {}
+
