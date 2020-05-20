@@ -41,6 +41,9 @@ private:
     std::unique_ptr<FMSinesGUI> sinesGUI;
     std::unique_ptr<AHDEnvWindow> ampAhdEnvWindow, modAhdEnvWindow;
     std::unique_ptr<SequencerPanelModule> seqPanel;
+    std::unique_ptr<LfoGUI> lfoGUI;
+    
+    
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

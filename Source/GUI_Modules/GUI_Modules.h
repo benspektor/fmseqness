@@ -14,3 +14,4 @@
 #include "FMSinesGUI.h"
 #include "AHDEnvWindow.h"
 #include "SequencerPanelModule/SequencerPanelModule.h"
+#include "LfoGUI.h"

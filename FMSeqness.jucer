@@ -9,6 +9,8 @@
         <FILE id="OJoDDa" name="FMUtilities.h" compile="0" resource="0" file="Source/Supporting_Files/FMUtilities.h"/>
       </GROUP>
       <GROUP id="{798E969C-B36A-2370-712D-89748EDFDAE6}" name="DSP_Modules">
+        <FILE id="Tyud86" name="LFO.cpp" compile="1" resource="0" file="Source/DSP_Modules/LFO.cpp"/>
+        <FILE id="yAP7yX" name="LFO.h" compile="0" resource="0" file="Source/DSP_Modules/LFO.h"/>
         <FILE id="ALIYgN" name="AHDEnv.cpp" compile="1" resource="0" file="Source/DSP_Modules/AHDEnv.cpp"/>
         <FILE id="kSp5de" name="AHDEnv.h" compile="0" resource="0" file="Source/DSP_Modules/AHDEnv.h"/>
         <FILE id="ydWvKN" name="StepSequencer.cpp" compile="1" resource="0"
@@ -84,6 +86,8 @@
         <FILE id="s0sV3Y" name="FMSinesGUI.cpp" compile="1" resource="0" file="Source/GUI_Modules/FMSinesGUI.cpp"/>
         <FILE id="ZogSOo" name="FMSinesGUI.h" compile="0" resource="0" file="Source/GUI_Modules/FMSinesGUI.h"/>
         <FILE id="Xny06C" name="GUI_Modules.h" compile="0" resource="0" file="Source/GUI_Modules/GUI_Modules.h"/>
+        <FILE id="j5Aj7T" name="LfoGUI.cpp" compile="1" resource="0" file="Source/GUI_Modules/LfoGUI.cpp"/>
+        <FILE id="E2cedl" name="LfoGUI.h" compile="0" resource="0" file="Source/GUI_Modules/LfoGUI.h"/>
       </GROUP>
       <FILE id="Klt9ry" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

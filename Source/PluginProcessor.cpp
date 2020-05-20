@@ -32,7 +32,10 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     std::make_unique<AudioParameterInt>   ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
     std::make_unique<AudioParameterFloat> ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
     std::make_unique<AudioParameterInt>   ("basePitch", "Base Pitch", 36, 84, 60),
-    std::make_unique<AudioParameterFloat> ("portamento", "Portamento", 0.01f, 1.0f, 0.1f)
+    std::make_unique<AudioParameterFloat> ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
+    std::make_unique<AudioParameterFloat> ("lfoFrequency", "LFO Frequency",
+                                           NormalisableRange<float>(0.1f, 10.0f, 0.001, 1.0),
+                                           2.0f)
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
@@ -116,6 +119,9 @@ void FmseqnessAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     currentSampleRate = sampleRate;
     sines.setSampleRate(sampleRate);
     sines.updateAngleDelta();
+    lfo.setSampleRate(sampleRate);
+    lfo.setFrequency(1.0);
+    lfo.updateAngleDelta();
 }
 
 void FmseqnessAudioProcessor::releaseResources()
@@ -167,36 +173,40 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         if (sequencer.processToGetTrigger(currentSampleRate))
             trigger();
         
-        portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
+//        portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
+//
+//        if (isNextStepGlide && portamentoCountDown == 0)
+//        {
+//
+//            float distance = pitch - targetPitch;
+//
+//            if (distance != 0.0)
+//            {
+//                if ( abs(distance) < abs(portamentoPitchUnit) || distance * portamentoPitchUnit > 0)
+//                {
+//                    pitch = targetPitch;
+//                    sines.setCurrentPitch(pitch);
+//                    sines.updateAngleDelta();
+//                }
+//                else
+//                {
+//                    pitch += portamentoPitchUnit;
+//                    sines.setCurrentPitch(pitch);
+//                    sines.updateAngleDelta();
+//                }
+//            }
+//
+//
+//        }
+
+        lfoAmp = lfo.generate();
         
-        if (isNextStepGlide && portamentoCountDown == 0)
-        {
-
-            float distance = pitch - targetPitch;
-            
-            if (distance != 0.0)
-            {
-                if ( abs(distance) < abs(portamentoPitchUnit) || distance * portamentoPitchUnit > 0)
-                {
-                    pitch = targetPitch;
-                    sines.setCurrentPitch(pitch);
-                    sines.updateAngleDelta();
-                }
-                else
-                {
-                    pitch += portamentoPitchUnit;
-                    sines.setCurrentPitch(pitch);
-                    sines.updateAngleDelta();
-                }
-            }
-            
-            
-        }
-
+        
+        
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
 
-        auto currentSample = sines.generate(mod * mod) * amp * level * currentStepLevel;
+        auto currentSample = sines.generate(mod * mod + lfoAmp * 0.1) * amp * level * currentStepLevel;
         
         leftBuffer[sample]  = currentSample;
         rightBuffer[sample] = currentSample;
@@ -261,11 +271,11 @@ void FmseqnessAudioProcessor::trigger()
     if (gateState == StepGateState::off)
         return;
     
+    
+    
     if (gateState == StepGateState::on)
     {
-        pitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
-        sines.setCurrentPitch(pitch);
-        sines.updateAngleDelta();
+        
 
         auto swingFactor = stepIndex % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
         float stepLength = mStepperDataModel->getStepLength (stepIndex);
@@ -281,15 +291,20 @@ void FmseqnessAudioProcessor::trigger()
         const float StepFMModValue = mStepperDataModel->modValues.values[stepIndex];
         sines.setStepFMModMulti(StepFMModValue);
     }
+    
     if (pitch != mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load())
     {
-        DBG(mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load());
-        DBG(pitch);
+//        DBG(mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load());
+//        DBG(pitch);
     }
     
-    portamentoPitchUnit =  1.1 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
-    portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
-    portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
+    pitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
+    sines.setCurrentPitch(pitch);
+    sines.updateAngleDelta();
+    
+//    portamentoPitchUnit =  1.1 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
+//    portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
+//    portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
 }
 
 AHDEnvDataModel& FmseqnessAudioProcessor::getAmpAHDEnvDataModel()

@@ -16,6 +16,7 @@
 #include "DSP_Modules/FM2SineOscsGenerator.h"
 #include "DSP_Modules/AHDEnv.h"
 #include "DSP_Modules/StepSequencer.h"
+#include "DSP_Modules/LFO.h"
 #include "Supporting_Files/Constants.h"
 
 
@@ -77,12 +78,14 @@ public:
     float pitch = 0;
     float targetPitch = 0;
     int portamentoCountDown = 0;
+    float lfoAmp = 0.0;
 private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
     AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel }, modAhdEnv { mParameters, mModAHDEnvModel };
     StepSequencer sequencer { mParameters };
     FM2SineOscsGenerator sines { mParameters };
+    LFO lfo { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     double amp = 0.0, mod = 0.0;
     double currentSampleRate = 0.0;
@@ -100,6 +103,7 @@ private:
     std::atomic<float>* firstStepIndex { mParameters.getRawParameterValue ("firstStepIndex") };
     std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue ("lastStepIndex") };
     std::atomic<float>* swingValue     { mParameters.getRawParameterValue ("swingValue") };
+    std::atomic<float>* globalFMAmount { mParameters.getRawParameterValue ("globalFMAmount") };
     
     
     //==============================================================================
