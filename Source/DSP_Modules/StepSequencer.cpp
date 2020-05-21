@@ -20,73 +20,24 @@ bool StepSequencer::processToGetTrigger ()
 {
     bool isPlaying = isPlayingFloat->load();
     bool isTrigger = false;
+    float swing = swingValue->load();
     
     if (isPlaying == false)
     {
-        ramp = 0.0;
         currentStep = -1;
         count = 0;
         return false;
     }
-    
-//    bool isNextStepSwingCandidate = currentStep % 2 == 0;
-//
-//    if (isNextStepSwingCandidate)
-//    {
-//        bool isNextStepSwingArrived = ramp >= currentStep + swingValue->load();
-//
-//        if (isNextStepSwingArrived)
-//            currentStep = ramp;
-//    }
-//    else
-//    {
-//        currentStep = ramp;
-//    }
-    
-//    currentStep = ramp;
-//
-//    if (prevStep != currentStep)
-//    {
-//        prevStep = currentStep;
-//        isTrigger = true;
-//        DBG(count);
-//        count = 0;
-//    }
-    
-    
-    
-//    ramp = ramp + stepDelta;
-    
-//    bool isNextStepSwingCandidate = currentStep % 2 == 0;
-//
-//    if (isNextStepSwingCandidate)
-//    {
-//        bool isNextStepSwingArrived = count > stepLengthInSamples * swingValue->load();
-//
-//        if (isNextStepSwingArrived)
-//        {
-//            DBG(count);
-//            currentStep++;
-//            isTrigger = true;
-//            count -= stepLengthInSamples;
-//        }
-//    }
-//    else if (count > stepLengthInSamples)
-//    {
-//        DBG(count);
-//        count -= stepLengthInSamples;
-//        currentStep++;
-//        isTrigger = true;
-//    }
+
     
     if (currentStep % 2 == 0)
     {
-        if (count >= stepLengthInSamples * swingValue->load())
+        if (count >= stepLengthInSamples * swing)
             count = 0;
     }
     else
     {
-        if (count >= stepLengthInSamples * (2.0f - swingValue->load()))
+        if (count >= stepLengthInSamples * (2.0f - swing))
             count = 0;
     }
     

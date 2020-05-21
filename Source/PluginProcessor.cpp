@@ -176,38 +176,38 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         if (sequencer.processToGetTrigger())
             trigger();
         
-//        portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
-//
-//        if (isNextStepGlide && portamentoCountDown == 0)
-//        {
-//
-//            float distance = pitch - targetPitch;
-//
-//            if (distance != 0.0)
-//            {
-//                if ( abs(distance) < abs(portamentoPitchUnit) || distance * portamentoPitchUnit > 0)
-//                {
-//                    pitch = targetPitch;
-//                    sines.setCurrentPitch(pitch);
-//                    sines.updateAngleDelta();
-//                }
-//                else
-//                {
-//                    pitch += portamentoPitchUnit;
-//                    sines.setCurrentPitch(pitch);
-//                    sines.updateAngleDelta();
-//                }
-//            }
-//
-//
-//        }
+        portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
+
+        if (isNextStepGlide && portamentoCountDown == 0)
+        {
+
+            float distance = pitch - targetPitch;
+
+            if (distance != 0.0)
+            {
+                if ( abs(distance) < abs(portamentoPitchUnit) || distance * portamentoPitchUnit > 0)
+                {
+                    pitch = targetPitch;
+                    sines.setCurrentPitch(pitch);
+                    sines.updateAngleDelta();
+                }
+                else
+                {
+                    pitch += portamentoPitchUnit;
+                    sines.setCurrentPitch(pitch);
+                    sines.updateAngleDelta();
+                }
+            }
+
+
+        }
 
         lfoAmp = lfo.generate();
         
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
 
-        auto currentSample = sines.generate(mod * mod + lfoAmp * 0.1) * amp * level * currentStepLevel;
+        auto currentSample = sines.generate(mod * mod + lfoAmp * 0.0) * amp * level * currentStepLevel;
         
         leftBuffer[sample]  = currentSample;
         rightBuffer[sample] = currentSample;
@@ -303,9 +303,9 @@ void FmseqnessAudioProcessor::trigger()
     sines.setCurrentPitch(pitch);
     sines.updateAngleDelta();
     
-//    portamentoPitchUnit =  1.1 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
-//    portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
-//    portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
+    portamentoPitchUnit = (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
+    portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
+    portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
     
     if (stepIndex == firstStepIndex->load())
         lfo.restart();
