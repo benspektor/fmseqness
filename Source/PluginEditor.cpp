@@ -20,18 +20,21 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
     seqPanel       .reset ( new SequencerPanelModule( processor.getParametersTree() ));
+    lfoGUI         .reset ( new LfoGUI ( processor.getParametersTree() ));
     
-    addAndMakeVisible (*stepSeqModule);
-    addAndMakeVisible (*sinesGUI);
-    addAndMakeVisible (*ampAhdEnvWindow);
-    addAndMakeVisible (*modAhdEnvWindow);
-    addAndMakeVisible (*seqPanel);
+    addAndMakeVisible ( *stepSeqModule );
+    addAndMakeVisible ( *sinesGUI );
+    addAndMakeVisible ( *ampAhdEnvWindow );
+    addAndMakeVisible ( *modAhdEnvWindow );
+    addAndMakeVisible ( *seqPanel );
+    addAndMakeVisible ( *lfoGUI );
     
     setResizable (true, true);
     setSize (1200, 900);
     
     processor.addListener (this);
     processor.addListener (stepSeqModule.get());
+    stepSeqModule->addActionListener(this);
     
 }
 
@@ -57,6 +60,7 @@ void FmseqnessAudioProcessorEditor::resized()
     float seqPanelY           = getHeight() - SEQUENCER_PANEL_HEIGHT - PADDING;
     
     sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
+    lfoGUI->setBounds(PADDING * 2 + 230 , PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
     ampAhdEnvWindow->setBounds(560, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     modAhdEnvWindow->setBounds(870, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     stepSeqModule->setBounds ( PADDING, stepSeqModuleY, innerWidth ,stepSeqModuleHeight );
@@ -67,6 +71,7 @@ void FmseqnessAudioProcessorEditor::resized()
 void FmseqnessAudioProcessorEditor::timerCallback()
 {
     stepSeqModule->timerTic();
+    lfoGUI->timerTic (processor.getLfoAmp());
 //    String message = "CountDown: ";
 //    message << processor.portamentoCountDown;
 //    DBG(message);
@@ -76,9 +81,15 @@ void FmseqnessAudioProcessorEditor::timerCallback()
 //    String message3 = "Target Pitch: ";
 //    message3 << processor.targetPitch;
 //    DBG(message3);
-//        String message4 = "LFO Amp: ";
-//        message4 << processor.lfoAmp;
-//        DBG(message4);
+//    String message4 = "LFO Amp: ";
+//    message4 << processor.lfoAmp;
+//    DBG(message4);
+}
+
+void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& message)
+{
+    if (message == "StepsChanged")
+        processor.updateSequncerNumberOfSteps();
 }
 
 void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcessor* processor,
@@ -97,6 +108,7 @@ void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcess
         {
             stopTimer();
             stepSeqModule->stop();
+            lfoGUI->timerTic(0.0f);
         }
     }
 }

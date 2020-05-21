@@ -103,6 +103,7 @@ void StepperSequencerModule::actionListenerCallback (const String& message)
         else if (action == "StepsChanged")
         {
             drawGreyedOut();
+            sendActionMessage(action);
         }
     }
 }
@@ -183,10 +184,6 @@ void StepperSequencerModule::play()
     isPlaying = true;
 }
 
-void StepperSequencerModule::switchStepTo (int step)
-{
-//    currentStep = step->load();
-}
 
 void StepperSequencerModule::drawGreyedOut()
 {

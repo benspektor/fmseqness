@@ -106,7 +106,7 @@ void PitchController::actionListenerCallback(const String &message)
         value = jlimit(-11.99f, 12.0f, value * PIANO_ROLL_LENGTH - OCTAVE);
         int pitch = value < 0 ? value - 1 : value;
         mPitchDataModel.values[bar] = pitch;
-        auto yPosition = -1 * (pitch - 12) * barHeight + PADDING;
+        auto yPosition = -1 * (pitch - 12) * barHeight + PADDING + 1;
         auto xPsition  = PADDING + bar * barWidth;
         bars[bar]->setBounds (xPsition, yPosition, barWidth, barHeight);
         recs[bar].setBounds  (xPsition, yPosition, barWidth, barHeight);

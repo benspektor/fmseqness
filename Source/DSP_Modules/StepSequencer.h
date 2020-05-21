@@ -16,15 +16,24 @@
 #include "../Supporting_Files/FMUtilities.h"
 #include "../Supporting_Files/Constants.h"
 
-class StepSequencer
+class StepSequencer : public AudioProcessorListener
 {
 public:
     StepSequencer(AudioProcessorValueTreeState& parameters);
     ~StepSequencer();
 
-    bool processToGetTrigger (double currentSampleRate);
+    bool processToGetTrigger();
     int getCurrentStepIndex();
     float getCurrentPitch();
+    void setSampleRate (double sampleRate);
+    void updateStepDelte();
+    void updateNumberOfSteps();
+    
+    //AudioProcessorListener
+    void audioProcessorParameterChanged (AudioProcessor* processor,
+                                         int parameterIndex,
+                                         float newValue) override;
+    void audioProcessorChanged (AudioProcessor* processor) override;
     
 private:
     AudioProcessorValueTreeState& mParameters;
@@ -36,8 +45,12 @@ private:
     std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue ("lastStepIndex") };
     std::atomic<float>* swingValue      { mParameters.getRawParameterValue ("swingValue") };
     
+    float stepDelta = 0.0f;
+    double currentSampleRate = 0.0;
     float ramp = 0.0;
     int prevStep = MAX_NUM_OF_STEPS;
     int currentNumOfSteps = 0;
-    int currentStep = 0;
+    int currentStep = -1;
+    int count = 0;
+    int stepLengthInSamples = 0;
 };

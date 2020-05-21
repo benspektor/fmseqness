@@ -27,7 +27,7 @@ enum Controller
     pitchController, levelController, modController
 };
 
-class StepperSequencerModule : public Component, public ActionListener, public AudioProcessorListener
+class StepperSequencerModule : public Component, public ActionListener, public AudioProcessorListener, public ActionBroadcaster
 {
 public:
     StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters);

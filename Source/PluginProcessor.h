@@ -68,17 +68,14 @@ public:
     int getNumberOfSamplesInStep();
     float getNextStepPitch();
     bool getNextStepGlide();
-//    float calculateCurrentPitch();
+    float getLfoAmp();
+    void updateSequncerNumberOfSteps();
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
 
-    float portamentoPitchUnit = 0.0f;
-    float pitch = 0;
-    float targetPitch = 0;
-    int portamentoCountDown = 0;
-    float lfoAmp = 0.0;
+    
 private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
@@ -92,6 +89,11 @@ private:
     float currentStepLevel = 0.0f;
     bool isNextStepGlide = false;
     bool isPortamentoActive = false;
+    float portamentoPitchUnit = 0.0f;
+    float pitch = 0;
+    float targetPitch = 0;
+    int portamentoCountDown = 0;
+    float lfoAmp = 0.0;
     
     
     std::atomic<float>* currentStep    { mParameters.getRawParameterValue ("currentStep") };

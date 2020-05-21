@@ -88,6 +88,9 @@
         <FILE id="Xny06C" name="GUI_Modules.h" compile="0" resource="0" file="Source/GUI_Modules/GUI_Modules.h"/>
         <FILE id="j5Aj7T" name="LfoGUI.cpp" compile="1" resource="0" file="Source/GUI_Modules/LfoGUI.cpp"/>
         <FILE id="E2cedl" name="LfoGUI.h" compile="0" resource="0" file="Source/GUI_Modules/LfoGUI.h"/>
+        <FILE id="SWVPDz" name="LFOMeterBar.h" compile="0" resource="0" file="Source/GUI_Modules/LFOMeterBar.h"/>
+        <FILE id="mbUcRq" name="LFOMeterWindow.h" compile="0" resource="0"
+              file="Source/GUI_Modules/LFOMeterWindow.h"/>
       </GROUP>
       <FILE id="Klt9ry" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

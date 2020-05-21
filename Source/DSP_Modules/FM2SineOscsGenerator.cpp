@@ -37,7 +37,7 @@ void FM2SineOscsGenerator::setCurrentPitch (double pitch)
 {
     auto hzValue = MidiMessage::getMidiNoteInHertz (pitch);
 //    DBG(hzValue);
-    normalizedCurrentCarrierFrequency = hzValue / currentSampleRate;
+    normalizedCurrentCarrierFrequency = hzValue * 2 / currentSampleRate;
 }
 
 float FM2SineOscsGenerator::generate(float externalModulationAmount)

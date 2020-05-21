@@ -12,10 +12,13 @@
 #include "LfoGUI.h"
 
 //==============================================================================
-LfoGUI::LfoGUI()
+LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(parameters)
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
+    addAndMakeVisible(meterWindow);
+    addAndMakeVisible(lengthSlider);
+    lengthSlider.setSliderStyle(Slider::SliderStyle::IncDecButtons);
+    lengthSlider.setTextBoxStyle(Slider::TextBoxAbove, false, 50.0, 20.0);
+    lengthAttachment.reset ( new SliderAttachment (mParameters, "LfoLength", lengthSlider ));
 
 }
 
@@ -37,15 +40,23 @@ void LfoGUI::paint (Graphics& g)
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-    g.setColour (Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("LfoGUI", getLocalBounds(),
+    g.setColour (Colours::grey);
+    g.setFont (30.0f);
+    g.drawText ("LFO", getLocalBounds(),
                 Justification::centred, true);   // draw some placeholder text
 }
 
 void LfoGUI::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
+    float meterWindowWidth = getWidth() / 5.0f;
+    float meterWindowX = getWidth() - PADDING - meterWindowWidth;
+    
+    lengthSlider.setBounds(PADDING, PADDING, 50, 50);
+    meterWindow.setBounds(meterWindowX, PADDING, meterWindowWidth, getHeight() - PADDING * 2);
+    
+}
 
+void LfoGUI::timerTic(float value)
+{
+    meterWindow.drawMeter(value);
 }

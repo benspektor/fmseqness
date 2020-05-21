@@ -17,7 +17,7 @@
 //==============================================================================
 /**
 */
-class FmseqnessAudioProcessorEditor  : public AudioProcessorEditor, private Timer, private AudioProcessorListener
+class FmseqnessAudioProcessorEditor  : public AudioProcessorEditor, private Timer, private AudioProcessorListener, ActionListener
 {
 public:
     FmseqnessAudioProcessorEditor (FmseqnessAudioProcessor&);
@@ -34,6 +34,8 @@ public:
 
      
     void audioProcessorChanged (AudioProcessor* processor) override;
+    
+    void actionListenerCallback (const String& message) override;
     
 private:
     

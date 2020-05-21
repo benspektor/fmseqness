@@ -130,7 +130,6 @@ void StepGateStateEditor::drawStepRectangles(Graphics &g)
 
 void StepGateStateEditor::drawGateStateIcons (Graphics &g)
 {
-    
     float gatedLevel = PADDING + 1;
     float glideLevel = PADDING + recHeight / 2;
     float floorLevel = PADDING + recHeight - 1;

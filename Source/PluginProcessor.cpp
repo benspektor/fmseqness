@@ -35,10 +35,13 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     std::make_unique<AudioParameterFloat> ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
     std::make_unique<AudioParameterFloat> ("lfoFrequency", "LFO Frequency",
                                            NormalisableRange<float>(0.1f, 10.0f, 0.001, 1.0),
-                                           2.0f)
+                                           2.0f),
+    std::make_unique<AudioParameterInt>   ("LfoLength", "LFO Length", 1, 16, 4)
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
+    addListener(&lfo);
+    addListener(&sequencer);
     mAmpAHDEnvModel.attack = 0.02;
     mAmpAHDEnvModel.attackCurve = 0.5;
     mAmpAHDEnvModel.hold   = 0.4;
@@ -117,10 +120,10 @@ void FmseqnessAudioProcessor::changeProgramName (int index, const String& newNam
 void FmseqnessAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     currentSampleRate = sampleRate;
+    sequencer.setSampleRate(sampleRate);
     sines.setSampleRate(sampleRate);
     sines.updateAngleDelta();
     lfo.setSampleRate(sampleRate);
-    lfo.setFrequency(1.0);
     lfo.updateAngleDelta();
 }
 
@@ -170,7 +173,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
             modAhdEnv.startDecay();
         }
         
-        if (sequencer.processToGetTrigger(currentSampleRate))
+        if (sequencer.processToGetTrigger())
             trigger();
         
 //        portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
@@ -200,8 +203,6 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 //        }
 
         lfoAmp = lfo.generate();
-        
-        
         
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
@@ -305,6 +306,9 @@ void FmseqnessAudioProcessor::trigger()
 //    portamentoPitchUnit =  1.1 * (targetPitch - pitch ) / (portamento->load() * getNumberOfSamplesInStep());
 //    portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
 //    portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
+    
+    if (stepIndex == firstStepIndex->load())
+        lfo.restart();
 }
 
 AHDEnvDataModel& FmseqnessAudioProcessor::getAmpAHDEnvDataModel()
@@ -344,4 +348,14 @@ bool FmseqnessAudioProcessor::getNextStepGlide()
         return mStepperDataModel->gateStateValues.values[0] + basePitch->load();
     
     return mStepperDataModel->gateStateValues.values[int(currentStep->load()) + 1];
+}
+
+float FmseqnessAudioProcessor::getLfoAmp()
+{
+    return lfoAmp;
+}
+
+void FmseqnessAudioProcessor::updateSequncerNumberOfSteps()
+{
+    sequencer.updateNumberOfSteps();
 }
