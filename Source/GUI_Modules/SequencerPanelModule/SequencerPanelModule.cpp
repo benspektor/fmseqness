@@ -22,6 +22,8 @@ SequencerPanelModule::SequencerPanelModule (AudioProcessorValueTreeState& parame
     
     
     playStopAttachment.reset ( new ButtonAttachment (mParameters, "play", playStopButton));
+    
+    
 }
 
 SequencerPanelModule::~SequencerPanelModule()

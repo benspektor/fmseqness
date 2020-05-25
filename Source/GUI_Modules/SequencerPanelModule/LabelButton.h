@@ -26,6 +26,12 @@ public:
     ~LabelButton()
     {
     }
+    
+    void changeName (const String& newName)
+    {
+        name = newName;
+        repaint();
+    }
 
     void paint (Graphics& g) override
     {
@@ -48,7 +54,7 @@ public:
     
     void mouseExit (const MouseEvent& event) override
     {
-        colour = Colours::white;
+        colour = Colour(200,171,0);
         repaint();
     }
     
@@ -62,7 +68,7 @@ public:
 
     void mouseUp (const MouseEvent& event) override
     {
-        colour = Colours::white;
+        colour = Colour(200,171,0);
         repaint();
     }
     
@@ -70,7 +76,7 @@ public:
 
 private:
     
-    Colour colour = Colours::white;
+    Colour colour = Colour(200,171,0);
     String name;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LabelButton)
 };

@@ -60,7 +60,7 @@ void FmseqnessAudioProcessorEditor::resized()
     float seqPanelY           = getHeight() - SEQUENCER_PANEL_HEIGHT - PADDING;
     
     sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
-    lfoGUI->setBounds(PADDING * 2 + 230 , PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
+    lfoGUI->setBounds(PADDING * 2 + 230 , PADDING, 280, ENVELOPE_WINDOW_HEIGHT);
     ampAhdEnvWindow->setBounds(560, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     modAhdEnvWindow->setBounds(870, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
     stepSeqModule->setBounds ( PADDING, stepSeqModuleY, innerWidth ,stepSeqModuleHeight );

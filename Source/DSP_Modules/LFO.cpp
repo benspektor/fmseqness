@@ -12,8 +12,9 @@
 
 LFO::LFO (AudioProcessorValueTreeState& parameters) : mParameters (parameters)
 {
-    setFrequency(frequency->load());
     updateAngleDelta();
+    
+    
 }
 LFO::~LFO() {}
 
@@ -22,13 +23,22 @@ void LFO::updateAngleDelta()
     if (currentSampleRate == 0.0)
         return;
     
-    float stepLength = tempo->load() / (60 * 8);
-    float totalLength = stepLength * length->load();
-    float frequency = 1 / totalLength;
+    bool isStepSync = stepSync->load();
+    float currentFrequency = 0.0f;
     
-    normalizedCurrentFrequency =  frequency * 2 / currentSampleRate;
+    if (isStepSync)
+    {
+        float stepLength = tempo->load() / (60 * 4);
+        float totalLength = stepLength * length->load();
+        currentFrequency = 1 / totalLength;
+    }
+    else
+    {
+        currentFrequency = frequency->load();
+    }
     
-    delta = normalizedCurrentFrequency; //* MathConstants<double>::pi;
+    normalizedCurrentFrequency =  currentFrequency * 2 / currentSampleRate;
+    delta = normalizedCurrentFrequency; 
 }
 
 
@@ -37,24 +47,44 @@ void LFO::setSampleRate (double sampleRate)
     currentSampleRate = sampleRate;
 }
 
-void LFO::setFrequency (double frequency)
-{
-//    normalizedCurrentFrequency = frequency / currentSampleRate;
-}
 
-float LFO::generate()
+void LFO::generate()
 {
-    auto sine = (float) std::sin (currentAngle);
-    currentAngle = currentAngle >= 1 ? -1 : currentAngle;
-    auto out = currentAngle;
-    currentAngle += delta;
-    return out;
+    amp = amp >= 1 ? amp - 1 : amp + delta;
 }
 
 void LFO::restart()
 {
-    currentAngle = 0.0;
+    amp = phase->load();
 }
+
+float LFO::getAmp (LFOShape shape)
+{
+    bool  isUni = polarity->load() != 0;
+    float direction = polarity->load() == 2 ? -1 : 1 ;
+    
+    switch (shape)
+    {
+        case LFOShape::saw:
+            return isUni ? amp * direction : (amp * 2) - 1 ;
+            break;
+            
+        case LFOShape::sine:
+            return isUni ? sin ( amp * MathConstants<float>::pi ) * direction : sin ( amp * 2 * MathConstants<float>::pi );
+            break;
+            
+        case LFOShape::triangle:
+            return isUni ? abs(amp * 2 - 1) * direction : abs(amp * 2 - 1) * 2 - 1;
+            break;
+            
+        case LFOShape::square:
+            return isUni ? (amp <= 0.5 ? 0 : 1) * direction : (amp <= 0.5 ? -1 : 1);
+        default:
+            break;
+    }
+}
+
+
 
 void LFO::audioProcessorParameterChanged (AudioProcessor* processor,
                                      int parameterIndex,
@@ -62,8 +92,16 @@ void LFO::audioProcessorParameterChanged (AudioProcessor* processor,
 {
     switch (parameterIndex)
     {
+        // LFO Freqeuncy
+        case 11:
+            updateAngleDelta();
+            break;
         // LFO length
         case 12:
+            updateAngleDelta();
+            break;
+        // LFO stepSync
+        case 19:
             updateAngleDelta();
             break;
         default:

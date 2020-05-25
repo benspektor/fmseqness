@@ -26,6 +26,7 @@ public:
     void setSampleRate (double sampleRate);
     void setCurrentPitch (double pitch);
     void setStepFMModMulti (double factor);
+    void modulateModulatorMulti (float mod);
     float generate(float externalModulationAmount);
     
     //AudioProcessorListener
@@ -39,10 +40,10 @@ private:
     
     std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
     std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
-//    std::atomic<float>* portamento     { mParameters.getRawParameterValue ("portamento") };
     
     double currentCarrierAngle = 0.0, carrierAngleDelta = 0.0;
     double currentModulatorAngle = 0.0, modulatorAngleDelta = 0.0, stepFMModMulti = 1.0;
     double currentSampleRate = 0.0;
     double normalizedCurrentCarrierFrequency = 0.0;
+    float modulatorMultiMod = 0.0f;
 };

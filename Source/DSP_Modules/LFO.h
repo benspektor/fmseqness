@@ -14,6 +14,8 @@
 #include "../Supporting_Files/Constants.h"
 #include "../Supporting_Files/FMUtilities.h"
 
+enum LFOShape {saw, sine, triangle, square};
+
 class LFO : public AudioProcessorListener
 {
 public:
@@ -22,9 +24,9 @@ public:
     
     void updateAngleDelta();
     void setSampleRate (double sampleRate);
-    void setFrequency (double pitch);
     void restart();
-    float generate();
+    void generate();
+    float getAmp (LFOShape shape);
     
     //AudioProcessorListener
     void audioProcessorParameterChanged (AudioProcessor* processor,
@@ -37,7 +39,10 @@ private:
     std::atomic<float>* frequency { mParameters.getRawParameterValue ("lfoFrequency") };
     std::atomic<float>* length    { mParameters.getRawParameterValue ("LfoLength") };
     std::atomic<float>* tempo     { mParameters.getRawParameterValue ("tempo") };
-    double currentAngle = 0.0, delta = 0.0;
+    std::atomic<float>* phase     { mParameters.getRawParameterValue ("lfoPhase") };
+    std::atomic<float>* polarity  { mParameters.getRawParameterValue ("lfoPolarity") };
+    std::atomic<float>* stepSync  { mParameters.getRawParameterValue ("lfoStepSync") };
+    double amp = 0.0, delta = 0.0;
     double currentSampleRate = 0.0;
     double normalizedCurrentFrequency = 0.0;
 };

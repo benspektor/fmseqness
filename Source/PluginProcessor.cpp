@@ -16,27 +16,35 @@ FmseqnessAudioProcessor::FmseqnessAudioProcessor()
 : AudioProcessor (BusesProperties().withOutput ("Output", AudioChannelSet::stereo(), true)),
 mParameters (*this, nullptr, Identifier ("FMSeqness"),
 {
-    std::make_unique<AudioParameterFloat> ("globalFMAmount", "Global FM Amount",
+    std::make_unique<AudioParameterFloat>  ("globalFMAmount", "Global FM Amount",
                                            NormalisableRange<float>(FM_AMNT_MIN_VALUE, FM_AMNT_MAX_VALUE, 0.001, FM_AMNT_SKEW_VALUE),
                                            FM_AMNT_SET_VALUE),
-    std::make_unique<AudioParameterFloat> ("modulatorMultiplier", "Modulator Multiplier",
+    std::make_unique<AudioParameterFloat>  ("modulatorMultiplier", "Modulator Multiplier",
                                            NormalisableRange<float>(MOD_MULTI_MIN_VALUE, MOD_MULTI_MAX_VALUE, 0.001, MOD_MULTI_SKEW_VALUE),
                                            MOD_MULTI_SET_VALUE),
-    std::make_unique<AudioParameterFloat> ("tempo", "Tempo",
+    std::make_unique<AudioParameterFloat>  ("tempo", "Tempo",
                                            NormalisableRange<float>(TEMPO_MIN_VALUE, TEMPO_MAX_VALUE, 1.0, TEMPO_SKEW_VALUE),
                                            TEMPO_SET_VALUE),
-    std::make_unique<AudioParameterInt>   ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
-    std::make_unique<AudioParameterBool>  ("play", "Play", false),
-    std::make_unique<AudioParameterFloat> ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
-    std::make_unique<AudioParameterInt>   ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
-    std::make_unique<AudioParameterInt>   ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
-    std::make_unique<AudioParameterFloat> ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
-    std::make_unique<AudioParameterInt>   ("basePitch", "Base Pitch", 36, 84, 60),
-    std::make_unique<AudioParameterFloat> ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
-    std::make_unique<AudioParameterFloat> ("lfoFrequency", "LFO Frequency",
-                                           NormalisableRange<float>(0.1f, 10.0f, 0.001, 1.0),
-                                           2.0f),
-    std::make_unique<AudioParameterInt>   ("LfoLength", "LFO Length", 1, 16, 4)
+    std::make_unique<AudioParameterInt>    ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
+    std::make_unique<AudioParameterBool>   ("play", "Play", false),
+    std::make_unique<AudioParameterFloat>  ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
+    std::make_unique<AudioParameterInt>    ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
+    std::make_unique<AudioParameterInt>    ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
+    std::make_unique<AudioParameterFloat>  ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
+    std::make_unique<AudioParameterInt>    ("basePitch", "Base Pitch", 36, 84, 60),
+    std::make_unique<AudioParameterFloat>  ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>  ("lfoFrequency", "LFO Frequency",
+                                           NormalisableRange<float>(0.1f, 10.0f, 0.001, 0.4),
+                                           2.0f, "Hz"),
+    std::make_unique<AudioParameterInt>    ("LfoLength", "LFO Length", 1, 32, 4, "Steps"),
+    std::make_unique<AudioParameterFloat>  ("lfo2FMAmount", "LFO to FM Amount", 0.0f, 1.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>  ("lfo2ModMulti", "LFO to modulator multiplier", 0.0f, 1.0f, 0.0f),
+    std::make_unique<AudioParameterFloat>  ("lfo2Panning", "LFO to panning", 0.0f, 1.0f, 0.0f),
+    std::make_unique<AudioParameterChoice> ("lfoShape", "LFO Shape",LFO_SHAPES, 1),
+    std::make_unique<AudioParameterFloat>  ("lfoPhase", "LFO Phase", 0.0f, 1.0f, 0.f),
+    std::make_unique<AudioParameterChoice> ("lfoPolarity", "LFO Polarity", LFO_POLARITIES, 0),
+    std::make_unique<AudioParameterBool>   ("lfoStepSync", "LFO Step Sync", false),
+    
 })
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
@@ -160,7 +168,7 @@ bool FmseqnessAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
     
-    auto level = 0.250f;
+    auto level = 0.5f;
     auto* leftBuffer  = buffer.getWritePointer (0, buffer.getSample(0, 0));
     auto* rightBuffer = buffer.getWritePointer (1, buffer.getSample(1, 0));
     
@@ -172,6 +180,8 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
             ampAhdEnv.startDecay();
             modAhdEnv.startDecay();
         }
+        
+        lfo.generate();
         
         if (sequencer.processToGetTrigger())
             trigger();
@@ -198,19 +208,26 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
                     sines.updateAngleDelta();
                 }
             }
-
-
         }
 
-        lfoAmp = lfo.generate();
+        
         
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
+        mod *= mod;
 
-        auto currentSample = sines.generate(mod * mod + lfoAmp * 0.0) * amp * level * currentStepLevel;
+        LFOShape shape = LFOShape (int(lfoShape->load()));
+        lfoAmp = lfo.getAmp(shape);
         
-        leftBuffer[sample]  = currentSample;
-        rightBuffer[sample] = currentSample;
+        sines.modulateModulatorMulti(lfoAmp * lfo2ModMulti->load());
+        
+        auto currentSample = sines.generate(mod + lfoAmp * lfo2FMAmount->load()) * amp * level * currentStepLevel;
+        
+        float panMod = (lfoAmp * lfo2Panning->load()) / 2.0f;
+
+        
+        leftBuffer[sample]  = currentSample * (0.5 + panMod);
+        rightBuffer[sample] = currentSample * (0.5 - panMod);
     }
 }
 

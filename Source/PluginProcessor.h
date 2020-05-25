@@ -106,7 +106,10 @@ private:
     std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue ("lastStepIndex") };
     std::atomic<float>* swingValue     { mParameters.getRawParameterValue ("swingValue") };
     std::atomic<float>* globalFMAmount { mParameters.getRawParameterValue ("globalFMAmount") };
-    
+    std::atomic<float>* lfo2Panning    { mParameters.getRawParameterValue ("lfo2Panning") };
+    std::atomic<float>* lfo2FMAmount   { mParameters.getRawParameterValue ("lfo2FMAmount") };
+    std::atomic<float>* lfo2ModMulti   { mParameters.getRawParameterValue ("lfo2ModMulti") };
+    std::atomic<float>* lfoShape       { mParameters.getRawParameterValue ("lfoShape") };
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)

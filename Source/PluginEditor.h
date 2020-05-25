@@ -17,6 +17,8 @@
 //==============================================================================
 /**
 */
+
+
 class FmseqnessAudioProcessorEditor  : public AudioProcessorEditor, private Timer, private AudioProcessorListener, ActionListener
 {
 public:
@@ -45,7 +47,8 @@ private:
     std::unique_ptr<SequencerPanelModule> seqPanel;
     std::unique_ptr<LfoGUI> lfoGUI;
     
-    
+    TooltipWindow tooltipWindow { this }; // instance required for ToolTips to work
+
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

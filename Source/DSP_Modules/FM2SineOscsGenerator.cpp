@@ -18,8 +18,11 @@ void FM2SineOscsGenerator::updateAngleDelta()
     if (currentSampleRate == 0.0)
         return;
     
+    float modMulti = modulatorMulti->load() * modulatorMultiMod;
+//    DBG(modMulti);
+    
     carrierAngleDelta = normalizedCurrentCarrierFrequency * MathConstants<double>::pi;
-    modulatorAngleDelta = normalizedCurrentCarrierFrequency * modulatorMulti->load() * MathConstants<double>::pi;
+    modulatorAngleDelta = normalizedCurrentCarrierFrequency * modMulti * MathConstants<double>::pi;
 }
 
 void FM2SineOscsGenerator::setStepFMModMulti (double factor)
@@ -50,6 +53,13 @@ float FM2SineOscsGenerator::generate(float externalModulationAmount)
     modulationAmount = jmax (modulationAmount, 0.0);
     currentCarrierAngle += carrierAngleDelta + modulatorSine * modulationAmount;
     return carrierSine;
+}
+
+void FM2SineOscsGenerator::modulateModulatorMulti (float mod)
+{
+    
+    modulatorMultiMod = mod >= 0 ? 1 + mod : 1 / (1 - mod * 0.5);
+    updateAngleDelta();
 }
 
 
