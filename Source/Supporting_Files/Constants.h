@@ -94,5 +94,5 @@ constexpr float ENVELOPE_WINDOW_HEIGHT = 160;
 //constexpr float SWING_VALUE = 1.5f;
 
 const StringArray LFO_SHAPES     { "Saw", "Sine", "Triangle", "Square" };
-const StringArray LFO_POLARITIES { "Bi", "Positive", "Negative" };
+const StringArray LFO_POLARITIES { "Bi-Polar", "Positive", "Negative" };
 

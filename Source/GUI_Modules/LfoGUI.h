@@ -18,7 +18,7 @@
 //==============================================================================
 /*
 */
-class LfoGUI    : public Component
+class LfoGUI    : public Component, public ActionBroadcaster
 {
 public:
     LfoGUI (AudioProcessorValueTreeState& parameters);
@@ -33,11 +33,12 @@ private:
     AudioProcessorValueTreeState& mParameters;
     LFOMeterWindow meterWindow;
     Slider lengthSlider, frequencySlider;
-    LabelButton syncButton {"Step Sync"};
+    LabelButton syncButton { "Sync" }, polarityButton { "BiPolar" };
     std::unique_ptr<SliderAttachment> lengthAttachment;
     std::unique_ptr<SliderAttachment> frequncyAttachment;
     std::vector<SafePointer<TextButton>> shapeButtons;
     std::atomic<float>* shape    { mParameters.getRawParameterValue ("lfoShape") };
     std::atomic<float>* stepSync { mParameters.getRawParameterValue ("lfoStepSync") };
+    std::atomic<float>* polarity { mParameters.getRawParameterValue ("lfoPolarity") };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LfoGUI)
 };

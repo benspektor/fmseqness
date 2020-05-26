@@ -14,7 +14,7 @@
 
 
 //==============================================================================
-BarsController::BarsController(bool isBidirectional, BarsControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel) :  mGateModel(gateModel), mDataModdel(dataModel)
+BarsController::BarsController(bool isBidirectional, BarsControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel) :  mGateModel(gateModel), mDataModel(dataModel)
 {
     this->isBidirectional = isBidirectional;
     
@@ -73,9 +73,9 @@ void BarsController::resizeControllBars()
 
 void BarsController::resizeControllBar (int stepNumber)
 {
-    auto height = barMaxHeight * abs(mDataModdel.values[stepNumber]);
+    auto height = barMaxHeight * abs(mDataModel.values[stepNumber]);
     auto y = barMaxHeight - height + PADDING;
-    y = mDataModdel.values[stepNumber] >= 0 ? y : barMaxHeight + PADDING;
+    y = mDataModel.values[stepNumber] >= 0 ? y : barMaxHeight + PADDING;
     bars[stepNumber]->setBounds ( PADDING + stepNumber * barWidth, y, barWidth, height);
 }
 
@@ -90,8 +90,21 @@ void BarsController::actionListenerCallback(const String &message)
         auto value = content.fromFirstOccurrenceOf("_", false, true).getFloatValue();
         
         value = isBidirectional ? value * 2 - 1 : value;
-        mDataModdel.values[barNumber] = value;
-        resizeControllBar (barNumber);
+        
+        if (barNumber == MAX_NUM_OF_STEPS)
+        {
+            for (int barIndex = 0; barIndex < MAX_NUM_OF_STEPS; barIndex++)
+            {
+                mDataModel.values[barIndex] = value;
+                resizeControllBar (barIndex);
+            }
+        }
+        else
+        {
+            mDataModel.values[barNumber] = value;
+            resizeControllBar (barNumber);
+        }
+        
         
         this->message = "BarsController_";
         this->message << content;

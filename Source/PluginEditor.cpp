@@ -35,6 +35,7 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     processor.addListener (this);
     processor.addListener (stepSeqModule.get());
     stepSeqModule->addActionListener(this);
+    lfoGUI->addActionListener(this);
     
 }
 
@@ -88,8 +89,12 @@ void FmseqnessAudioProcessorEditor::timerCallback()
 
 void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& message)
 {
+    
     if (message == "StepsChanged")
         processor.updateSequncerNumberOfSteps();
+    
+    else if (message == "LFO Sync Changed")
+        processor.updateLFOAngle();
 }
 
 void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcessor* processor,

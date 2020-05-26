@@ -42,9 +42,14 @@ public:
     {
         const float x = e.position.getX();
         const float y = e.position.getY();
+        int barNumber = 0;
+       
+        if (e.mods.isAltDown())
+            barNumber = TOTAL_NUMBER_OF_STEPS;
+        else
+            barNumber = jlimit(0.0f, float(TOTAL_NUMBER_OF_STEPS - 1), x / width * TOTAL_NUMBER_OF_STEPS);
         
-        const int   barNumber = jlimit(0.0f, float(TOTAL_NUMBER_OF_STEPS - 1), x / width * TOTAL_NUMBER_OF_STEPS);
-        const float value     = jlimit(0.0f, 1.0f, 1 - y / height);
+        const float value = jlimit(0.0f, 1.0f, 1 - y / height);
         
         message = "BarsMouseArea_";
         message << barNumber << "_" << value;

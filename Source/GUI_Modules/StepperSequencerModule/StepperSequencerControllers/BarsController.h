@@ -48,7 +48,7 @@ private:
     String message;
     std::vector<SafePointer<Bar>> bars;
     StepGateStateValuesModel& mGateModel;
-    BarsControllerValuesModel& mDataModdel;
+    BarsControllerValuesModel& mDataModel;
     BarsMouseArea mouseArea;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BarsController)

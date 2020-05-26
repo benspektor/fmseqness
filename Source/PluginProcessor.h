@@ -70,6 +70,7 @@ public:
     bool getNextStepGlide();
     float getLfoAmp();
     void updateSequncerNumberOfSteps();
+    void updateLFOAngle();
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();

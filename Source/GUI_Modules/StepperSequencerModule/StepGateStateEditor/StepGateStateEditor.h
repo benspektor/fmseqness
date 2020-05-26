@@ -37,6 +37,7 @@ public:
     void moveLastStepMarker();
     void moveFirstStepMarker();
     void sendGateChangeMessage();
+    void changeAllGates();
     
     void mouseDown (const MouseEvent& e) override;
     void mouseDrag (const MouseEvent& e) override;

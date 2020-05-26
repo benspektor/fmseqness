@@ -376,3 +376,8 @@ void FmseqnessAudioProcessor::updateSequncerNumberOfSteps()
 {
     sequencer.updateNumberOfSteps();
 }
+
+void FmseqnessAudioProcessor::updateLFOAngle()
+{
+    lfo.updateAngleDelta();
+}

@@ -104,13 +104,41 @@ void StepGateStateEditor::mouseDown (const MouseEvent& e)
     clickLocation.setXY(e.getMouseDownX(), e.getMouseDownY());
     
     if (isClickInsideBody(clickLocation))
-        sendGateChangeMessage();
+    {
+        if (e.mods.isAltDown())
+            changeAllGates();
+        else
+            sendGateChangeMessage();
+    }
     
     else if (isClickInStartMarkerZone())
         moveFirstStepMarker();
     
     else if (isClickInEndMarkerZone())
         moveLastStepMarker();
+}
+
+void StepGateStateEditor::changeAllGates()
+{
+    int stepNumber = (clickLocation.x - PADDING) / (width - PADDING * 2) * TOTAL_NUMBER_OF_STEPS;
+    StepGateState state = gateStatesDataModel.values[stepNumber];
+    state = state == 2 ? on : StepGateState (state + 1);
+    
+    if (state == glide)
+        gateStatesDataModel.values[0] = on;
+    else
+        gateStatesDataModel.values[0] = state;
+
+    resetMessage(0);
+    sendActionMessage(messege);
+    
+    for (int stepIndex = 1; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+    {
+        resetMessage (stepIndex);
+        gateStatesDataModel.values[stepIndex] = state;
+        sendActionMessage(messege);
+    }
+    repaint();
 }
 
 void StepGateStateEditor::drawStepRectangles(Graphics &g)

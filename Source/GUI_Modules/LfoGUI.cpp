@@ -28,11 +28,22 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     frequencySlider.setTextValueSuffix ( " Hz" );
     frequncyAttachment.reset        ( new SliderAttachment (mParameters, "lfoFrequency", frequencySlider ));
     
+    addAndMakeVisible(polarityButton);
+    polarityButton.changeName (LFO_POLARITIES[polarity->load()]);
+    
+    polarityButton.onClick = [this]
+    {
+        int oldPolarity = polarity->load();
+        int newPolarity = oldPolarity == 2.0f ? 0.0 : oldPolarity + 1;
+        polarity->store (newPolarity);
+        polarityButton.changeName (LFO_POLARITIES[polarity->load()]);
+    };
+    
     addAndMakeVisible(syncButton);
     
     if (stepSync->load())
     {
-        syncButton.changeName   ( "Sync" );
+        syncButton.changeName   ( "Step Sync" );
         lengthSlider.setVisible ( true );
     }
     else
@@ -41,7 +52,7 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         frequencySlider.setVisible ( true );
     }
     
-    syncButton.changeName (stepSync->load() ? "Sync" : "Free");
+    
     syncButton.onClick = [this]
     {
         if (stepSync->load())
@@ -54,10 +65,11 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         else
         {
             stepSync->store(1.0f);
-            syncButton.changeName("Sync");
+            syncButton.changeName("Step Sync");
             lengthSlider.setVisible(true);
             frequencySlider.setVisible(false);
         }
+        sendActionMessage ("LFO Sync Changed");
     };
     
     
@@ -112,27 +124,31 @@ void LfoGUI::paint (Graphics& g)
 
     g.setColour (Colours::grey);
     g.setFont (30.0f);
-    g.drawText ("LFO", getLocalBounds(),
-                Justification::centred, true);   // draw some placeholder text
+    g.drawText ("LFO", Rectangle<float> (PADDING, PADDING, getWidth(), getHeight()),
+                Justification::topLeft, true);   // draw some placeholder text
 }
 
 void LfoGUI::resized()
 {
-    float meterWindowWidth = getWidth() / 6.0f;
-    float meterWindowX = getWidth() - PADDING - meterWindowWidth;
-    float shapeButtonWidth = (getWidth() - PADDING * 3 - meterWindowWidth) / 4.0f;
-    float shapeButtonHeight = 30;
-    float shapeButtonY = getHeight() - PADDING - shapeButtonHeight;
-    float syncButtonX = meterWindowX - PADDING - shapeButtonWidth;
+    float meterWindowWidth     = getWidth() / 6.0f;
+    float meterWindowX         = getWidth() - PADDING - meterWindowWidth;
+    float shapeButtonWidth     = (getWidth() - PADDING * 3 - meterWindowWidth) / 4.0f;
+    float shapeButtonHeight    = 30;
+    float shapeButtonY         = getHeight() - PADDING - shapeButtonHeight;
+    float frequencySliderWidth = 80;
+    float frequencySliderX     = getWidth() - PADDING * 2 - meterWindowWidth - frequencySliderWidth;
+    float syncButtonX          = frequencySliderX;
+    float syncButtonY          = getHeight() - PADDING * 2 - shapeButtonHeight * 2;
     
-    lengthSlider   .setBounds(PADDING, PADDING, 80, 50);
-    frequencySlider.setBounds(PADDING, PADDING, 80, 80);
-    meterWindow    .setBounds(meterWindowX, PADDING, meterWindowWidth, getHeight() - PADDING * 2);
-    syncButton     .setBounds(syncButtonX, PADDING, shapeButtonWidth, shapeButtonHeight);
+    
+    lengthSlider   .setBounds (frequencySliderX + PADDING, PADDING * 2, frequencySliderWidth - PADDING * 2, 50);
+    frequencySlider.setBounds (frequencySliderX, PADDING, frequencySliderWidth, 80);
+    meterWindow    .setBounds (meterWindowX, PADDING, meterWindowWidth, getHeight() - PADDING * 2);
+    syncButton     .setBounds (syncButtonX, syncButtonY, frequencySliderWidth, shapeButtonHeight);
+    polarityButton .setBounds (PADDING, syncButtonY, frequencySliderWidth, shapeButtonHeight);
     
     for (int i = 0; i < 4; ++i)
         shapeButtons[i]->setBounds (PADDING + i * shapeButtonWidth, shapeButtonY, shapeButtonWidth, shapeButtonHeight);
-
 
 }
 

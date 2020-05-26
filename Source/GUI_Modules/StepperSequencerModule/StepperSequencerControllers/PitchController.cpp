@@ -105,11 +105,28 @@ void PitchController::actionListenerCallback(const String &message)
         
         value = jlimit(-11.99f, 12.0f, value * PIANO_ROLL_LENGTH - OCTAVE);
         int pitch = value < 0 ? value - 1 : value;
-        mPitchDataModel.values[bar] = pitch;
+        
         auto yPosition = -1 * (pitch - 12) * barHeight + PADDING + 1;
-        auto xPsition  = PADDING + bar * barWidth;
-        bars[bar]->setBounds (xPsition, yPosition, barWidth, barHeight);
-        recs[bar].setBounds  (xPsition, yPosition, barWidth, barHeight);
+        
+        
+        if (bar == MAX_NUM_OF_STEPS)
+        {
+            for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+            {
+                mPitchDataModel.values[stepIndex] = pitch;
+                auto xPsition  = PADDING + stepIndex * barWidth;
+                bars[stepIndex]->setBounds (xPsition, yPosition, barWidth, barHeight);
+                recs[stepIndex].setBounds  (xPsition, yPosition, barWidth, barHeight);
+            }
+        }
+        else
+        {
+            mPitchDataModel.values[bar] = pitch;
+            auto xPsition  = PADDING + bar * barWidth;
+            bars[bar]->setBounds (xPsition, yPosition, barWidth, barHeight);
+            recs[bar].setBounds  (xPsition, yPosition, barWidth, barHeight);
+        }
+       
         lineScreen.repaint();
         this->message = "PitchController_";
         this->message << bar << "_" << pitch;
