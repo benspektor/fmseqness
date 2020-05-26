@@ -114,6 +114,7 @@ private:
     std::atomic<float>* lfoShape       { mParameters.getRawParameterValue ("lfoShape") };
     std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
     std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
+    std::atomic<float>* lfoRestart     { mParameters.getRawParameterValue ("lfoRestart") };
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)

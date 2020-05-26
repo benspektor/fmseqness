@@ -11,8 +11,9 @@
 #pragma once
 #include <JuceHeader.h>
 
-typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
-typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
+typedef AudioProcessorValueTreeState::SliderAttachment   SliderAttachment;
+typedef AudioProcessorValueTreeState::ButtonAttachment   ButtonAttachment;
+typedef AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 
 const float PADDING = 10.0f;
 const float SELECTOR_HEIGHT = 50.0F;
@@ -89,10 +90,15 @@ constexpr int HARD_CODED_NOTES[32] = {48,60,72,67,65,60,48,72,48,60,72,67,65,60,
 
  
 constexpr float SEQUENCER_PANEL_HEIGHT = 80;
-constexpr float ENVELOPE_WINDOW_HEIGHT = 160;
+constexpr float ENVELOPE_WINDOW_HEIGHT = 180;
+constexpr float MOD_MATRIX_HEIGHT      = 60;
 
 //constexpr float SWING_VALUE = 1.5f;
 
-const StringArray LFO_SHAPES     { "Saw", "Sine", "Triangle", "Square" };
-const StringArray LFO_POLARITIES { "Bi-Polar", "Positive", "Negative" };
+const StringArray LFO_SHAPES              { "Saw", "Sine", "Triangle", "Square" };
+const StringArray LFO_POLARITIES          { "Bi-Polar", "Positive", "Negative" };
+const StringArray LFO_RESTART_OPTIONS     { "Never", "Step", "Pattern" };
+const StringArray MODULATION_SOURCES      { "Mod Env", "LFO", "Mod Seq" };
+const StringArray MODULATION_DESTINATIONS { "FM", "Pitch", "Pan", "Volume", "Mod Multi", "Portamento", "Swing" };
+
 

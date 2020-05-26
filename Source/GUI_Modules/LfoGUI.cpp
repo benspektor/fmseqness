@@ -101,6 +101,35 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         sendActionMessage ("LFO Sync Changed");
     };
     
+    addAndMakeVisible(restartButton);
+    
+    restartButton.changeName( LFO_RESTART_OPTIONS[int(lfoRestart->load())] );
+    
+    restartButton.onClick = [this]
+    {
+        int restart = lfoRestart->load();
+        
+        if (restart == 2)
+            restart = 0;
+        else
+            restart += 1;
+        
+        lfoRestart->store(restart);
+        
+        restartButton.changeName ( LFO_RESTART_OPTIONS[restart] );
+    };
+    
+    addAndMakeVisible (syncLabel);
+    addAndMakeVisible (polarityLabel);
+    addAndMakeVisible (phaseLabel);
+    addAndMakeVisible (restartLabel);
+    
+    syncLabel.setJustificationType(Justification::centred);
+    polarityLabel.setJustificationType(Justification::centred);
+    phaseLabel.setJustificationType(Justification::centred);
+    restartLabel.setJustificationType(Justification::centred);
+    
+    
     
     for (int i = 0; i < 4; ++i)
     {
@@ -153,32 +182,40 @@ void LfoGUI::paint (Graphics& g)
 
     g.setColour (Colours::grey);
     g.setFont (30.0f);
-    g.drawText ("LFO", Rectangle<float> (PADDING, PADDING, getWidth(), getHeight()),
-                Justification::topLeft, true);   // draw some placeholder text
+    g.drawText ("LFO", Rectangle<float> (PADDING, PADDING, getWidth() - PADDING * 2, getHeight()),
+                Justification::centredTop, true);   // draw some placeholder text
 }
 
 void LfoGUI::resized()
 {
-    float meterWindowWidth     = getWidth() / 6.0f;
+    float meterWindowWidth     = getWidth() / 5.0f;
     float meterWindowX         = getWidth() - PADDING - meterWindowWidth;
-    float shapeButtonWidth     = (getWidth() - PADDING * 3 - meterWindowWidth) / 4.0f;
-    float shapeButtonHeight    = 30;
-    float shapeButtonY         = getHeight() - PADDING - shapeButtonHeight;
-    float frequencySliderWidth = 80;
-    float frequencySliderX     = getWidth() - PADDING * 2 - meterWindowWidth - frequencySliderWidth;
-    float syncButtonX          = frequencySliderX;
-    float syncButtonY          = getHeight() - PADDING * 2 - shapeButtonHeight * 2;
+    float shapeButtonWidth     = getWidth() / 5.0f;;
+    float shapeButtonHeight    = (getHeight() - PADDING * 2) / 4.0f;
+    float frequencySliderWidth = getWidth() / 4.0f;
+    float frequencySliderX     = (getWidth() - frequencySliderWidth) / 2.0f;
+    float frequencySliderY     = 50;
+    float labelButtonWidth     = (getWidth() - meterWindowWidth - shapeButtonWidth - PADDING * 4) / 4.0f;
+    float labelButtonHeight    = getHeight() / 8.0f;
+    float labelButtonY         = getHeight() - PADDING - labelButtonHeight;
+    float syncButtonX          = PADDING * 2 + shapeButtonWidth;
+    float labelY               = labelButtonY - labelButtonHeight;
     
     
-    lengthSlider   .setBounds (frequencySliderX + PADDING, PADDING * 2, frequencySliderWidth - PADDING * 2, 50);
-    frequencySlider.setBounds (frequencySliderX, PADDING, frequencySliderWidth, 80);
+    lengthSlider   .setBounds (frequencySliderX + PADDING, frequencySliderY + PADDING, frequencySliderWidth - PADDING * 2, 50);
+    frequencySlider.setBounds (frequencySliderX, frequencySliderY, frequencySliderWidth, 80);
     meterWindow    .setBounds (meterWindowX, PADDING, meterWindowWidth, getHeight() - PADDING * 2);
-    syncButton     .setBounds (syncButtonX, syncButtonY, frequencySliderWidth, shapeButtonHeight);
-    polarityButton .setBounds (PADDING, syncButtonY, shapeButtonWidth, shapeButtonHeight);
-    phaseButton    .setBounds (PADDING * 2 + shapeButtonWidth, syncButtonY, shapeButtonWidth, shapeButtonHeight);
+    syncButton     .setBounds (syncButtonX, labelButtonY, labelButtonWidth, labelButtonHeight);
+    polarityButton .setBounds (syncButtonX + labelButtonWidth, labelButtonY, labelButtonWidth, labelButtonHeight);
+    phaseButton    .setBounds (syncButtonX + labelButtonWidth * 2, labelButtonY, labelButtonWidth, labelButtonHeight);
+    restartButton  .setBounds (syncButtonX + labelButtonWidth * 3, labelButtonY, labelButtonWidth, labelButtonHeight);
+    syncLabel      .setBounds (syncButtonX, labelY, labelButtonWidth, labelButtonHeight);
+    polarityLabel  .setBounds (syncButtonX + labelButtonWidth, labelY, labelButtonWidth, labelButtonHeight);
+    phaseLabel     .setBounds (syncButtonX + labelButtonWidth * 2, labelY, labelButtonWidth, labelButtonHeight);
+    restartLabel   .setBounds (syncButtonX + labelButtonWidth * 3, labelY, labelButtonWidth, labelButtonHeight);
     
     for (int i = 0; i < 4; ++i)
-        shapeButtons[i]->setBounds (PADDING + i * shapeButtonWidth, shapeButtonY, shapeButtonWidth, shapeButtonHeight);
+        shapeButtons[i]->setBounds (PADDING, PADDING + shapeButtonHeight * i, shapeButtonWidth, shapeButtonHeight);
 
 }
 

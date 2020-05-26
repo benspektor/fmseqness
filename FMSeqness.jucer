@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="PPaDId" name="FMSeqness" projectType="audioplug" jucerVersion="5.4.7">
+<JUCERPROJECT id="PPaDId" name="FMSeqness" projectType="audioplug" jucerVersion="5.4.7"
+              pluginName="FM SeqNesse">
   <MAINGROUP id="VzqHyu" name="FMSeqness">
     <GROUP id="{4B8A1AE8-F34E-2E20-DE12-E0DD399F2A48}" name="Source">
       <GROUP id="{32AB6F7F-6314-00F6-6A7C-1FB5B4E7E16E}" name="Supporting_Files">
@@ -28,6 +29,12 @@
               file="Source/DataModels/StepperSequencerDataModel.h"/>
       </GROUP>
       <GROUP id="{CD3EDA95-1AA2-AFE3-057A-27C30A7C1883}" name="GUI_Modules">
+        <GROUP id="{0DBC6E52-A3D5-474F-97F5-B1676B7D27D0}" name="ModulationMatrix">
+          <FILE id="MqCAoW" name="ModulationMatrix.h" compile="0" resource="0"
+                file="Source/GUI_Modules/ModulationMatrix/ModulationMatrix.h"/>
+          <FILE id="iq3rjt" name="ModulationModule.h" compile="0" resource="0"
+                file="Source/GUI_Modules/ModulationMatrix/ModulationModule.h"/>
+        </GROUP>
         <GROUP id="{7C62E5B2-B981-7723-6272-1C29772D5A7F}" name="SequencerPanelModule">
           <FILE id="Kfd9tO" name="BasePitchPicker.h" compile="0" resource="0"
                 file="Source/GUI_Modules/SequencerPanelModule/BasePitchPicker.h"/>

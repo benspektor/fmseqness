@@ -42,10 +42,11 @@ public:
 private:
     
     std::unique_ptr<StepperSequencerModule> stepSeqModule;
-    std::unique_ptr<FMSinesGUI> sinesGUI;
+//    std::unique_ptr<FMSinesGUI> sinesGUI;
     std::unique_ptr<AHDEnvWindow> ampAhdEnvWindow, modAhdEnvWindow;
     std::unique_ptr<SequencerPanelModule> seqPanel;
     std::unique_ptr<LfoGUI> lfoGUI;
+    std::unique_ptr<ModulationMatrix> modMatrix;
     
     TooltipWindow tooltipWindow { this }; // instance required for ToolTips to work
 

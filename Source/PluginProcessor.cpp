@@ -34,16 +34,29 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     std::make_unique<AudioParameterInt>    ("basePitch", "Base Pitch", 36, 84, 60),
     std::make_unique<AudioParameterFloat>  ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
     std::make_unique<AudioParameterFloat>  ("lfoFrequency", "LFO Frequency",
-                                           NormalisableRange<float>(0.1f, 10.0f, 0.001, 0.4),
+                                           NormalisableRange<float>(0.01f, 10.0f, 0.001, 0.4),
                                            2.0f, "Hz"),
     std::make_unique<AudioParameterInt>    ("LfoLength", "LFO Length", 1, 32, 4, "Steps"),
-    std::make_unique<AudioParameterFloat>  ("lfo2FMAmount", "LFO to FM Amount", 0.0f, 1.0f, 0.1f),
+    std::make_unique<AudioParameterFloat>  ("lfo2FMAmount", "LFO to FM Amount", 0.0f, 1.0f, 0.3f),
     std::make_unique<AudioParameterFloat>  ("lfo2ModMulti", "LFO to modulator multiplier", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterFloat>  ("lfo2Panning", "LFO to panning", 0.0f, 1.0f, 0.0f),
     std::make_unique<AudioParameterChoice> ("lfoShape", "LFO Shape",LFO_SHAPES, 1),
     std::make_unique<AudioParameterFloat>  ("lfoPhase", "LFO Phase", 0.0f, 1.0f, 0.f),
     std::make_unique<AudioParameterChoice> ("lfoPolarity", "LFO Polarity", LFO_POLARITIES, 0),
     std::make_unique<AudioParameterBool>   ("lfoStepSync", "LFO Step Sync", false),
+    std::make_unique<AudioParameterChoice> ("lfoRestart", "LFO Restart", LFO_RESTART_OPTIONS, 2),
+    std::make_unique<AudioParameterFloat>  ("mod1Amount", "Mod 1 Amount", -1.0f, 1.0f, 0.f),
+    std::make_unique<AudioParameterChoice> ("mod1Source", "Mod 1 Source", MODULATION_SOURCES, 0),
+    std::make_unique<AudioParameterChoice> ("mod1Destination", "Mod 1 Destination", MODULATION_DESTINATIONS, 0),
+    std::make_unique<AudioParameterFloat>  ("mod2Amount", "Mod 2 Amount", -1.0f, 1.0f, 0.f),
+    std::make_unique<AudioParameterChoice> ("mod2Source", "Mod 2 Source", MODULATION_SOURCES, 0),
+    std::make_unique<AudioParameterChoice> ("mod2Destination", "Mod 2 Destination", MODULATION_DESTINATIONS, 0),
+    std::make_unique<AudioParameterFloat>  ("mod3Amount", "Mod 3 Amount", -1.0f, 1.0f, 0.f),
+    std::make_unique<AudioParameterChoice> ("mod3Source", "Mod 3 Source", MODULATION_SOURCES, 0),
+    std::make_unique<AudioParameterChoice> ("mod3Destination", "Mod 4 Destination", MODULATION_DESTINATIONS, 0),
+    std::make_unique<AudioParameterFloat>  ("mod4Amount", "Mod 4 Amount", -1.0f, 1.0f, 0.f),
+    std::make_unique<AudioParameterChoice> ("mod4Source", "Mod 4 Source", MODULATION_SOURCES, 0),
+    std::make_unique<AudioParameterChoice> ("mod4Destination", "Mod 4 Destination", MODULATION_DESTINATIONS, 0),
     
 })
 {
@@ -56,6 +69,13 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     mAmpAHDEnvModel.decay  = 0.3;
     mAmpAHDEnvModel.decayCurve = 4.0;
     mAmpAHDEnvModel.level  = 1.0;
+    
+    mModAHDEnvModel.attack = 0.02;
+    mModAHDEnvModel.attackCurve = 0.5;
+    mModAHDEnvModel.hold   = 0.4;
+    mModAHDEnvModel.decay  = 0.3;
+    mModAHDEnvModel.decayCurve = 4.0;
+    mModAHDEnvModel.level  = 1.0;
 }
 
 FmseqnessAudioProcessor::~FmseqnessAudioProcessor()
@@ -217,7 +237,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         mod *= mod;
 
         LFOShape shape = LFOShape (int(lfoShape->load()));
-        lfoAmp = 0.0f;//lfo.getAmp(shape);
+        lfoAmp = lfo.getAmp(shape);
         
         sines.modulateModulatorMulti(lfoAmp * lfo2ModMulti->load());
         
@@ -284,6 +304,12 @@ void FmseqnessAudioProcessor::trigger()
     isNextStepGlide = getNextStepGlide();
 
     auto gateState = mStepperDataModel->gateStateValues.values[stepIndex];
+    
+    int lfo2Restart = lfoRestart->load();
+    
+    if (lfo2Restart == 1)
+        lfo.restart();
+    
 
     if (gateState == StepGateState::off)
         return;
@@ -318,7 +344,8 @@ void FmseqnessAudioProcessor::trigger()
     portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
     portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
     
-    if (stepIndex == firstStepIndex->load())
+    
+    if (lfo2Restart == 2 && stepIndex == firstStepIndex->load())
         lfo.restart();
 }
 
@@ -378,24 +405,28 @@ void FmseqnessAudioProcessor::updateLFOAngle()
 
 float FmseqnessAudioProcessor::getModulatorMultiFrom01 (float value)
 {
+    float returnValue = 0.0f;
+    
     if (value == 0.0f)
-        return 0.25;
+        returnValue = 0.25;
     else if (value == 1.0f/9.0f )
-        return 0.5;
+        returnValue = 0.5;
     else if (value == 2.0f/9.0f )
-        return 1;
+        returnValue = 1;
     else if (value == 3.0f/9.0f )
-        return 2;
+        returnValue = 2;
     else if (value == 4.0f/9.0f )
-        return 3;
+        returnValue = 3;
     else if (value == 5.0f/9.0f )
-        return 4;
+        returnValue = 4;
     else if (value == 6.0f/9.0f )
-        return 5;
+        returnValue = 5;
     else if (value == 7.0f/9.0f )
-        return 6;
+        returnValue = 6;
     else if (value == 8.0f/9.0f )
-        return 7;
+        returnValue = 7;
     else if (value == 9.0f/9.0f )
-        return 8;
+        returnValue = 8;
+    
+    return returnValue;
 }

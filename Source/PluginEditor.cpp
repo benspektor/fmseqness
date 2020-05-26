@@ -16,14 +16,15 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     : AudioProcessorEditor (&p), processor (p)
 {
     stepSeqModule  .reset ( new StepperSequencerModule ( processor.getStepperDataModel(), processor.getParametersTree()));
-    sinesGUI       .reset ( new FMSinesGUI (processor.getParametersTree()));
+//    sinesGUI       .reset ( new FMSinesGUI (processor.getParametersTree()));
     ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
     seqPanel       .reset ( new SequencerPanelModule( processor.getParametersTree() ));
     lfoGUI         .reset ( new LfoGUI ( processor.getParametersTree() ));
+    modMatrix      .reset ( new ModulationMatrix (processor.getParametersTree()) );
     
     addAndMakeVisible ( *stepSeqModule );
-    addAndMakeVisible ( *sinesGUI );
+    addAndMakeVisible ( *modMatrix );
     addAndMakeVisible ( *ampAhdEnvWindow );
     addAndMakeVisible ( *modAhdEnvWindow );
     addAndMakeVisible ( *seqPanel );
@@ -56,16 +57,20 @@ void FmseqnessAudioProcessorEditor::paint (Graphics& g)
 void FmseqnessAudioProcessorEditor::resized()
 {
     float innerWidth          = getWidth() - PADDING * 2;
-    float stepSeqModuleY      = PADDING * 2 + ENVELOPE_WINDOW_HEIGHT;
-    float stepSeqModuleHeight = getHeight() - PADDING * 3 - ENVELOPE_WINDOW_HEIGHT - SEQUENCER_PANEL_HEIGHT;
+    float stepSeqModuleY      = PADDING * 3 + ENVELOPE_WINDOW_HEIGHT + MOD_MATRIX_HEIGHT;
+    float stepSeqModuleHeight = getHeight() - PADDING * 4 - ENVELOPE_WINDOW_HEIGHT - SEQUENCER_PANEL_HEIGHT - MOD_MATRIX_HEIGHT;
     float seqPanelY           = getHeight() - SEQUENCER_PANEL_HEIGHT - PADDING;
+    float envWindowWidth      = (innerWidth - PADDING * 2) * (2.0 / 7.0);
+    float lfoWindowWidth      = (innerWidth - PADDING * 2) * (3.0 / 7.0);
+    float modMatrixY          = PADDING * 2 + ENVELOPE_WINDOW_HEIGHT;
+//    sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
     
-    sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
-    lfoGUI->setBounds(PADDING * 2 + 230 , PADDING, 280, ENVELOPE_WINDOW_HEIGHT);
-    ampAhdEnvWindow->setBounds(560, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
-    modAhdEnvWindow->setBounds(870, PADDING, 300, ENVELOPE_WINDOW_HEIGHT);
-    stepSeqModule->setBounds ( PADDING, stepSeqModuleY, innerWidth ,stepSeqModuleHeight );
-    seqPanel->setBounds(PADDING, seqPanelY, innerWidth, SEQUENCER_PANEL_HEIGHT);
+    ampAhdEnvWindow->setBounds (PADDING, PADDING, envWindowWidth, ENVELOPE_WINDOW_HEIGHT);
+    lfoGUI         ->setBounds (PADDING * 2 + envWindowWidth , PADDING, lfoWindowWidth, ENVELOPE_WINDOW_HEIGHT);
+    modAhdEnvWindow->setBounds (PADDING * 3 + envWindowWidth + lfoWindowWidth, PADDING, envWindowWidth, ENVELOPE_WINDOW_HEIGHT);
+    modMatrix      ->setBounds (PADDING, modMatrixY, innerWidth, MOD_MATRIX_HEIGHT);
+    stepSeqModule  ->setBounds ( PADDING, stepSeqModuleY, innerWidth ,stepSeqModuleHeight );
+    seqPanel       ->setBounds (PADDING, seqPanelY, innerWidth, SEQUENCER_PANEL_HEIGHT);
     
 }
 

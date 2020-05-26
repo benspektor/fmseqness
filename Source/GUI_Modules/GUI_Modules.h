@@ -15,3 +15,4 @@
 #include "AHDEnvWindow.h"
 #include "SequencerPanelModule/SequencerPanelModule.h"
 #include "LfoGUI.h"
+#include "ModulationMatrix/ModulationMatrix.h"
