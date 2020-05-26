@@ -63,7 +63,7 @@ private:
     
     std::unique_ptr<AnimatedSelector> selector;
     std::unique_ptr<PitchController> pitchController;
-    std::unique_ptr<BarsController> levelController, modController;
+    std::unique_ptr<BarsController> fMController, multiplyController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
     int displayedController = 0;
     bool isPlaying = false;

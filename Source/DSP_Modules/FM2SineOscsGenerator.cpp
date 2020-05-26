@@ -64,6 +64,8 @@ void FM2SineOscsGenerator::modulateModulatorMulti (float mod)
 
 
 
+
+
 void FM2SineOscsGenerator::audioProcessorParameterChanged (AudioProcessor* processor,
                                      int parameterIndex,
                                      float newValue)

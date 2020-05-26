@@ -39,7 +39,7 @@ struct StepGateStateValuesModel
 struct StepperSequencerDataModel
 {
     PitchControllerValuesModel pitchValues;
-    BarsControllerValuesModel  levelValues;
+    BarsControllerValuesModel  fmValues;
     BarsControllerValuesModel  modValues;
     StepGateStateValuesModel   gateStateValues;
     

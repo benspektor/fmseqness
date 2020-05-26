@@ -71,6 +71,7 @@ public:
     float getLfoAmp();
     void updateSequncerNumberOfSteps();
     void updateLFOAngle();
+    float getModulatorMultiFrom01 (float value);
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
@@ -87,7 +88,7 @@ private:
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     double amp = 0.0, mod = 0.0;
     double currentSampleRate = 0.0;
-    float currentStepLevel = 0.0f;
+    float currentStepFM = 0.0f;
     bool isNextStepGlide = false;
     bool isPortamentoActive = false;
     float portamentoPitchUnit = 0.0f;
@@ -111,6 +112,8 @@ private:
     std::atomic<float>* lfo2FMAmount   { mParameters.getRawParameterValue ("lfo2FMAmount") };
     std::atomic<float>* lfo2ModMulti   { mParameters.getRawParameterValue ("lfo2ModMulti") };
     std::atomic<float>* lfoShape       { mParameters.getRawParameterValue ("lfoShape") };
+    std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
+    std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)

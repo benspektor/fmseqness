@@ -14,9 +14,10 @@
 
 
 //==============================================================================
-BarsController::BarsController(bool isBidirectional, BarsControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel) :  mGateModel(gateModel), mDataModel(dataModel)
+BarsController::BarsController(bool isBidirectional, BarsControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel, int numOfDiscreteValues) :  mGateModel(gateModel), mDataModel(dataModel)
 {
     this->isBidirectional = isBidirectional;
+    this->numOfDiscreteValues = numOfDiscreteValues;
     
     addControllBars();
     
@@ -88,6 +89,26 @@ void BarsController::actionListenerCallback(const String &message)
     {
         const auto barNumber = content.upToFirstOccurrenceOf("_", false, true).getIntValue();
         auto value = content.fromFirstOccurrenceOf("_", false, true).getFloatValue();
+        
+        if (numOfDiscreteValues > 1)
+        {
+            int areas = numOfDiscreteValues * 2 - 2;
+            int currentArea = value * areas;
+            
+            if (currentArea == 0)
+            {
+                value = 0.0f;
+            }
+            else if (currentArea == areas - 1)
+            {
+                value = 1.0f;
+            }
+            else
+            {
+                currentArea = (currentArea + 1) / 2;
+                value = float(currentArea) / float (numOfDiscreteValues - 1);
+            }
+        }
         
         value = isBidirectional ? value * 2 - 1 : value;
         

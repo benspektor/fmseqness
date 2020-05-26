@@ -24,7 +24,7 @@ class BarsController    : public Component, public ActionListener, public Action
 public:
     void extracted();
     
-    BarsController(bool isBidirectional, BarsControllerValuesModel& model, StepGateStateValuesModel& gateModel);
+    BarsController(bool isBidirectional, BarsControllerValuesModel& model, StepGateStateValuesModel& gateModel, int numOfSteps = 0);
     ~BarsController();
     
     void paint (Graphics&) override;
@@ -45,6 +45,7 @@ private:
     float barWidth = 0.0f;
     float barMaxHeight = 0.0f;
     bool isBidirectional = false;
+    int numOfDiscreteValues = 0;
     String message;
     std::vector<SafePointer<Bar>> bars;
     StepGateStateValuesModel& mGateModel;

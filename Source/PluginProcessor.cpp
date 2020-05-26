@@ -217,11 +217,11 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         mod *= mod;
 
         LFOShape shape = LFOShape (int(lfoShape->load()));
-        lfoAmp = lfo.getAmp(shape);
+        lfoAmp = 0.0f;//lfo.getAmp(shape);
         
         sines.modulateModulatorMulti(lfoAmp * lfo2ModMulti->load());
         
-        auto currentSample = sines.generate(mod + lfoAmp * lfo2FMAmount->load()) * amp * level * currentStepLevel;
+        auto currentSample = sines.generate(mod + lfoAmp * lfo2FMAmount->load()) * amp * level;
         
         float panMod = (lfoAmp * lfo2Panning->load()) / 2.0f;
 
@@ -283,18 +283,13 @@ void FmseqnessAudioProcessor::trigger()
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
 
-    
     auto gateState = mStepperDataModel->gateStateValues.values[stepIndex];
 
     if (gateState == StepGateState::off)
         return;
     
-    
-    
     if (gateState == StepGateState::on)
     {
-        
-
         auto swingFactor = stepIndex % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
         float stepLength = mStepperDataModel->getStepLength (stepIndex);
         
@@ -305,15 +300,14 @@ void FmseqnessAudioProcessor::trigger()
         ampAhdEnv.state = PlayState::play;
         modAhdEnv.reset (amp, currentSampleRate, isNextStepGlide, stepLength);
         modAhdEnv.state = PlayState::play;
-        currentStepLevel = mStepperDataModel->levelValues.values[int(currentStep->load())];
+        currentStepFM = mStepperDataModel->fmValues.values[int(currentStep->load())];
+        currentStepFM = pow(currentStepFM * 2, 3);
+        fmAmount->store(currentStepFM);
+        float multiRawValue = mStepperDataModel->modValues.values[int(currentStep->load())];
+        float multiValue = getModulatorMultiFrom01(multiRawValue);
+        modulatorMulti->store(multiValue);
         const float StepFMModValue = mStepperDataModel->modValues.values[stepIndex];
         sines.setStepFMModMulti(StepFMModValue);
-    }
-    
-    if (pitch != mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load())
-    {
-//        DBG(mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load());
-//        DBG(pitch);
     }
     
     pitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
@@ -380,4 +374,28 @@ void FmseqnessAudioProcessor::updateSequncerNumberOfSteps()
 void FmseqnessAudioProcessor::updateLFOAngle()
 {
     lfo.updateAngleDelta();
+}
+
+float FmseqnessAudioProcessor::getModulatorMultiFrom01 (float value)
+{
+    if (value == 0.0f)
+        return 0.25;
+    else if (value == 1.0f/9.0f )
+        return 0.5;
+    else if (value == 2.0f/9.0f )
+        return 1;
+    else if (value == 3.0f/9.0f )
+        return 2;
+    else if (value == 4.0f/9.0f )
+        return 3;
+    else if (value == 5.0f/9.0f )
+        return 4;
+    else if (value == 6.0f/9.0f )
+        return 5;
+    else if (value == 7.0f/9.0f )
+        return 6;
+    else if (value == 8.0f/9.0f )
+        return 7;
+    else if (value == 9.0f/9.0f )
+        return 8;
 }

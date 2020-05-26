@@ -39,6 +39,35 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         polarityButton.changeName (LFO_POLARITIES[polarity->load()]);
     };
     
+    addAndMakeVisible(phaseButton);
+    
+    phaseButton.onClick = [this]
+    {
+        float currentPhase = phase->load();
+        
+        if (currentPhase == 0.0f)
+        {
+            phase->store(0.25f);
+            phaseButton.changeName("90 deg");
+        }
+        else if (currentPhase == 0.25f)
+        {
+            phase->store(0.5f);
+            phaseButton.changeName("180 deg");
+        }
+        else if (currentPhase == 0.5f)
+        {
+            phase->store(0.75f);
+            phaseButton.changeName("270 deg");
+        }
+        else if (currentPhase == 0.75f)
+        {
+            phase->store(0.0f);
+            phaseButton.changeName("0 deg");
+        }
+    };
+    
+    
     addAndMakeVisible(syncButton);
     
     if (stepSync->load())
@@ -145,7 +174,8 @@ void LfoGUI::resized()
     frequencySlider.setBounds (frequencySliderX, PADDING, frequencySliderWidth, 80);
     meterWindow    .setBounds (meterWindowX, PADDING, meterWindowWidth, getHeight() - PADDING * 2);
     syncButton     .setBounds (syncButtonX, syncButtonY, frequencySliderWidth, shapeButtonHeight);
-    polarityButton .setBounds (PADDING, syncButtonY, frequencySliderWidth, shapeButtonHeight);
+    polarityButton .setBounds (PADDING, syncButtonY, shapeButtonWidth, shapeButtonHeight);
+    phaseButton    .setBounds (PADDING * 2 + shapeButtonWidth, syncButtonY, shapeButtonWidth, shapeButtonHeight);
     
     for (int i = 0; i < 4; ++i)
         shapeButtons[i]->setBounds (PADDING + i * shapeButtonWidth, shapeButtonY, shapeButtonWidth, shapeButtonHeight);

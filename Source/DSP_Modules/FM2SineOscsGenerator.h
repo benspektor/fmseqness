@@ -21,7 +21,7 @@ public:
     FM2SineOscsGenerator (AudioProcessorValueTreeState& parameters);
     ~FM2SineOscsGenerator();
     void updateAngleDelta();
-    void setFMAmountValue (double amount);
+//    void setFMAmountValue (double amount);
     void setModulatorMultiFactor (double factor);
     void setSampleRate (double sampleRate);
     void setCurrentPitch (double pitch);

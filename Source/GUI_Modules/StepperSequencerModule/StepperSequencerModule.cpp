@@ -14,15 +14,15 @@
 //==============================================================================
 StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters) : mDataModel(dataModel), mParameters(parameters)
 {
-    String array[] = {"Pitch","Level","Mod Amnt"};
+    String array[] = {"Pitch","FM","Modulator Multi"};
     selector.reset (new AnimatedSelector (array, 3, true));
     selector->addActionListener(this);
     
    
     
     pitchController.reset ( new PitchController     ( mDataModel.pitchValues, mDataModel.gateStateValues));
-    levelController.reset ( new BarsController      ( false, mDataModel.levelValues, mDataModel.gateStateValues) );
-    modController  .reset ( new BarsController      ( true,  mDataModel.modValues, mDataModel.gateStateValues  ) );
+    fMController.reset ( new BarsController      ( false, mDataModel.fmValues, mDataModel.gateStateValues) );
+    multiplyController  .reset ( new BarsController      ( false,  mDataModel.modValues, mDataModel.gateStateValues, 10  ) );
     gateStateEditor.reset ( new StepGateStateEditor ( mParameters, mDataModel.gateStateValues) );
     
     gateStateEditor->addActionListener(this);
@@ -30,9 +30,9 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     addAndMakeVisible (*selector);
     addAndMakeVisible (*gateStateEditor);
 
-    addChildComponent (*modController);
+    addChildComponent (*multiplyController);
     addChildComponent (*pitchController);
-    addChildComponent (*levelController);
+    addChildComponent (*fMController);
     
     addAndMakeVisible (leftGreyedOut);
     addAndMakeVisible (rightGreyedOut);
@@ -62,8 +62,8 @@ void StepperSequencerModule::resized()
     selector->setBounds(0, 0, width, SELECTOR_HEIGHT);
     
     pitchController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
-    levelController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
-    modController  ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    fMController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    multiplyController  ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
     
     
     gateStateEditor->setBounds ( 0, controllerHeight + SELECTOR_HEIGHT + PADDING * 2, width, GATE_EDITOR_HEIGHT);
@@ -90,14 +90,14 @@ void StepperSequencerModule::actionListenerCallback (const String& message)
             const auto first = data.upToFirstOccurrenceOf("_", false, true);
             const auto second = data.fromFirstOccurrenceOf("_", false, true);
             pitchController->gateStateChanged (first.getIntValue());
-            levelController->gateStateChanged (first.getIntValue());
-            modController  ->gateStateChanged (first.getIntValue());
+            fMController->gateStateChanged (first.getIntValue());
+            multiplyController  ->gateStateChanged (first.getIntValue());
             
             if (second != "")
             {
                 pitchController->gateStateChanged (second.getIntValue());
-                levelController->gateStateChanged (second.getIntValue());
-                modController  ->gateStateChanged (second.getIntValue());
+                fMController->gateStateChanged (second.getIntValue());
+                multiplyController  ->gateStateChanged (second.getIntValue());
             }
         }
         else if (action == "StepsChanged")
@@ -116,26 +116,26 @@ void StepperSequencerModule::switchViewTo (Controller controllerToDisplay)
     {
         case Controller::pitchController:
             pitchController->setVisible(true);
-            levelController->setVisible(false);
-            modController  ->setVisible(false);
-            levelController->turnOfSteps();
-            modController  ->turnOfSteps();
+            fMController->setVisible(false);
+            multiplyController  ->setVisible(false);
+            fMController->turnOfSteps();
+            multiplyController  ->turnOfSteps();
             break;
             
         case Controller::levelController:
-            levelController->setVisible(true);
+            fMController->setVisible(true);
             pitchController->setVisible(false);
-            modController  ->setVisible(false);
+            multiplyController  ->setVisible(false);
             pitchController->turnOfSteps();
-            modController  ->turnOfSteps();
+            multiplyController  ->turnOfSteps();
             break;
             
         case Controller::modController:
-            modController  ->setVisible(true);
+            multiplyController  ->setVisible(true);
             pitchController->setVisible(false);
-            levelController->setVisible(false);
+            fMController->setVisible(false);
             pitchController->turnOfSteps();
-            levelController->turnOfSteps();
+            fMController->turnOfSteps();
             break;
     }
 }
@@ -151,10 +151,10 @@ void StepperSequencerModule::timerTic()
                 pitchController->timerCallback(currentStep->load());
                 break;
             case Controller::levelController:
-                levelController->timerCallback(currentStep->load());
+                fMController->timerCallback(currentStep->load());
                 break;
             case Controller::modController:
-                modController->timerCallback(currentStep->load());
+                multiplyController->timerCallback(currentStep->load());
                 break;
         }
     }
@@ -170,10 +170,10 @@ void StepperSequencerModule::stop()
             return pitchController->turnOfSteps();
             break;
         case Controller::levelController:
-            return levelController->turnOfSteps();
+            return fMController->turnOfSteps();
             break;
         case Controller::modController:
-            return modController->turnOfSteps();
+            return multiplyController->turnOfSteps();
             break;
     }
     
