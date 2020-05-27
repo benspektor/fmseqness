@@ -27,6 +27,27 @@
 class FmseqnessAudioProcessor  : public AudioProcessor
 {
 public:
+    struct ModMatrixProcessResults
+    {
+        float fm;
+        float pitch;
+        float pan;
+        float volume;
+        float modMulti;
+        float portamento;
+        float swing;
+        
+        void resetAll()
+        {
+            fm         = 0.0f;
+            pitch      = 0.0f;
+            pan        = 0.0f;
+            volume     = 0.0f;
+            modMulti   = 0.0f;
+            portamento = 0.0f;
+            swing      = 0.0f;
+        }
+    };
     //==============================================================================
     FmseqnessAudioProcessor();
     ~FmseqnessAudioProcessor();
@@ -72,12 +93,13 @@ public:
     void updateSequncerNumberOfSteps();
     void updateLFOAngle();
     float getModulatorMultiFrom01 (float value);
+    void processModMatrix(float env, float lfo, float modSeq);
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
 
-    
+    ModMatrixProcessResults modMatrix;
 private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
@@ -86,11 +108,12 @@ private:
     FM2SineOscsGenerator sines { mParameters };
     LFO lfo { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
-    double amp = 0.0, mod = 0.0;
+    
+    float amp = 0.0, mod = 0.0, modSeqCurrentValue = 0.0;
     double currentSampleRate = 0.0;
     float currentStepFM = 0.0f;
     bool isNextStepGlide = false;
-    bool isPortamentoActive = false;
+//    bool isPortamentoActive = false;
     float portamentoPitchUnit = 0.0f;
     float pitch = 0;
     float targetPitch = 0;

@@ -14,25 +14,17 @@ enum StepGateState { on, glide, off };
 
 struct BarsControllerValuesModel
 {
-    float values[32] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+    float values[32] = {0.0f};
 };
 
 struct PitchControllerValuesModel
 {
-    int values[32] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int values[32] = {0};
 };
 
 struct StepGateStateValuesModel
 {
-    StepGateState values[32] = {StepGateState::on, StepGateState::glide, StepGateState::glide, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::off, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::glide, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::off, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::glide, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::off, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::glide, StepGateState::on,
-                                StepGateState::on, StepGateState::glide, StepGateState::off, StepGateState::on
-    };
+    StepGateState values[32] = { StepGateState::on };
 };
 
 
@@ -40,7 +32,8 @@ struct StepperSequencerDataModel
 {
     PitchControllerValuesModel pitchValues;
     BarsControllerValuesModel  fmValues;
-    BarsControllerValuesModel  modValues;
+    BarsControllerValuesModel  modMultiValues;
+    BarsControllerValuesModel  seqModValues;
     StepGateStateValuesModel   gateStateValues;
     
     int getStepLength (int stepIndex)

@@ -135,11 +135,11 @@ void BarsController::actionListenerCallback(const String &message)
 
 void BarsController::lightUpStep (int stepIndex)
 {
-    turnOfSteps();
+    turnOffSteps();
     bars[stepIndex]->lightUp();
 }
 
-void BarsController::turnOfSteps()
+void BarsController::turnOffSteps()
 {
     for (Bar *bar : bars)
         bar->turnOff();
@@ -147,7 +147,7 @@ void BarsController::turnOfSteps()
 
 void BarsController::timerCallback ( int currentStep )
 {
-    turnOfSteps();
+    turnOffSteps();
 
     for (int i = 0; i < 32; ++i)
     {

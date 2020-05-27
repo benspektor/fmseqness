@@ -210,7 +210,6 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 
         if (isNextStepGlide && portamentoCountDown == 0)
         {
-
             float distance = pitch - targetPitch;
 
             if (distance != 0.0)
@@ -234,16 +233,25 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         
         amp = ampAhdEnv.process(currentSampleRate);
         mod = modAhdEnv.process(currentSampleRate);
-        mod *= mod;
-
+ 
         LFOShape shape = LFOShape (int(lfoShape->load()));
         lfoAmp = lfo.getAmp(shape);
         
-        sines.modulateModulatorMulti(lfoAmp * lfo2ModMulti->load());
+        processModMatrix(mod, lfoAmp, modSeqCurrentValue);
         
-        auto currentSample = sines.generate(mod + lfoAmp * lfo2FMAmount->load()) * amp * level;
+//        sines.modulateModulatorMulti(modMatrix.modMulti);
         
-        float panMod = (lfoAmp * lfo2Panning->load()) / 2.0f;
+//        auto currentSample = sines.generate(modMatrix.fm) * amp * level;
+        int step       = sequencer.getCurrentStepIndex();
+        float pitch    = mStepperDataModel->pitchValues   .values[step] + modMatrix.pitch * 36.0f + basePitch->load();
+        float fmAmount = mStepperDataModel->fmValues      .values[step] * 8.0f + modMatrix.fm;
+        float modMulti = mStepperDataModel->modMultiValues.values[step];
+        modMulti = getModulatorMultiFrom01(modMulti) + modMatrix.modMulti * 2.0f;
+        
+        auto currentSample = sines.generate(pitch, fmAmount, modMulti) * amp * level;
+//        DBG(currentSample);
+        
+        float panMod = modMatrix.pan / 2.0f;
 
         
         leftBuffer[sample]  = currentSample * (0.5 + panMod);
@@ -302,6 +310,7 @@ void FmseqnessAudioProcessor::trigger()
     currentStep->store(stepIndex);
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
+    modSeqCurrentValue = mStepperDataModel->seqModValues.values[stepIndex];
 
     auto gateState = mStepperDataModel->gateStateValues.values[stepIndex];
     
@@ -329,10 +338,10 @@ void FmseqnessAudioProcessor::trigger()
         currentStepFM = mStepperDataModel->fmValues.values[int(currentStep->load())];
         currentStepFM = pow(currentStepFM * 2, 3);
         fmAmount->store(currentStepFM);
-        float multiRawValue = mStepperDataModel->modValues.values[int(currentStep->load())];
+        float multiRawValue = mStepperDataModel->modMultiValues.values[int(currentStep->load())];
         float multiValue = getModulatorMultiFrom01(multiRawValue);
         modulatorMulti->store(multiValue);
-        const float StepFMModValue = mStepperDataModel->modValues.values[stepIndex];
+        const float StepFMModValue = mStepperDataModel->modMultiValues.values[stepIndex];
         sines.setStepFMModMulti(StepFMModValue);
     }
     
@@ -429,4 +438,34 @@ float FmseqnessAudioProcessor::getModulatorMultiFrom01 (float value)
         returnValue = 8;
     
     return returnValue;
+}
+
+void FmseqnessAudioProcessor::processModMatrix(float env, float lfo, float modSeq)
+{
+    float sources[3] {env, lfo, modSeq};
+    float results[7] {0.0f};
+    modMatrix.resetAll();
+    
+    for (int mod = 1; mod <= 4; mod++)
+    {
+        String code { "mod" };
+        code << mod << "Source";
+        std::atomic<float>* source { mParameters.getRawParameterValue (code) };
+        code = "mod";
+        code << mod << "Amount";
+        std::atomic<float>* amount { mParameters.getRawParameterValue (code) };
+        code = "mod";
+        code << mod << "Destination";
+        std::atomic<float>* destination { mParameters.getRawParameterValue (code) };
+        
+        results[int(destination->load())] += sources[int(source->load())] * amount->load();
+    }
+    
+    modMatrix.fm         = results[0];
+    modMatrix.pitch      = results[1];
+    modMatrix.pan        = results[2];
+    modMatrix.volume     = results[3];
+    modMatrix.modMulti   = results[4];
+    modMatrix.portamento = results[5];
+    modMatrix.swing      = results[6];
 }

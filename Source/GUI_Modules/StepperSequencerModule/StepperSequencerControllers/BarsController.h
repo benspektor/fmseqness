@@ -37,7 +37,7 @@ public:
     void timerCallback (int currentStep);
     void addControllBars();
     void lightUpStep (int stepIndex);
-    void turnOfSteps();
+    void turnOffSteps();
     void gateStateChanged (int step);
 
 private:

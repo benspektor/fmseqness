@@ -24,7 +24,7 @@
 
 enum Controller
 {
-    pitchController, levelController, modController
+    pitchController, fmController, modulatorMultiController, seqModController
 };
 
 class StepperSequencerModule : public Component, public ActionListener, public AudioProcessorListener, public ActionBroadcaster
@@ -63,7 +63,7 @@ private:
     
     std::unique_ptr<AnimatedSelector> selector;
     std::unique_ptr<PitchController> pitchController;
-    std::unique_ptr<BarsController> fMController, multiplyController;
+    std::unique_ptr<BarsController> fMController, multiplyController, seqModController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
     int displayedController = 0;
     bool isPlaying = false;

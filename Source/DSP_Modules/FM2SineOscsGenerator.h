@@ -21,13 +21,13 @@ public:
     FM2SineOscsGenerator (AudioProcessorValueTreeState& parameters);
     ~FM2SineOscsGenerator();
     void updateAngleDelta();
-//    void setFMAmountValue (double amount);
     void setModulatorMultiFactor (double factor);
     void setSampleRate (double sampleRate);
     void setCurrentPitch (double pitch);
     void setStepFMModMulti (double factor);
     void modulateModulatorMulti (float mod);
     float generate(float externalModulationAmount);
+    float generate(float pitch, float fmAmount, float modMulti);
     
     //AudioProcessorListener
     void audioProcessorParameterChanged (AudioProcessor* processor,
