@@ -105,18 +105,21 @@ private:
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
     AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel }, modAhdEnv { mParameters, mModAHDEnvModel };
     StepSequencer sequencer { mParameters };
-    FM2SineOscsGenerator sines { mParameters };
+    FM2SineOscsGenerator sines;
     LFO lfo { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     
-    float amp = 0.0, mod = 0.0, modSeqCurrentValue = 0.0;
+    float ampEnv = 0.0, modEnv = 0.0, modSeqCurrentValue = 0.0;
     double currentSampleRate = 0.0;
-    float currentStepFM = 0.0f;
+   
     bool isNextStepGlide = false;
 //    bool isPortamentoActive = false;
     float portamentoPitchUnit = 0.0f;
-    float pitch = 0;
+    float currentStepPitch = 0;
+    float currentStepFM = 0.0f;
+    float currentStepModMulti = 0.0f;
     float targetPitch = 0;
+    float poratmentoAccumulator = 0.0f;
     int portamentoCountDown = 0;
     float lfoAmp = 0.0;
     

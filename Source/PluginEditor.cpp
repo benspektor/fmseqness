@@ -87,9 +87,9 @@ void FmseqnessAudioProcessorEditor::timerCallback()
 //    String message3 = "Target Pitch: ";
 //    message3 << processor.targetPitch;
 //    DBG(message3);
-    String message4 = "FM mod: ";
-    message4 << processor.modMatrix.fm;
-    DBG(message4);
+//    String message4 = "FM mod: ";
+//    message4 << processor.modMatrix.fm;
+//    DBG(message4);
 }
 
 void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& message)
