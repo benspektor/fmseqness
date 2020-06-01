@@ -20,30 +20,11 @@ class FM2SineOscsGenerator
 public:
     FM2SineOscsGenerator();
     ~FM2SineOscsGenerator();
-//    void updateAngleDelta();
-//    void setModulatorMultiFactor (double factor);
     void setSampleRate (double sampleRate);
-//    void setCurrentPitch (double pitch);
-//    void setStepFMModMulti (double factor);
-//    void modulateModulatorMulti (float mod);
-//    float generate(float externalModulationAmount);
     float generate(float pitch, float fmAmount, float modMulti);
-    
-//    //AudioProcessorListener
-//    void audioProcessorParameterChanged (AudioProcessor* processor,
-//                                         int parameterIndex,
-//                                         float newValue) override;
-//    void audioProcessorChanged (AudioProcessor* processor) override;
-    
+
 private:
-//    AudioProcessorValueTreeState& mParameters;
-//    
-//    std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
-//    std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
-    
-    float currentCarrierAngle = 0.0;
-    float currentModulatorAngle = 0.0;
+    float currentCarrierRamp = 0.0;
+    float currentModulatorRamp = 0.0;
     double currentSampleRate = 0.0;
-//    double normalizedCurrentCarrierFrequency = 0.0;
-//    float modulatorMultiMod = 0.0f;
 };

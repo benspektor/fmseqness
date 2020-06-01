@@ -82,14 +82,17 @@ void FmseqnessAudioProcessorEditor::timerCallback()
 //    message << processor.portamentoCountDown;
 //    DBG(message);
 //    String message2 = "Pitch: ";
-//    message2 << processor.pitch;
+//    message2 << processor.calculatedPitch;
 //    DBG(message2);
-//    String message3 = "Target Pitch: ";
-//    message3 << processor.targetPitch;
+//    String message3 = "Env:       ";
+//    message3 << processor.modEnv;
 //    DBG(message3);
-//    String message4 = "FM mod: ";
-//    message4 << processor.modMatrix.fm;
+//    String message4 = "Pitch mod: ";
+//    message4 << processor.modMatrix.pitch;
 //    DBG(message4);
+//    String message5 = "FM mod: ";
+//    message5 << processor.modMatrix.fm;
+//    DBG(message5);
 }
 
 void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& message)

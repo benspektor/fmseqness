@@ -100,6 +100,8 @@ public:
     AHDEnvDataModel& getModAHDEnvDataModel();
 
     ModMatrixProcessResults modMatrix;
+    float ampEnv = 0.0, modEnv = 0.0, modSeqCurrentValue = 0.0;
+     float calculatedPitch = 0.0f;
 private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
@@ -109,7 +111,7 @@ private:
     LFO lfo { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     
-    float ampEnv = 0.0, modEnv = 0.0, modSeqCurrentValue = 0.0;
+    
     double currentSampleRate = 0.0;
    
     bool isNextStepGlide = false;
@@ -122,6 +124,7 @@ private:
     float poratmentoAccumulator = 0.0f;
     int portamentoCountDown = 0;
     float lfoAmp = 0.0;
+   
     
     
     std::atomic<float>* currentStep    { mParameters.getRawParameterValue ("currentStep") };

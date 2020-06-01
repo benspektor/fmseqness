@@ -13,8 +13,6 @@
 LFO::LFO (AudioProcessorValueTreeState& parameters) : mParameters (parameters)
 {
     updateAngleDelta();
-    
-    
 }
 LFO::~LFO() {}
 

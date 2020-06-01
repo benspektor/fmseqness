@@ -239,26 +239,13 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         
         processModMatrix(modEnv, lfoAmp, modSeqCurrentValue);
         
-//        sines.modulateModulatorMulti(modMatrix.modMulti);
-        
-//        auto currentSample = sines.generate(modMatrix.fm) * amp * level;
-       
-//        float pitch    = mStepperDataModel->pitchValues   .values[step] + modMatrix.pitch * 36.0f + basePitch->load();
-//        float fmAmount = mStepperDataModel->fmValues      .values[step] * 8.0f + modMatrix.fm;
-//        float modMulti = mStepperDataModel->modMultiValues.values[step];
-//        modMulti = getModulatorMultiFrom01(modMulti) + modMatrix.modMulti * 2.0f;
-        
-        float calculatedPitch    = currentStepPitch + poratmentoAccumulator + modMatrix.pitch * 36.0f;
+        calculatedPitch    = currentStepPitch + modMatrix.pitch * 36.0f;
         float calculatedFM       = currentStepFM + pow(modMatrix.fm * 2, 3);
         float calculatedModMulti = currentStepModMulti + modMatrix.modMulti * 2.0f;
         float calculatedVolume   = level * ampEnv * (modMatrix.volume + 1);
-        float calculatedPanMod = modMatrix.pan / 2.0f;
+        float calculatedPanMod   = modMatrix.pan / 2.0f;
         
         auto currentSample = sines.generate(calculatedPitch, calculatedFM, calculatedModMulti) * calculatedVolume;
-//        DBG(currentSample);
-        
-        
-
         
         leftBuffer[sample]  = currentSample * (0.5 + calculatedPanMod);
         rightBuffer[sample] = currentSample * (0.5 - calculatedPanMod);
@@ -314,11 +301,11 @@ void FmseqnessAudioProcessor::trigger()
 {
     const int stepIndex = sequencer.getCurrentStepIndex();
     currentStep->store(stepIndex);
+    currentStepPitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
     poratmentoAccumulator = 0.0f;
     
-
     auto gateState = mStepperDataModel->gateStateValues.values[stepIndex];
     
     int lfo2Restart = lfoRestart->load();
@@ -326,7 +313,6 @@ void FmseqnessAudioProcessor::trigger()
     if (lfo2Restart == 1)
         lfo.restart();
     
-
     if (gateState == StepGateState::off)
         return;
     
@@ -342,21 +328,15 @@ void FmseqnessAudioProcessor::trigger()
         ampAhdEnv.state = PlayState::play;
         modAhdEnv.reset (ampEnv, currentSampleRate, isNextStepGlide, stepLength);
         modAhdEnv.state = PlayState::play;
-        currentStepFM = mStepperDataModel->fmValues.values[int(currentStep->load())];
+        currentStepFM = mStepperDataModel->fmValues.values[stepIndex];
         currentStepFM = pow(currentStepFM * 2, 3);
-//        fmAmount->store(currentStepFM);
-        currentStepModMulti = mStepperDataModel->modMultiValues.values[int(currentStep->load())];
+        currentStepModMulti = mStepperDataModel->modMultiValues.values[stepIndex];
         currentStepModMulti = getModulatorMultiFrom01(currentStepModMulti);
         modSeqCurrentValue  = mStepperDataModel->seqModValues.values[stepIndex];
-//        modulatorMulti->store(multiValue);
-//        const float StepFMModValue = mStepperDataModel->modMultiValues.values[stepIndex];
-//        sines.setStepFMModMulti(StepFMModValue);
+
     }
     
-    currentStepPitch = mStepperDataModel->pitchValues.values[stepIndex] + basePitch->load();
-//    sines.setCurrentPitch(pitch);
-//    sines.updateAngleDelta();
-    
+
     portamentoPitchUnit = (targetPitch - currentStepPitch ) / (portamento->load() * getNumberOfSamplesInStep());
     portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
     portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
@@ -452,7 +432,7 @@ void FmseqnessAudioProcessor::processModMatrix(float env, float lfo, float modSe
 {
     float sources[3] {env, lfo, modSeq};
     float results[7] {0.0f};
-    modMatrix.resetAll();
+//    modMatrix.resetAll();
     
     for (int mod = 1; mod <= 4; mod++)
     {

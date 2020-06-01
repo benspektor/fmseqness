@@ -13,102 +13,40 @@
 FM2SineOscsGenerator::FM2SineOscsGenerator () {}
 FM2SineOscsGenerator::~FM2SineOscsGenerator() {}
 
-//void FM2SineOscsGenerator::updateAngleDelta()
-//{
-//    if (currentSampleRate == 0.0)
-//        return;
-//
-//    float modMulti = modulatorMulti->load() * modulatorMultiMod;
-//
-//    carrierAngleDelta = normalizedCurrentCarrierFrequency * MathConstants<double>::pi;
-//    modulatorAngleDelta = normalizedCurrentCarrierFrequency * modMulti * MathConstants<double>::pi;
-//}
-
-//void FM2SineOscsGenerator::setStepFMModMulti (double factor)
-//{
-//    stepFMModMulti = factor;
-//    updateAngleDelta();
-//}
-
 void FM2SineOscsGenerator::setSampleRate (double sampleRate)
 {
     currentSampleRate = sampleRate;
 }
-
-//void FM2SineOscsGenerator::setCurrentPitch (double pitch)
-//{
-//    auto hzValue = MidiMessage::getMidiNoteInHertz (pitch);
-//    normalizedCurrentCarrierFrequency = hzValue * 2 / currentSampleRate;
-//}
-
-//float FM2SineOscsGenerator::generate(float externalModulationAmount)
-//{
-//    if (currentSampleRate == 0.0)
-//        return 0.0f;
-//
-//
-//    auto modulatorSine = (float) std::sin (currentModulatorAngle);
-//    auto carrierSine = (float) std::sin (currentCarrierAngle);
-//    currentModulatorAngle += modulatorAngleDelta;
-//    const float mod = isnan(externalModulationAmount) ? 0 : externalModulationAmount;
-//    auto modulationAmount = fmAmount->load() + stepFMModMulti * mod;
-//    modulationAmount = jmax (modulationAmount, 0.0);
-//    currentCarrierAngle += carrierAngleDelta + modulatorSine * modulationAmount;
-//    return carrierSine;
-//}
 
 float FM2SineOscsGenerator::generate(float pitch, float fmAmount, float modMulti)
 {
     if (currentSampleRate == 0.0)
         return 0.0f;
     
-    auto hzValue = MidiMessage::getMidiNoteInHertz (pitch);
+    auto hzValue = 440.0f * std::pow (2.0, (pitch - 69) / 12.0);
     auto normalizedCurrentCarrierFrequency = hzValue * 2 / currentSampleRate;
     
-    auto carrierAngleDelta   = normalizedCurrentCarrierFrequency * MathConstants<double>::pi;
-    auto modulatorAngleDelta = normalizedCurrentCarrierFrequency * modMulti * MathConstants<double>::pi;
+    auto carrierAngleDelta   = normalizedCurrentCarrierFrequency; // * MathConstants<float>::pi;
+    auto modulatorAngleDelta = normalizedCurrentCarrierFrequency * modMulti; // * MathConstants<float>::pi;
     
-    auto modulatorSine = (float) std::sin (currentModulatorAngle);
-    auto carrierSine =   (float) std::sin (currentCarrierAngle);
     
-    currentModulatorAngle += modulatorAngleDelta;
     
-    float modulationAmount = isnan(fmAmount) ? 0 : fmAmount;
     
-    modulationAmount = jmax (modulationAmount, 0.0f);
+    currentModulatorRamp += modulatorAngleDelta;
     
-    currentCarrierAngle += carrierAngleDelta + modulatorSine * modulationAmount;
+    if (currentModulatorRamp >= 1)
+        currentModulatorRamp -= 1;
     
+    auto modulatorSine = std::sin (currentModulatorRamp * 2 * MathConstants<float>::pi);
+        
+    fmAmount = jmax (fmAmount, 0.0f);
+    
+    currentCarrierRamp += carrierAngleDelta + modulatorSine * fmAmount;
+    
+    if (currentCarrierRamp >= 1)
+        currentCarrierRamp -= 1;
+    
+    auto carrierSine =   std::sin (currentCarrierRamp * 2 * MathConstants<float>::pi);
     return carrierSine;
 }
-
-//void FM2SineOscsGenerator::modulateModulatorMulti (float mod)
-//{
-//    modulatorMultiMod = mod >= 0 ? 1 + mod : 1 / (1 - mod * 0.5);
-//    updateAngleDelta();
-//}
-
-
-
-
-
-//void FM2SineOscsGenerator::audioProcessorParameterChanged (AudioProcessor* processor,
-//                                     int parameterIndex,
-//                                     float newValue)
-//{
-//    switch (parameterIndex)
-//    {
-//        // gloabl FM amount
-//        case 0:
-//            break;
-//        // modulator frequency multiplier
-//        case 1:
-//            updateAngleDelta();
-//            break;
-//        default:
-//            break;
-//    }
-//}
-//
-//void FM2SineOscsGenerator::audioProcessorChanged (AudioProcessor* processor) {}
 
