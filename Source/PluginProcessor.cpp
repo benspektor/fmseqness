@@ -208,29 +208,8 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
 
         if (isNextStepGlide && portamentoCountDown == 0)
-        {
-//            poratmentoAccumulator += portamentoPitchUnit;
-//            float distance = currentStepPitch - targetPitch;
-//
-//            if (distance != 0.0)
-//            {
-//                if ( abs(distance) < abs(portamentoPitchUnit) || distance * portamentoPitchUnit > 0)
-//                {
-////                    currentStepPitch = targetPitch;
-////                    sines.setCurrentPitch(pitch);
-////                    sines.updateAngleDelta();
-//                }
-//                else
-//                {
-////                    currentStepPitch += portamentoPitchUnit;
-////                    sines.setCurrentPitch(pitch);
-////                    sines.updateAngleDelta();
-//                }
-//            }
-        }
+            poratmentoAccumulator += portamentoPitchUnit;
 
-        
-        
         ampEnv = ampAhdEnv.process(currentSampleRate);
         modEnv = modAhdEnv.process(currentSampleRate);
  
@@ -239,7 +218,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         
         processModMatrix(modEnv, lfoAmp, modSeqCurrentValue);
         
-        calculatedPitch    = currentStepPitch + modMatrix.pitch * 36.0f;
+        float calculatedPitch    = currentStepPitch + poratmentoAccumulator + modMatrix.pitch * 36.0f;
         float calculatedFM       = currentStepFM + pow(modMatrix.fm * 2, 3);
         float calculatedModMulti = currentStepModMulti + modMatrix.modMulti * 2.0f;
         float calculatedVolume   = level * ampEnv * (modMatrix.volume + 1);
