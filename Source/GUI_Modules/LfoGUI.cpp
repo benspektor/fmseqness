@@ -16,20 +16,45 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
 {
     addAndMakeVisible(meterWindow);
     
-    addChildComponent            (lengthSlider);
-    lengthSlider.setSliderStyle  (Slider::SliderStyle::IncDecButtons);
-    lengthSlider.setTextBoxStyle (Slider::TextBoxAbove, false, 60.0, 20.0);
-    lengthSlider.setTextValueSuffix (" Steps");
-    lengthAttachment.reset       ( new SliderAttachment (mParameters, "LfoLength", lengthSlider ));
+    addChildComponent               ( lengthSlider );
+    lengthSlider.setSliderStyle     ( Slider::SliderStyle::IncDecButtons );
+    lengthSlider.setTextBoxStyle    ( Slider::TextBoxAbove, false, 60.0, 20.0 );
+    lengthSlider.setTextValueSuffix ( " Steps" );
+    lengthAttachment.reset          ( new SliderAttachment ( mParameters, "LfoLength", lengthSlider ));
     
-    addChildComponent               (frequencySlider);
-    frequencySlider.setSliderStyle  (Slider::SliderStyle::RotaryVerticalDrag);
-    frequencySlider.setTextBoxStyle (Slider::TextBoxAbove, false, 60.0, 20.0);
-    frequencySlider.setTextValueSuffix ( " Hz" );
-    frequncyAttachment.reset        ( new SliderAttachment (mParameters, "lfoFrequency", frequencySlider ));
+    addChildComponent                  ( frequencySlider );
+    frequencySlider.setSliderStyle     ( Slider::SliderStyle::RotaryVerticalDrag );
+    frequencySlider.setTextBoxStyle    ( Slider::TextBoxAbove, false, 60.0, 20.0 );
+    frequencySlider.setTextValueSuffix (  " Hz" );
+    frequncyAttachment.reset           (  new SliderAttachment (mParameters, "lfoFrequency", frequencySlider ));
     
-    addAndMakeVisible(polarityButton);
-    polarityButton.changeName (LFO_POLARITIES[polarity.getValue()]);
+    addAndMakeVisible ( polarityButton );
+    addAndMakeVisible ( phaseButton );
+    addAndMakeVisible ( syncButton );
+    addAndMakeVisible ( restartButton );
+    
+    for (int i = 0; i < 4; ++i)
+    {
+        auto label = LFO_SHAPES[i];
+        
+        SafePointer<TextButton> shapeButton = new TextButton (label);
+        
+        addAndMakeVisible (shapeButton);
+        
+        shapeButton->setClickingTogglesState (true);
+        shapeButton->setRadioGroupId (34567);
+        shapeButton->setColour (TextButton::textColourOffId,  Colours::white);
+        shapeButton->setColour (TextButton::textColourOnId,   Colours::black);
+        shapeButton->setColour (TextButton::buttonColourId,   Colours::black);
+        shapeButton->setColour (TextButton::buttonOnColourId, Colour(200,171,0));
+        shapeButton->setConnectedEdges(Button::ConnectedOnLeft | Button::ConnectedOnRight);
+        
+        shapeButton->onClick = [this, i] { shape = i; };
+        
+        shapeButtons.push_back(shapeButton);
+    }
+    
+    loadButtonsState();
     
     polarityButton.onClick = [this]
     {
@@ -38,9 +63,6 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         polarity = newPolarity;
         polarityButton.changeName (LFO_POLARITIES[polarity.getValue()]);
     };
-    polarity.addListener(&polarityButton);
-    
-    addAndMakeVisible(phaseButton);
     
     phaseButton.onClick = [this]
     {
@@ -68,21 +90,6 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         }
     };
     
-    
-    addAndMakeVisible(syncButton);
-    
-    if (stepSync.getValue())
-    {
-        syncButton.changeName   ( "Step Sync" );
-        lengthSlider.setVisible ( true );
-    }
-    else
-    {
-        syncButton.changeName      ( "Free" );
-        frequencySlider.setVisible ( true );
-    }
-    
-    
     syncButton.onClick = [this]
     {
         if (stepSync.getValue())
@@ -102,9 +109,6 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         sendActionMessage ("LFO Sync Changed");
     };
     
-    addAndMakeVisible(restartButton);
-    
-    restartButton.changeName( LFO_RESTART_OPTIONS[int(lfoRestart.getValue())] );
     
     restartButton.onClick = [this]
     {
@@ -125,39 +129,14 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     addAndMakeVisible (phaseLabel);
     addAndMakeVisible (restartLabel);
     
-    syncLabel.setJustificationType(Justification::centred);
-    polarityLabel.setJustificationType(Justification::centred);
-    phaseLabel.setJustificationType(Justification::centred);
-    restartLabel.setJustificationType(Justification::centred);
+    syncLabel    .setJustificationType (Justification::centred);
+    polarityLabel.setJustificationType (Justification::centred);
+    phaseLabel   .setJustificationType (Justification::centred);
+    restartLabel .setJustificationType (Justification::centred);
     
     
     
-    for (int i = 0; i < 4; ++i)
-    {
-        auto label = LFO_SHAPES[i];
-        
-        SafePointer<TextButton> tb = new TextButton (label);
-        
-        addAndMakeVisible (tb);
-        
-        tb->setClickingTogglesState (true);
-        tb->setRadioGroupId (34567);
-        tb->setColour (TextButton::textColourOffId,  Colours::white);
-        tb->setColour (TextButton::textColourOnId,   Colours::black);
-        tb->setColour (TextButton::buttonColourId,   Colours::black);
-        tb->setColour (TextButton::buttonOnColourId, Colour(200,171,0));
-        tb->setConnectedEdges(Button::ConnectedOnLeft | Button::ConnectedOnRight);
-        
-        tb->onClick = [this, i]
-        {
-            shape = i;
-        };
-        
-        shapeButtons.push_back(tb);
-
-        if (i == (int)shape.getValue())
-            tb->setToggleState (true, dontSendNotification);
-    }
+    
 
 }
 
@@ -167,13 +146,6 @@ LfoGUI::~LfoGUI()
 
 void LfoGUI::paint (Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
-
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 
     g.setColour (Colours::grey);
@@ -221,4 +193,48 @@ void LfoGUI::resized()
 void LfoGUI::timerTic(float value)
 {
     meterWindow.drawMeter(value);
+}
+
+void LfoGUI::loadButtonsState()
+{
+    shape      = mParameters.getParameterAsValue ("lfoShape");
+    stepSync   = mParameters.getParameterAsValue ("lfoStepSync");
+    phase      = mParameters.getParameterAsValue ("lfoPhase");
+    lfoRestart = mParameters.getParameterAsValue ("lfoRestart");
+    polarity   = mParameters.getParameterAsValue ("lfoPolarity");
+    
+    polarityButton.changeName ( LFO_POLARITIES[polarity.getValue()] );
+    restartButton .changeName ( LFO_RESTART_OPTIONS[int(lfoRestart.getValue())] );
+    
+    float currentPhase = phase.getValue();
+    
+    if (currentPhase == 0.0f)
+        phaseButton.changeName("0 deg");
+    else if (currentPhase == 0.25f)
+        phaseButton.changeName("90 deg");
+    else if (currentPhase == 0.5f)
+        phaseButton.changeName("180 deg");
+    else if (currentPhase == 0.75f)
+        phaseButton.changeName("270 deg");
+    
+    if (stepSync.getValue())
+    {
+        syncButton.changeName      ( "Step Sync" );
+        lengthSlider.setVisible    ( true );
+        frequencySlider.setVisible ( false );
+    }
+    else
+    {
+        syncButton.changeName      ( "Free" );
+        frequencySlider.setVisible ( true );
+        lengthSlider.setVisible    ( false );
+    }
+    
+    for (int i = 0; i < 4; ++i)
+    {
+        if (i == (int)shape.getValue())
+            shapeButtons[i]->setToggleState (true, dontSendNotification);
+        else
+            shapeButtons[i]->setToggleState (false, dontSendNotification);
+    }
 }

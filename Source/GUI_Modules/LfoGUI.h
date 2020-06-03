@@ -28,6 +28,7 @@ public:
     void resized() override;
     
     void timerTic(float value);
+    void loadButtonsState();
     
 
 private:

@@ -16,7 +16,6 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     : AudioProcessorEditor (&p), processor (p)
 {
     stepSeqModule  .reset ( new StepperSequencerModule ( processor.getStepperDataModel(), processor.getParametersTree()));
-//    sinesGUI       .reset ( new FMSinesGUI (processor.getParametersTree()));
     ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
     seqPanel       .reset ( new SequencerPanelModule( processor.getParametersTree() ));
@@ -37,6 +36,7 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     processor.addListener (stepSeqModule.get());
     stepSeqModule->addActionListener(this);
     lfoGUI->addActionListener(this);
+    processor.addActionListener(this);
     
 }
 
@@ -103,6 +103,12 @@ void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& messag
     
     else if (message == "LFO Sync Changed")
         processor.updateLFOAngle();
+    
+    else if (message == "Preset Loaded")
+    {
+        lfoGUI->loadButtonsState();
+        DBG(message);
+    }
 }
 
 void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcessor* processor,

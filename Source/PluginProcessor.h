@@ -24,7 +24,7 @@
 //==============================================================================
 /**
 */
-class FmseqnessAudioProcessor  : public AudioProcessor
+class FmseqnessAudioProcessor  : public AudioProcessor, public ActionBroadcaster
 {
 public:
     struct ModMatrixProcessResults

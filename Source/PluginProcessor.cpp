@@ -325,6 +325,8 @@ void FmseqnessAudioProcessor::setStateInformation (const void* data, int sizeInB
     if (xmlState.get() != nullptr && xmlState->hasTagName (mParameters.state.getType()))
         mParameters.replaceState (ValueTree::fromXml (*xmlState));
     
+    sendActionMessage ( "Preset Loaded" );
+    
     for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
     {
         String parameterName {"step"};
