@@ -45,7 +45,8 @@ void AHDEnvWindow::paint (Graphics& g)
     for (int i  = 10; i >= 0; --i)
     {
         float y = i/10.0 ;
-        float x = pow(y,mModel.attackCurve);
+        float curve = FMUtilities::convert0to1toCurveValue(mModel.attackCurve->load());
+        float x = pow(y, curve);
         y = y * attackHeightDisplayValue + attackRect.getCentreY() - lineWidth / 2;
         x = (1 - x) * attackLengthDisplayValue - lineWidth / 2 + startX;
         attackPath.lineTo(x, y);
@@ -67,7 +68,8 @@ void AHDEnvWindow::paint (Graphics& g)
     for (int i  = 0; i <= 10; ++i)
     {
         float y = i/10.0 ;
-        float x = pow(y,mModel.decayCurve);
+        float curve = FMUtilities::convert0to1toCurveValue(mModel.decayCurve->load());
+        float x = pow(y,curve);
         y = y * decayHeightDisplayValue + attackRect.getCentreY() - lineWidth / 2;
         x = x * decayLengthDisplayValue - lineWidth / 2 + holdRect.getCentreX();
         decayPath.lineTo(x, y);
@@ -99,17 +101,17 @@ void AHDEnvWindow::resized()
     const float envWidth  = getWidth() - totalPadding * 2;
     const float startX    = totalPadding;
     const float startY    = getHeight() - totalPadding;
-    const float attackX   = totalPadding + mModel.attack * envWidth;
-    const float attackY   = getHeight() - totalPadding - envHeight * mModel.level;
-    const float holdX     = attackX + envWidth * mModel.hold;
+    const float attackX   = totalPadding + mModel.attack->load() * envWidth;
+    const float attackY   = getHeight() - totalPadding - envHeight * mModel.level->load();
+    const float holdX     = attackX + envWidth * mModel.hold->load();
     const float holdY     = padding;
-    const float decayX    = holdX + envWidth * mModel.hold;
+    const float decayX    = holdX + envWidth * mModel.decay->load();
     const float decayY    = startY;
     
     const float attackCurveX = padding;
-    const float attackCurveY = getHeight() / 2;
+    const float attackCurveY = totalPadding + envHeight * mModel.attackCurve->load();
     const float decacyCurveX = getWidth() - padding;
-    const float decayCurveY  = getHeight() / 2;
+    const float decayCurveY  = totalPadding + envHeight * mModel.decayCurve->load();
     
     startRect       .setCentre (startX, startY);
     attackRect      .setCentre (attackX, attackY);
@@ -209,22 +211,23 @@ void AHDEnvWindow::updateModel()
     const float width  = getWidth() - (padding + frameWidth) * 2 - dotSize;
     const float height = getHeight() - (padding + frameWidth) * 2 - dotSize;
     
-    mModel.attack = (attackRect.getCentreX() - totalPadding) / width;
-    mModel.hold   = (holdRect.getCentreX() - totalPadding) / width - mModel.attack;
-    mModel.decay  = (decayRect.getCentreX() - totalPadding) / width - mModel.attack - mModel.hold;
-    mModel.level  = 1 - (attackRect.getCentreY() - totalPadding) / height;
+    mModel.attack->store((attackRect.getCentreX() - totalPadding) / width);
+    mModel.hold->store((holdRect.getCentreX() - totalPadding) / width - mModel.attack->load());
+    mModel.decay->store((decayRect.getCentreX() - totalPadding) / width - mModel.attack->load() - mModel.hold->load());
+    mModel.level->store(1 - (attackRect.getCentreY() - totalPadding) / height);
     
     const float attackCurve = (attackCurveRect.getCentreY() - totalPadding) / height;
     const float decayCurve  = (decayCurveRect.getCentreY()  - totalPadding) / height;
     
-    mModel.attackCurve = convert0to1toCurveValue (attackCurve);
-    mModel.decayCurve  = convert0to1toCurveValue (decayCurve);
+    mModel.attackCurve->store (attackCurve);
+    mModel.decayCurve ->store (decayCurve);
     
 }
 
 float AHDEnvWindow::convert0to1toCurveValue (float value)
 {
-    return value <= 0.5 ? value + 0.5 : 1.0 + (value - 0.5) * 14.0;
+    return value <= 0.5 ? value * 1.5 + 0.25 : 1.0 + (value - 0.5) * 14.0;
+//    return  pow ((value + 0.25) * 2, 2);
 }
 
 

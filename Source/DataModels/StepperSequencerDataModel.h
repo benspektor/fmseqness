@@ -19,7 +19,7 @@ struct BarsControllerValuesModel
 
 struct PitchControllerValuesModel
 {
-    int values[32] = {0};
+    std::atomic<float>* values[32];
 };
 
 struct StepGateStateValuesModel

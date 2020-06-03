@@ -28,6 +28,7 @@ public:
     void resized() override;
     
     void timerTic(float value);
+    
 
 private:
     AudioProcessorValueTreeState& mParameters;
@@ -38,10 +39,12 @@ private:
     std::unique_ptr<SliderAttachment> lengthAttachment;
     std::unique_ptr<SliderAttachment> frequncyAttachment;
     std::vector<SafePointer<TextButton>> shapeButtons;
-    std::atomic<float>* shape      { mParameters.getRawParameterValue ("lfoShape") };
-    std::atomic<float>* stepSync   { mParameters.getRawParameterValue ("lfoStepSync") };
-    std::atomic<float>* polarity   { mParameters.getRawParameterValue ("lfoPolarity") };
-    std::atomic<float>* phase      { mParameters.getRawParameterValue ("lfoPhase") };
-    std::atomic<float>* lfoRestart { mParameters.getRawParameterValue ("lfoRestart") };
+    
+    Value shape      { mParameters.getParameterAsValue ("lfoShape") };
+    Value stepSync   { mParameters.getParameterAsValue ("lfoStepSync") };
+    Value phase      { mParameters.getParameterAsValue ("lfoPhase") };
+    Value lfoRestart { mParameters.getParameterAsValue ("lfoRestart") };
+    Value polarity   { mParameters.getParameterAsValue ("lfoPolarity") };
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LfoGUI)
 };

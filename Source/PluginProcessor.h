@@ -98,10 +98,8 @@ public:
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
-
     ModMatrixProcessResults modMatrix;
     float ampEnv = 0.0, modEnv = 0.0, modSeqCurrentValue = 0.0;
-     float calculatedPitch = 0.0f;
 private:
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
@@ -115,7 +113,6 @@ private:
     double currentSampleRate = 0.0;
    
     bool isNextStepGlide = false;
-//    bool isPortamentoActive = false;
     float portamentoPitchUnit = 0.0f;
     float currentStepPitch = 0;
     float currentStepFM = 0.0f;

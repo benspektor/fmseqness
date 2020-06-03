@@ -43,7 +43,7 @@ void PitchController::resized()
     
     for (int stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        auto yPosition = -1 * (mPitchDataModel.values[stepNumber] - OCTAVE) * barHeight + PADDING + 1;
+        auto yPosition = -1 * (mPitchDataModel.values[stepNumber]->load() - OCTAVE) * barHeight + PADDING + 1;
         auto xPsition  = PADDING + stepNumber * barWidth;
         recs[stepNumber].setBounds  ( xPsition, yPosition, barWidth, barHeight);
         bars[stepNumber]->setBounds ( xPsition, yPosition, barWidth, barHeight);
@@ -113,7 +113,7 @@ void PitchController::actionListenerCallback(const String &message)
         {
             for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
             {
-                mPitchDataModel.values[stepIndex] = pitch;
+                mPitchDataModel.values[stepIndex]->store (pitch);
                 auto xPsition  = PADDING + stepIndex * barWidth;
                 bars[stepIndex]->setBounds (xPsition, yPosition, barWidth, barHeight);
                 recs[stepIndex].setBounds  (xPsition, yPosition, barWidth, barHeight);
@@ -121,7 +121,7 @@ void PitchController::actionListenerCallback(const String &message)
         }
         else
         {
-            mPitchDataModel.values[bar] = pitch;
+            mPitchDataModel.values[bar]->store (pitch);
             auto xPsition  = PADDING + bar * barWidth;
             bars[bar]->setBounds (xPsition, yPosition, barWidth, barHeight);
             recs[bar].setBounds  (xPsition, yPosition, barWidth, barHeight);

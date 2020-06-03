@@ -24,9 +24,9 @@ double AHDEnv::process (double currentSampleRate)
     float stepLength = ((60 / tempo->load()) / 4) * currentStepLength;
     
     auto restartDelta = FMUtilities::convertTimeToFrequency(RESTART_TIME , currentSampleRate);
-    auto attackDelta  = FMUtilities::convertTimeToFrequency((mModel.attack.load() + 0.01) * stepLength , currentSampleRate);
-    auto holdDelta    = FMUtilities::convertTimeToFrequency(mModel.hold.load() * stepLength , currentSampleRate);
-    auto decayDelta   = FMUtilities::convertTimeToFrequency((mModel.decay.load() + 0.01) * stepLength , currentSampleRate);
+    auto attackDelta  = FMUtilities::convertTimeToFrequency((mModel.attack->load() + 0.01) * stepLength , currentSampleRate);
+    auto holdDelta    = FMUtilities::convertTimeToFrequency(mModel.hold->load() * stepLength , currentSampleRate);
+    auto decayDelta   = FMUtilities::convertTimeToFrequency((mModel.decay->load() + 0.01) * stepLength , currentSampleRate);
     
     //restart stage;
     restart = restart > 0.0 ? restart - restartDelta : 0.0;
@@ -43,7 +43,10 @@ double AHDEnv::process (double currentSampleRate)
     if (attack == 1.0 && hold <= 0.0)
         decay = decay > 0.0 ? decay - decayDelta : 0.0;
     
-    auto amp = mModel.level.load() * (restart + pow (attack, mModel.attackCurve) * pow (decay, mModel.decayCurve));
+    auto attackCurve = FMUtilities::convert0to1toCurveValue (mModel.attackCurve->load());
+    auto decayCurve  = FMUtilities::convert0to1toCurveValue (mModel.decayCurve ->load());
+    
+    auto amp = mModel.level->load() * (restart + pow (attack, attackCurve) * pow (decay, decayCurve));
     
     //Envelope end:
     if (decay == 0.0)

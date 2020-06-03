@@ -14,5 +14,10 @@
 
 struct AHDEnvDataModel
 {
-    std::atomic<float> attack, hold, decay, level, attackCurve, decayCurve;
+    std::atomic<float>* attack;
+    std::atomic<float>* hold;
+    std::atomic<float>* decay;
+    std::atomic<float>* level;
+    std::atomic<float>* attackCurve;
+    std::atomic<float>* decayCurve;
 };

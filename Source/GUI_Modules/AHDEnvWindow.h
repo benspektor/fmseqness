@@ -14,6 +14,7 @@
 #include "../DataModels/AHDEnvDataModel.h"
 #include "../Supporting_Files/Constants.h"
 #include "../Supporting_Files/Enums.h"
+#include "../Supporting_Files/FMUtilities.h"
 
 //==============================================================================
 /*

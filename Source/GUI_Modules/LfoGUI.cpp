@@ -29,40 +29,41 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     frequncyAttachment.reset        ( new SliderAttachment (mParameters, "lfoFrequency", frequencySlider ));
     
     addAndMakeVisible(polarityButton);
-    polarityButton.changeName (LFO_POLARITIES[polarity->load()]);
+    polarityButton.changeName (LFO_POLARITIES[polarity.getValue()]);
     
     polarityButton.onClick = [this]
     {
-        int oldPolarity = polarity->load();
+        int oldPolarity = polarity.getValue();
         int newPolarity = oldPolarity == 2.0f ? 0.0 : oldPolarity + 1;
-        polarity->store (newPolarity);
-        polarityButton.changeName (LFO_POLARITIES[polarity->load()]);
+        polarity = newPolarity;
+        polarityButton.changeName (LFO_POLARITIES[polarity.getValue()]);
     };
+    polarity.addListener(&polarityButton);
     
     addAndMakeVisible(phaseButton);
     
     phaseButton.onClick = [this]
     {
-        float currentPhase = phase->load();
+        float currentPhase = phase.getValue();
         
         if (currentPhase == 0.0f)
         {
-            phase->store(0.25f);
+            phase = 0.25f;
             phaseButton.changeName("90 deg");
         }
         else if (currentPhase == 0.25f)
         {
-            phase->store(0.5f);
+            phase = 0.5f;
             phaseButton.changeName("180 deg");
         }
         else if (currentPhase == 0.5f)
         {
-            phase->store(0.75f);
+            phase = 0.75f;
             phaseButton.changeName("270 deg");
         }
         else if (currentPhase == 0.75f)
         {
-            phase->store(0.0f);
+            phase = 0.0f;
             phaseButton.changeName("0 deg");
         }
     };
@@ -70,7 +71,7 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     
     addAndMakeVisible(syncButton);
     
-    if (stepSync->load())
+    if (stepSync.getValue())
     {
         syncButton.changeName   ( "Step Sync" );
         lengthSlider.setVisible ( true );
@@ -84,16 +85,16 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     
     syncButton.onClick = [this]
     {
-        if (stepSync->load())
+        if (stepSync.getValue())
         {
-            stepSync->store(0.0f);
+            stepSync = 0.0f;
             syncButton.changeName("Free");
             lengthSlider.setVisible(false);
             frequencySlider.setVisible(true);
         }
         else
         {
-            stepSync->store(1.0f);
+            stepSync = 1.0f;
             syncButton.changeName("Step Sync");
             lengthSlider.setVisible(true);
             frequencySlider.setVisible(false);
@@ -103,18 +104,18 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     
     addAndMakeVisible(restartButton);
     
-    restartButton.changeName( LFO_RESTART_OPTIONS[int(lfoRestart->load())] );
+    restartButton.changeName( LFO_RESTART_OPTIONS[int(lfoRestart.getValue())] );
     
     restartButton.onClick = [this]
     {
-        int restart = lfoRestart->load();
+        int restart = lfoRestart.getValue();
         
         if (restart == 2)
             restart = 0;
         else
             restart += 1;
         
-        lfoRestart->store(restart);
+        lfoRestart = restart;
         
         restartButton.changeName ( LFO_RESTART_OPTIONS[restart] );
     };
@@ -149,16 +150,14 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
         
         tb->onClick = [this, i]
         {
-            shape->store(i);
+            shape = i;
         };
         
         shapeButtons.push_back(tb);
 
-        if (i == 0)
+        if (i == (int)shape.getValue())
             tb->setToggleState (true, dontSendNotification);
     }
-
-    
 
 }
 

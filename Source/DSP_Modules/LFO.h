@@ -44,5 +44,4 @@ private:
     std::atomic<float>* stepSync  { mParameters.getRawParameterValue ("lfoStepSync") };
     double amp = 0.0, delta = 0.0;
     double currentSampleRate = 0.0;
-    double normalizedCurrentFrequency = 0.0;
 };

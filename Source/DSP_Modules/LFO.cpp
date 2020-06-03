@@ -28,15 +28,14 @@ void LFO::updateAngleDelta()
     {
         float stepLength = tempo->load() / (60 * 4);
         float totalLength = stepLength * length->load();
-        currentFrequency = 1 / totalLength;
+        currentFrequency = 2 / totalLength;
     }
     else
     {
         currentFrequency = frequency->load();
     }
     
-    normalizedCurrentFrequency =  currentFrequency * 2 / currentSampleRate;
-    delta = normalizedCurrentFrequency; 
+    delta =  currentFrequency * 2 / currentSampleRate;
 }
 
 
