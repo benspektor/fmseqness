@@ -107,6 +107,9 @@ void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& messag
     else if (message == "Preset Loaded")
     {
         lfoGUI->loadButtonsState();
+        processor.refreshEnvelopesModels();
+        ampAhdEnvWindow->loadState();
+        modAhdEnvWindow->loadState();
         DBG(message);
     }
 }

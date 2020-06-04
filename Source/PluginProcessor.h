@@ -48,7 +48,9 @@ public:
             swing      = 0.0f;
         }
     };
-    //==============================================================================
+    void extracted();
+    
+//==============================================================================
     FmseqnessAudioProcessor();
     ~FmseqnessAudioProcessor();
 
@@ -94,6 +96,7 @@ public:
     void updateLFOAngle();
     float getModulatorMultiFrom01 (float value);
     void processModMatrix(float env, float lfo, float modSeq);
+    void refreshEnvelopesModels();
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();

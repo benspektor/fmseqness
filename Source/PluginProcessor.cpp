@@ -11,6 +11,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+
+
 //==============================================================================
 FmseqnessAudioProcessor::FmseqnessAudioProcessor()
 : AudioProcessor (BusesProperties().withOutput ("Output", AudioChannelSet::stereo(), true)),
@@ -113,21 +115,7 @@ mParameters (*this, nullptr, Identifier ("FMSeqness"),
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
     addListener(&lfo);
     addListener(&sequencer);
-    
-    
-    mAmpAHDEnvModel.attack      = mParameters.getRawParameterValue("ampEnvAttack");
-    mAmpAHDEnvModel.attackCurve = mParameters.getRawParameterValue("ampEnvAttackCurve");
-    mAmpAHDEnvModel.hold        = mParameters.getRawParameterValue("ampEnvHold");
-    mAmpAHDEnvModel.decay       = mParameters.getRawParameterValue("ampEnvDecay");
-    mAmpAHDEnvModel.decayCurve  = mParameters.getRawParameterValue("ampEnvDecayCurve");
-    mAmpAHDEnvModel.level       = mParameters.getRawParameterValue("ampEnvLevel");
-    
-    mModAHDEnvModel.attack      = mParameters.getRawParameterValue("modEnvAttack");
-    mModAHDEnvModel.attackCurve = mParameters.getRawParameterValue("modEnvAttackCurve");
-    mModAHDEnvModel.hold        = mParameters.getRawParameterValue("modEnvHold");
-    mModAHDEnvModel.decay       = mParameters.getRawParameterValue("modEnvDecay");
-    mModAHDEnvModel.decayCurve  = mParameters.getRawParameterValue("modEnvDecayCurve");
-    mModAHDEnvModel.level       = mParameters.getRawParameterValue("modEnvLevel");
+    refreshEnvelopesModels();
     
     for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
     {
@@ -488,7 +476,6 @@ void FmseqnessAudioProcessor::processModMatrix(float env, float lfo, float modSe
 {
     float sources[3] {env, lfo, modSeq};
     float results[7] {0.0f};
-//    modMatrix.resetAll();
     
     for (int mod = 1; mod <= 4; mod++)
     {
@@ -512,4 +499,21 @@ void FmseqnessAudioProcessor::processModMatrix(float env, float lfo, float modSe
     modMatrix.modMulti   = isnan(results[4]) ? 0.0f : results[4];
     modMatrix.portamento = isnan(results[5]) ? 0.0f : results[5];
     modMatrix.swing      = isnan(results[6]) ? 0.0f : results[6];
+}
+
+void FmseqnessAudioProcessor::refreshEnvelopesModels()
+{
+    mAmpAHDEnvModel.attack      = mParameters.getParameterAsValue ( "ampEnvAttack" );
+    mAmpAHDEnvModel.attackCurve = mParameters.getParameterAsValue ( "ampEnvAttackCurve" );
+    mAmpAHDEnvModel.hold        = mParameters.getParameterAsValue ( "ampEnvHold" );
+    mAmpAHDEnvModel.decay       = mParameters.getParameterAsValue ( "ampEnvDecay" );
+    mAmpAHDEnvModel.decayCurve  = mParameters.getParameterAsValue ( "ampEnvDecayCurve" );
+    mAmpAHDEnvModel.level       = mParameters.getParameterAsValue ( "ampEnvLevel" );
+    
+    mModAHDEnvModel.attack      = mParameters.getParameterAsValue ( "modEnvAttack" );
+    mModAHDEnvModel.attackCurve = mParameters.getParameterAsValue ( "modEnvAttackCurve" );
+    mModAHDEnvModel.hold        = mParameters.getParameterAsValue ( "modEnvHold" );
+    mModAHDEnvModel.decay       = mParameters.getParameterAsValue ( "modEnvDecay" );
+    mModAHDEnvModel.decayCurve  = mParameters.getParameterAsValue ( "modEnvDecayCurve" );
+    mModAHDEnvModel.level       = mParameters.getParameterAsValue ( "modEnvLevel" );
 }

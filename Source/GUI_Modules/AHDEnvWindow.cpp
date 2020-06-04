@@ -45,7 +45,7 @@ void AHDEnvWindow::paint (Graphics& g)
     for (int i  = 10; i >= 0; --i)
     {
         float y = i/10.0 ;
-        float curve = FMUtilities::convert0to1toCurveValue(mModel.attackCurve->load());
+        float curve = FMUtilities::convert0to1toCurveValue((float)mModel.attackCurve.getValue());
         float x = pow(y, curve);
         y = y * attackHeightDisplayValue + attackRect.getCentreY() - lineWidth / 2;
         x = (1 - x) * attackLengthDisplayValue - lineWidth / 2 + startX;
@@ -68,7 +68,7 @@ void AHDEnvWindow::paint (Graphics& g)
     for (int i  = 0; i <= 10; ++i)
     {
         float y = i/10.0 ;
-        float curve = FMUtilities::convert0to1toCurveValue(mModel.decayCurve->load());
+        float curve = FMUtilities::convert0to1toCurveValue(mModel.decayCurve.getValue());
         float x = pow(y,curve);
         y = y * decayHeightDisplayValue + attackRect.getCentreY() - lineWidth / 2;
         x = x * decayLengthDisplayValue - lineWidth / 2 + holdRect.getCentreX();
@@ -101,17 +101,17 @@ void AHDEnvWindow::resized()
     const float envWidth  = getWidth() - totalPadding * 2;
     const float startX    = totalPadding;
     const float startY    = getHeight() - totalPadding;
-    const float attackX   = totalPadding + mModel.attack->load() * envWidth;
-    const float attackY   = getHeight() - totalPadding - envHeight * mModel.level->load();
-    const float holdX     = attackX + envWidth * mModel.hold->load();
+    const float attackX   = totalPadding + (float)mModel.attack.getValue() * envWidth;
+    const float attackY   = getHeight() - totalPadding - envHeight * (float)mModel.level.getValue();
+    const float holdX     = attackX + envWidth * (float)mModel.hold.getValue();
     const float holdY     = padding;
-    const float decayX    = holdX + envWidth * mModel.decay->load();
+    const float decayX    = holdX + envWidth * (float)mModel.decay.getValue();
     const float decayY    = startY;
     
     const float attackCurveX = padding;
-    const float attackCurveY = totalPadding + envHeight * mModel.attackCurve->load();
+    const float attackCurveY = totalPadding + envHeight * (float)mModel.attackCurve.getValue();
     const float decacyCurveX = getWidth() - padding;
-    const float decayCurveY  = totalPadding + envHeight * mModel.decayCurve->load();
+    const float decayCurveY  = totalPadding + envHeight * (float)mModel.decayCurve.getValue();
     
     startRect       .setCentre (startX, startY);
     attackRect      .setCentre (attackX, attackY);
@@ -211,24 +211,22 @@ void AHDEnvWindow::updateModel()
     const float width  = getWidth() - (padding + frameWidth) * 2 - dotSize;
     const float height = getHeight() - (padding + frameWidth) * 2 - dotSize;
     
-    mModel.attack->store((attackRect.getCentreX() - totalPadding) / width);
-    mModel.hold->store((holdRect.getCentreX() - totalPadding) / width - mModel.attack->load());
-    mModel.decay->store((decayRect.getCentreX() - totalPadding) / width - mModel.attack->load() - mModel.hold->load());
-    mModel.level->store(1 - (attackRect.getCentreY() - totalPadding) / height);
+    mModel.attack = (attackRect.getCentreX() - totalPadding) / width;
+    mModel.hold   = (holdRect.getCentreX() - totalPadding) / width - (float)mModel.attack.getValue();
+    mModel.decay  = (decayRect.getCentreX() - totalPadding) / width - (float)mModel.attack.getValue() - (float)mModel.hold.getValue();
+    mModel.level  = 1 - (attackRect.getCentreY() - totalPadding) / height;
     
     const float attackCurve = (attackCurveRect.getCentreY() - totalPadding) / height;
     const float decayCurve  = (decayCurveRect.getCentreY()  - totalPadding) / height;
     
-    mModel.attackCurve->store (attackCurve);
-    mModel.decayCurve ->store (decayCurve);
+    mModel.attackCurve = attackCurve;
+    mModel.decayCurve  = decayCurve;
     
 }
 
-float AHDEnvWindow::convert0to1toCurveValue (float value)
+void AHDEnvWindow::loadState()
 {
-    return value <= 0.5 ? value * 1.5 + 0.25 : 1.0 + (value - 0.5) * 14.0;
-//    return  pow ((value + 0.25) * 2, 2);
+    resized();
+    repaint();
 }
-
-
 

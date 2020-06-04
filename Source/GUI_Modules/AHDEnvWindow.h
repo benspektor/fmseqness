@@ -29,13 +29,13 @@ public:
     void resized() override;
         
     void updateModel();
+    void loadState();
     
 
 private:
     void mouseDrag (const MouseEvent& e) override;
     void mouseUp (const MouseEvent&) override;
     
-    float convert0to1toCurveValue (float value);
 
     EnvelopeControl currentDraging = EnvelopeControl::none;
     
@@ -43,7 +43,6 @@ private:
     const float frameWidth = 4;
     const float dotSize    = 20;
     const float padding    = 16;
-    
     
     AHDEnvDataModel& mModel;
     
