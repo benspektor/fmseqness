@@ -19,14 +19,16 @@ enum LFOShape {saw, sine, triangle, square};
 class LFO : public AudioProcessorListener
 {
 public:
-    LFO (AudioProcessorValueTreeState& parameters);
+    void extracted();
+    
+LFO (AudioProcessorValueTreeState& parameters);
     ~LFO();
     
     void updateAngleDelta();
     void setSampleRate (double sampleRate);
     void restart();
-    void generate();
-    float getAmp (LFOShape shape);
+    void updatePolarity();
+    float generate (LFOShape shape);
     
     //AudioProcessorListener
     void audioProcessorParameterChanged (AudioProcessor* processor,
@@ -42,6 +44,8 @@ private:
     std::atomic<float>* phase     { mParameters.getRawParameterValue ("lfoPhase") };
     std::atomic<float>* polarity  { mParameters.getRawParameterValue ("lfoPolarity") };
     std::atomic<float>* stepSync  { mParameters.getRawParameterValue ("lfoStepSync") };
-    double amp = 0.0, delta = 0.0;
+    float amp = 0.0, delta = 0.0;
     double currentSampleRate = 0.0;
+    bool  isUni = false;
+    float direction = 1.0f;
 };

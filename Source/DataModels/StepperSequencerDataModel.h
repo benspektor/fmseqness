@@ -9,6 +9,8 @@
 */
 
 #pragma once
+#include <JuceHeader.h>
+
 
 enum StepGateState { on, glide, off };
 
@@ -19,7 +21,10 @@ struct BarsControllerValuesModel
 
 struct PitchControllerValuesModel
 {
-    std::atomic<float>* values[32];
+//    std::atomic<float>* values[32];
+//    Value values[32];
+    std::unique_ptr<Value> values[32];
+//    std::vector<std::unique_ptr<Value>> values;
 };
 
 struct StepGateStateValuesModel

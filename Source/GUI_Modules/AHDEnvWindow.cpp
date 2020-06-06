@@ -222,6 +222,7 @@ void AHDEnvWindow::updateModel()
     mModel.attackCurve = attackCurve;
     mModel.decayCurve  = decayCurve;
     
+    mModel.sendActionMessage("Model Changed");
 }
 
 void AHDEnvWindow::loadState()

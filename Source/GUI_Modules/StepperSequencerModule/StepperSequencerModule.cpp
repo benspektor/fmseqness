@@ -18,12 +18,10 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     selector.reset (new AnimatedSelector (array, 4, true));
     selector->addActionListener(this);
     
-   
-    
     pitchController   .reset ( new PitchController     ( mDataModel.pitchValues, mDataModel.gateStateValues));
     fMController      .reset ( new BarsController      ( false, mDataModel.fmValues, mDataModel.gateStateValues) );
     multiplyController.reset ( new BarsController      ( false, mDataModel.modMultiValues, mDataModel.gateStateValues, 10));
-    seqModController .reset ( new BarsController      ( true, mDataModel.seqModValues, mDataModel.gateStateValues));
+    seqModController  .reset ( new BarsController      ( true, mDataModel.seqModValues, mDataModel.gateStateValues));
     gateStateEditor   .reset ( new StepGateStateEditor ( mParameters, mDataModel.gateStateValues) );
     
     gateStateEditor->addActionListener(this);
@@ -41,8 +39,16 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     
     pitchController->setVisible(true);
 
-    leftGreyedOut.setAlpha(0.5);
+    leftGreyedOut .setAlpha(0.5);
     rightGreyedOut.setAlpha(0.5);
+    
+    for (int i = 0; i < MAX_NUM_OF_STEPS; i++)
+    {
+        String parameterName {"step"};
+        parameterName << i + 1 << "Pitch";
+        pitchAttachments[i].reset ( new SliderAttachment (mParameters, parameterName, pitchController->getSliderRef(i)));
+    }
+    
 }
 
 StepperSequencerModule::~StepperSequencerModule()
@@ -63,10 +69,10 @@ void StepperSequencerModule::resized()
     
     selector->setBounds(0, 0, width, SELECTOR_HEIGHT);
     
-    pitchController   ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
-    fMController      ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
-    multiplyController->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
-    seqModController ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    pitchController    ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    fMController       ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    multiplyController ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
+    seqModController   ->setBounds ( 0, SELECTOR_HEIGHT + PADDING, width, controllerHeight );
     
     
     gateStateEditor->setBounds ( 0, controllerHeight + SELECTOR_HEIGHT + PADDING * 2, width, GATE_EDITOR_HEIGHT);
@@ -76,8 +82,14 @@ void StepperSequencerModule::resized()
 
 void StepperSequencerModule::actionListenerCallback (const String& message)
 {
+    if (message == "Preset Loaded")
+    {
+        DBG("Got it!");
+        pitchController->refreshView();
+    }
+    
     const auto broadcaster = message.upToFirstOccurrenceOf("_", false, true);
-    const auto content = message.fromFirstOccurrenceOf("_", false, true);
+    const auto content     = message.fromFirstOccurrenceOf("_", false, true);
     
     if (broadcaster == "Selector")
     {
@@ -86,21 +98,24 @@ void StepperSequencerModule::actionListenerCallback (const String& message)
     else if (broadcaster == "StepGateStateEditor")
     {
         const auto action = content.upToFirstOccurrenceOf("_", false, true);
-        const auto data = content.fromFirstOccurrenceOf("_", false, true);
+        const auto data   = content.fromFirstOccurrenceOf("_", false, true);
         
         if (action == "GateChanged")
         {
-            const auto first = data.upToFirstOccurrenceOf("_", false, true);
+            const auto first  = data.upToFirstOccurrenceOf("_", false, true);
             const auto second = data.fromFirstOccurrenceOf("_", false, true);
-            pitchController->gateStateChanged (first.getIntValue());
-            fMController->gateStateChanged (first.getIntValue());
-            multiplyController  ->gateStateChanged (first.getIntValue());
+            
+            pitchController    ->gateStateChanged ( first.getIntValue() );
+            fMController       ->gateStateChanged ( first.getIntValue() );
+            multiplyController ->gateStateChanged ( first.getIntValue() );
+            seqModController   ->gateStateChanged ( first.getIntValue() );
             
             if (second != "")
             {
-                pitchController->gateStateChanged (second.getIntValue());
-                fMController->gateStateChanged (second.getIntValue());
-                multiplyController  ->gateStateChanged (second.getIntValue());
+                pitchController    ->gateStateChanged ( second.getIntValue() );
+                fMController       ->gateStateChanged ( second.getIntValue() );
+                multiplyController ->gateStateChanged ( second.getIntValue() );
+                seqModController   ->gateStateChanged ( second.getIntValue() );
             }
         }
         else if (action == "StepsChanged")
@@ -118,40 +133,41 @@ void StepperSequencerModule::switchViewTo (Controller controllerToDisplay)
     switch (controllerToDisplay)
     {
         case Controller::pitchController:
-            pitchController   ->setVisible(true);
-            fMController      ->setVisible(false);
-            multiplyController->setVisible(false);
-            seqModController ->setVisible(false);
-            fMController      ->turnOffSteps();
-            multiplyController->turnOffSteps();
-            seqModController ->turnOffSteps();
+            pitchController    ->setVisible ( true  );
+            fMController       ->setVisible ( false );
+            multiplyController ->setVisible ( false );
+            seqModController   ->setVisible ( false );
+            fMController       ->turnOffSteps();
+            multiplyController ->turnOffSteps();
+            seqModController   ->turnOffSteps();
+            seqModController   ->turnOffSteps();
             break;
             
         case Controller::fmController:
-            fMController      ->setVisible(true);
-            pitchController   ->setVisible(false);
-            multiplyController->setVisible(false);
-            seqModController ->setVisible(false);
-            pitchController   ->turnOfSteps();
-            multiplyController->turnOffSteps();
-            seqModController ->turnOffSteps();
+            fMController       ->setVisible ( true  );
+            pitchController    ->setVisible ( false );
+            multiplyController ->setVisible ( false );
+            seqModController   ->setVisible ( false );
+            pitchController    ->turnOfSteps();
+            multiplyController ->turnOffSteps();
+            seqModController   ->turnOffSteps();
             break;
             
         case Controller::modulatorMultiController:
-            multiplyController->setVisible(true);
-            pitchController   ->setVisible(false);
-            fMController      ->setVisible(false);
-            seqModController ->setVisible(false);
-            pitchController   ->turnOfSteps();
-            fMController      ->turnOffSteps();
-            seqModController ->turnOffSteps();
+            multiplyController ->setVisible ( true  ) ;
+            pitchController    ->setVisible ( false );
+            fMController       ->setVisible ( false );
+            seqModController   ->setVisible ( false );
+            pitchController    ->turnOfSteps();
+            fMController       ->turnOffSteps();
+            seqModController   ->turnOffSteps();
             break;
             
         case Controller::seqModController:
-            seqModController ->setVisible(true);
-            multiplyController->setVisible(false);
-            pitchController   ->setVisible(false);
-            fMController      ->setVisible(false);
+            seqModController ->setVisible  ( true  ) ;
+            multiplyController->setVisible ( false );
+            pitchController   ->setVisible ( false );
+            fMController      ->setVisible ( false );
             pitchController   ->turnOfSteps();
             fMController      ->turnOffSteps();
             multiplyController->turnOffSteps();
@@ -239,6 +255,11 @@ void StepperSequencerModule::drawGreyedOut()
     rightGreyedOut.setBounds (rightScreenX, screenY, rightScreenWidth, screenHeight);
     
     
+}
+
+void StepperSequencerModule::refreshViews()
+{
+    pitchController->refreshView();
 }
 
 void StepperSequencerModule::audioProcessorParameterChanged (AudioProcessor* processor,

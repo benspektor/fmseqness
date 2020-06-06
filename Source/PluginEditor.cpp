@@ -110,7 +110,7 @@ void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& messag
         processor.refreshEnvelopesModels();
         ampAhdEnvWindow->loadState();
         modAhdEnvWindow->loadState();
-        DBG(message);
+        stepSeqModule->refreshViews();
     }
 }
 
@@ -118,7 +118,7 @@ void FmseqnessAudioProcessorEditor::audioProcessorParameterChanged (AudioProcess
                                                 int parameterIndex,
                                                 float newValue)
 {
-
+    //play
     if (parameterIndex == 4)
     {
         if (newValue == 1.0f)

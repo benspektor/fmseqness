@@ -13,11 +13,13 @@
 #include <JuceHeader.h>
 #include "DataModels/StepperSequencerDataModel.h"
 #include "DataModels/AHDEnvDataModel.h"
+#include "DataModels/ModMatrixDataModel.h"
 #include "DSP_Modules/FM2SineOscsGenerator.h"
 #include "DSP_Modules/AHDEnv.h"
 #include "DSP_Modules/StepSequencer.h"
 #include "DSP_Modules/LFO.h"
-#include "Supporting_Files/Constants.h"
+#include "Supporting_Files/SupportingFiles.h"
+
 
 
 
@@ -34,7 +36,6 @@ public:
         float pan;
         float volume;
         float modMulti;
-        float portamento;
         float swing;
         
         void resetAll()
@@ -44,7 +45,6 @@ public:
             pan        = 0.0f;
             volume     = 0.0f;
             modMulti   = 0.0f;
-            portamento = 0.0f;
             swing      = 0.0f;
         }
     };
@@ -97,6 +97,7 @@ public:
     float getModulatorMultiFrom01 (float value);
     void processModMatrix(float env, float lfo, float modSeq);
     void refreshEnvelopesModels();
+    void matrixModelSetup();
     StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
@@ -111,7 +112,7 @@ private:
     FM2SineOscsGenerator sines;
     LFO lfo { mParameters };
     std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
-    
+    ModMatrixModel matrix;
     
     double currentSampleRate = 0.0;
    
@@ -124,6 +125,7 @@ private:
     float poratmentoAccumulator = 0.0f;
     int portamentoCountDown = 0;
     float lfoAmp = 0.0;
+    float currentSwingValue = 0.0f;
    
     
     

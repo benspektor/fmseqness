@@ -51,6 +51,7 @@ public:
     void play();
     void switchStepTo (int step);
     void drawGreyedOut();
+    void refreshViews();
     
 
 private:
@@ -65,6 +66,8 @@ private:
     std::unique_ptr<PitchController> pitchController;
     std::unique_ptr<BarsController> fMController, multiplyController, seqModController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
+    
+    std::unique_ptr<SliderAttachment> pitchAttachments[32];
     int displayedController = 0;
     bool isPlaying = false;
     GreyScreen leftGreyedOut, rightGreyedOut;

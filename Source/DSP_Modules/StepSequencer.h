@@ -22,10 +22,10 @@ public:
     StepSequencer(AudioProcessorValueTreeState& parameters);
     ~StepSequencer();
 
-    bool processToGetTrigger();
+    bool processToGetTrigger ( float swingValue );
     int getCurrentStepIndex();
     float getCurrentPitch();
-    void setSampleRate (double sampleRate);
+    void setSampleRate ( double sampleRate );
     void updateStepDelte();
     void updateNumberOfSteps();
     
@@ -39,11 +39,9 @@ private:
     AudioProcessorValueTreeState& mParameters;
     
     std::atomic<float>* tempo           { mParameters.getRawParameterValue ("tempo") };
-    std::atomic<float>* isPlayingFloat  { mParameters.getRawParameterValue ("play") };
-    std::atomic<float>* numOfStepsFloat { mParameters.getRawParameterValue ("steps") };
+    std::atomic<float>* isPlaying       { mParameters.getRawParameterValue ("play") };
     std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue ("firstStepIndex") };
     std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue ("lastStepIndex") };
-    std::atomic<float>* swingValue      { mParameters.getRawParameterValue ("swingValue") };
     
     float stepDelta = 0.0f;
     double currentSampleRate = 0.0;

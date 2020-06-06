@@ -8,6 +8,9 @@
         <FILE id="ypRt1z" name="Constants.h" compile="0" resource="0" file="Source/Supporting_Files/Constants.h"/>
         <FILE id="F1Lc72" name="Enums.h" compile="0" resource="0" file="Source/Supporting_Files/Enums.h"/>
         <FILE id="OJoDDa" name="FMUtilities.h" compile="0" resource="0" file="Source/Supporting_Files/FMUtilities.h"/>
+        <FILE id="TEfQqA" name="Parameters.h" compile="0" resource="0" file="Source/Supporting_Files/Parameters.h"/>
+        <FILE id="XF7MRa" name="SupportingFiles.h" compile="0" resource="0"
+              file="Source/Supporting_Files/SupportingFiles.h"/>
       </GROUP>
       <GROUP id="{798E969C-B36A-2370-712D-89748EDFDAE6}" name="DSP_Modules">
         <FILE id="Tyud86" name="LFO.cpp" compile="1" resource="0" file="Source/DSP_Modules/LFO.cpp"/>
@@ -25,6 +28,8 @@
       <GROUP id="{C2F9B38F-87AD-A07A-5DED-405DFDE3E345}" name="DataModels">
         <FILE id="A7TLEa" name="AHDEnvDataModel.h" compile="0" resource="0"
               file="Source/DataModels/AHDEnvDataModel.h"/>
+        <FILE id="GM70Bd" name="ModMatrixDataModel.h" compile="0" resource="0"
+              file="Source/DataModels/ModMatrixDataModel.h"/>
         <FILE id="TbIvXD" name="StepperSequencerDataModel.h" compile="0" resource="0"
               file="Source/DataModels/StepperSequencerDataModel.h"/>
       </GROUP>

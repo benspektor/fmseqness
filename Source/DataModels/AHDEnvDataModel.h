@@ -12,7 +12,7 @@
 #include <JuceHeader.h>
 
 
-struct AHDEnvDataModel
+struct AHDEnvDataModel : ActionBroadcaster
 {
 //    std::atomic<float>* attack;
 //    std::atomic<float>* hold;

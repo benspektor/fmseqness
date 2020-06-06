@@ -41,6 +41,9 @@ public:
     void lightUpStep (int stepIndex);
     void turnOfSteps();
     void gateStateChanged (int step);
+    void calculateNoteLocation (int step, int pitch);
+    void refreshView();
+    Slider& getSliderRef (int index);
     
 private:
     float width = 0.0f, height = 0.0f, barWidth = 0.0f, barHeight = 0.0f;
@@ -51,6 +54,6 @@ private:
     StepGateStateValuesModel& mGateDataModel;
     BarsMouseArea mouseArea;
     PitchLineScreen lineScreen { mPitchDataModel, mGateDataModel, recs };
-
+    Slider sliders[32];
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchController)
 };

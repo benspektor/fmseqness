@@ -10,9 +10,12 @@
 
 #include "LFO.h"
 
+
+
 LFO::LFO (AudioProcessorValueTreeState& parameters) : mParameters (parameters)
 {
     updateAngleDelta();
+    updatePolarity() ;
 }
 LFO::~LFO() {}
 
@@ -42,23 +45,18 @@ void LFO::updateAngleDelta()
 void LFO::setSampleRate (double sampleRate)
 {
     currentSampleRate = sampleRate;
+    updateAngleDelta();
 }
 
-
-void LFO::generate()
-{
-    amp = amp >= 1 ? amp - 1 : amp + delta;
-}
 
 void LFO::restart()
 {
     amp = phase->load();
 }
 
-float LFO::getAmp (LFOShape shape)
+float LFO::generate (LFOShape shape)
 {
-    bool  isUni = polarity->load() != 0;
-    float direction = polarity->load() == 2 ? -1 : 1 ;
+    amp = amp >= 1 ? amp - 1 : amp + delta;
     
     switch (shape)
     {
@@ -81,6 +79,11 @@ float LFO::getAmp (LFOShape shape)
     }
 }
 
+void LFO::updatePolarity()
+{
+    isUni = polarity->load() != 0;
+    direction = polarity->load() == 2 ? -1 : 1;
+}
 
 
 void LFO::audioProcessorParameterChanged (AudioProcessor* processor,
@@ -96,6 +99,10 @@ void LFO::audioProcessorParameterChanged (AudioProcessor* processor,
         // LFO length
         case 12:
             updateAngleDelta();
+            break;
+        // LFO polarity
+        case 18:
+            updatePolarity();
             break;
         // LFO stepSync
         case 19:

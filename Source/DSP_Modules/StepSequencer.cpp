@@ -16,13 +16,13 @@ StepSequencer::StepSequencer(AudioProcessorValueTreeState& parameters) : mParame
 }
 StepSequencer::~StepSequencer() {}
 
-bool StepSequencer::processToGetTrigger ()
+bool StepSequencer::processToGetTrigger ( float swingValue )
 {
-    bool isPlaying = isPlayingFloat->load();
-    bool isTrigger = false;
-    float swing = swingValue->load();
     
-    if (isPlaying == false)
+    bool isTrigger = false;
+    
+    
+    if ( ! *isPlaying)
     {
         currentStep = -1;
         count = 0;
@@ -32,12 +32,12 @@ bool StepSequencer::processToGetTrigger ()
     
     if (currentStep % 2 == 0)
     {
-        if (count >= stepLengthInSamples * swing)
+        if (count >= stepLengthInSamples * swingValue)
             count = 0;
     }
     else
     {
-        if (count >= stepLengthInSamples * (2.0f - swing))
+        if (count >= stepLengthInSamples * (2.0f - swingValue))
             count = 0;
     }
     
@@ -48,6 +48,7 @@ bool StepSequencer::processToGetTrigger ()
     }
     
     count++;
+    
     return isTrigger;
 }
 

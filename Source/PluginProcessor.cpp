@@ -11,120 +11,211 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-
+//AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
+//{
+//    std::vector<std::unique_ptr<RangedAudioParameter>> params;
+//
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("globalFMAmount", "Global FM Amount",
+//                                           NormalisableRange<float>(FM_AMNT_MIN_VALUE, FM_AMNT_MAX_VALUE, 0.001, FM_AMNT_SKEW_VALUE),
+//                                                              FM_AMNT_SET_VALUE));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modulatorMultiplier", "Modulator Multiplier",
+//                                           NormalisableRange<float>(MOD_MULTI_MIN_VALUE, MOD_MULTI_MAX_VALUE, 0.001, MOD_MULTI_SKEW_VALUE),
+//                                                              MOD_MULTI_SET_VALUE));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("tempo", "Tempo",
+//                                           NormalisableRange<float>(TEMPO_MIN_VALUE, TEMPO_MAX_VALUE, 1.0, TEMPO_SKEW_VALUE),
+//                                                              TEMPO_SET_VALUE));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS));
+//    params.push_back (std::make_unique<AudioParameterBool>   ("play", "Play", false));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0),MAX_NUM_OF_STEPS));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("basePitch", "Base Pitch", 36, 84, 60));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("portamento", "Portamento", 0.01f, 1.0f, 0.1f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("lfoFrequency", "LFO Frequency", NormalisableRange<float>(0.01f, 10.0f, 0.001, 0.4), 2.0f, "Hz"));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("LfoLength", "LFO Length", 1, 32, 4, "Steps"));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("lfo2FMAmount", "LFO to FM Amount", 0.0f, 1.0f, 0.3f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("lfo2ModMulti", "LFO to modulator multiplier", 0.0f, 1.0f, 0.0f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("lfo2Panning", "LFO to panning", 0.0f, 1.0f, 0.0f));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("lfoShape", "LFO Shape",LFO_SHAPES, 1));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("lfoPhase", "LFO Phase", 0.0f, 1.0f, 0.f));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("lfoPolarity", "LFO Polarity", LFO_POLARITIES, 0));
+//    params.push_back (std::make_unique<AudioParameterBool>   ("lfoStepSync", "LFO Step Sync", false));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("lfoRestart", "LFO Restart", LFO_RESTART_OPTIONS, 2));
+//
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("mod1Amount"     , "Mod 1 Amount"     , -1.0f, 1.0f, 0.f));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod1Source"     , "Mod 1 Source"     , MODULATION_SOURCES, 0));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod1Destination", "Mod 1 Destination", MODULATION_DESTINATIONS, 0));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("mod2Amount"     , "Mod 2 Amount"     , -1.0f, 1.0f, 0.f));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod2Source"     , "Mod 2 Source"     , MODULATION_SOURCES, 0));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod2Destination", "Mod 2 Destination", MODULATION_DESTINATIONS, 0));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("mod3Amount"     , "Mod 3 Amount"     , -1.0f, 1.0f, 0.f));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod3Source"     , "Mod 3 Source"     , MODULATION_SOURCES, 0));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod3Destination", "Mod 3 Destination", MODULATION_DESTINATIONS, 0));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("mod4Amount"     , "Mod 4 Amount"     , -1.0f, 1.0f, 0.f));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod4Source"     , "Mod 4 Source"     , MODULATION_SOURCES, 0));
+//    params.push_back (std::make_unique<AudioParameterChoice> ("mod4Destination", "Mod 4 Destination", MODULATION_DESTINATIONS, 0));
+//
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("ampEnvAttack"     , "Amp Envelope Attack"      , 0.0f, 1.0f, 0.1f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("ampEnvHold"       , "Amp Envelope Hold"        , 0.0f, 1.0f, 0.2f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("ampEnvDecay"      , "Amp Envelope Decay"       , 0.0f, 1.0f, 0.4f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("ampEnvLevel"      , "Amp Envelope Level"       , 0.0f, 1.0f, 1.0f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("ampEnvAttackCurve", "Amp Envelope Attack Curve", 0.0f, 1.0f, 0.0f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("ampEnvDecayCurve" , "Amp Envelope Decay Curve" , 0.0f, 1.0f, 0.7f));
+//
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvAttack"     , "Mod Envelope Attack"      , 0.0f, 1.0f, 0.0f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvHold"       , "Mod Envelope Hold"        , 0.0f, 1.0f, 0.0f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvDecay"      , "Mod Envelope Decay"       , 0.0f, 1.0f, 0.4f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvLevel"      , "Mod Envelope Level"       , 0.0f, 1.0f, 0.5f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvAttackCurve", "Mod Envelope Attack Curve", 0.0f, 1.0f, 0.0f));
+//    params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvDecayCurve" , "Mod Envelope Decay Curve" , 0.0f, 1.0f, 0.0f));
+//
+//
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step1Pitch",  "Step 1 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step2Pitch",  "Step 2 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step3Pitch",  "Step 3 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step4Pitch",  "Step 4 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step5Pitch",  "Step 5 Pitch",  -12, 12, 5));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step6Pitch",  "Step 6 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step7Pitch",  "Step 7 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step8Pitch",  "Step 8 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step9Pitch",  "Step 9 Pitch",  -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step10Pitch", "Step 10 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step11Pitch", "Step 11 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step12Pitch", "Step 12 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step13Pitch", "Step 13 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step14Pitch", "Step 14 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step15Pitch", "Step 15 Pitch", -12, 12, 5));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step16Pitch", "Step 16 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step17Pitch", "Step 17 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step18Pitch", "Step 18 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step19Pitch", "Step 19 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step20Pitch", "Step 20 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step21Pitch", "Step 21 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step22Pitch", "Step 22 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step23Pitch", "Step 23 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step24Pitch", "Step 24 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step25Pitch", "Step 25 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step26Pitch", "Step 26 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step27Pitch", "Step 27 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step28Pitch", "Step 28 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step29Pitch", "Step 29 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step30Pitch", "Step 30 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step31Pitch", "Step 31 Pitch", -12, 12, 0));
+//    params.push_back (std::make_unique<AudioParameterInt>    ("step32Pitch", "Step 32 Pitch", -12, 12, 0));
+//
+////    for (int i = 1; i < 9; ++i)
+////        params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
+//
+//    return { params.begin(), params.end() };
+//}
 
 //==============================================================================
 FmseqnessAudioProcessor::FmseqnessAudioProcessor()
 : AudioProcessor (BusesProperties().withOutput ("Output", AudioChannelSet::stereo(), true)),
-mParameters (*this, nullptr, Identifier ("FMSeqness"),
-{
-    std::make_unique<AudioParameterFloat>  ("globalFMAmount", "Global FM Amount",
-                                           NormalisableRange<float>(FM_AMNT_MIN_VALUE, FM_AMNT_MAX_VALUE, 0.001, FM_AMNT_SKEW_VALUE),
-                                           FM_AMNT_SET_VALUE),
-    std::make_unique<AudioParameterFloat>  ("modulatorMultiplier", "Modulator Multiplier",
-                                           NormalisableRange<float>(MOD_MULTI_MIN_VALUE, MOD_MULTI_MAX_VALUE, 0.001, MOD_MULTI_SKEW_VALUE),
-                                           MOD_MULTI_SET_VALUE),
-    std::make_unique<AudioParameterFloat>  ("tempo", "Tempo",
-                                           NormalisableRange<float>(TEMPO_MIN_VALUE, TEMPO_MAX_VALUE, 1.0, TEMPO_SKEW_VALUE),
-                                           TEMPO_SET_VALUE),
-    std::make_unique<AudioParameterInt>    ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
-    std::make_unique<AudioParameterBool>   ("play", "Play", false),
-    std::make_unique<AudioParameterFloat>  ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
-    std::make_unique<AudioParameterInt>    ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
-    std::make_unique<AudioParameterInt>    ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
-    std::make_unique<AudioParameterFloat>  ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
-    std::make_unique<AudioParameterInt>    ("basePitch", "Base Pitch", 36, 84, 60),
-    std::make_unique<AudioParameterFloat>  ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
-    std::make_unique<AudioParameterFloat>  ("lfoFrequency", "LFO Frequency",
-                                           NormalisableRange<float>(0.01f, 10.0f, 0.001, 0.4),
-                                           2.0f, "Hz"),
-    std::make_unique<AudioParameterInt>    ("LfoLength", "LFO Length", 1, 32, 4, "Steps"),
-    std::make_unique<AudioParameterFloat>  ("lfo2FMAmount", "LFO to FM Amount", 0.0f, 1.0f, 0.3f),
-    std::make_unique<AudioParameterFloat>  ("lfo2ModMulti", "LFO to modulator multiplier", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>  ("lfo2Panning", "LFO to panning", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterChoice> ("lfoShape", "LFO Shape",LFO_SHAPES, 1),
-    std::make_unique<AudioParameterFloat>  ("lfoPhase", "LFO Phase", 0.0f, 1.0f, 0.f),
-    std::make_unique<AudioParameterChoice> ("lfoPolarity", "LFO Polarity", LFO_POLARITIES, 0),
-    std::make_unique<AudioParameterBool>   ("lfoStepSync", "LFO Step Sync", false),
-    std::make_unique<AudioParameterChoice> ("lfoRestart", "LFO Restart", LFO_RESTART_OPTIONS, 2),
+mParameters (*this, nullptr, Identifier ("FMSeqness"), Parameters::createParameterLayout()
+//{
+//    std::make_unique<AudioParameterFloat>  ("globalFMAmount", "Global FM Amount",
+//                                           NormalisableRange<float>(FM_AMNT_MIN_VALUE, FM_AMNT_MAX_VALUE, 0.001, FM_AMNT_SKEW_VALUE),
+//                                           FM_AMNT_SET_VALUE),
+//    std::make_unique<AudioParameterFloat>  ("modulatorMultiplier", "Modulator Multiplier",
+//                                           NormalisableRange<float>(MOD_MULTI_MIN_VALUE, MOD_MULTI_MAX_VALUE, 0.001, MOD_MULTI_SKEW_VALUE),
+//                                           MOD_MULTI_SET_VALUE),
+//    std::make_unique<AudioParameterFloat>  ("tempo", "Tempo",
+//                                           NormalisableRange<float>(TEMPO_MIN_VALUE, TEMPO_MAX_VALUE, 1.0, TEMPO_SKEW_VALUE),
+//                                           TEMPO_SET_VALUE),
+//    std::make_unique<AudioParameterInt>    ("steps", "Steps", MIN_NUM_OF_STEPS, MAX_NUM_OF_STEPS, DEF_NUM_OF_STEPS),
+//    std::make_unique<AudioParameterBool>   ("play", "Play", false),
+//    std::make_unique<AudioParameterFloat>  ("currentStep", "Current Step", NormalisableRange<float>(0.0, MAX_NUM_OF_STEPS, 1.0, 1.0), MAX_NUM_OF_STEPS),
+//    std::make_unique<AudioParameterInt>    ("firstStepIndex", "First Step Index", 0, MAX_NUM_OF_STEPS - 1, 0),
+//    std::make_unique<AudioParameterInt>    ("lastStepIndex", "Last Step Index", 0, MAX_NUM_OF_STEPS - 1, DEF_NUM_OF_STEPS - 1),
+//    std::make_unique<AudioParameterFloat>  ("swingValue", "Swing Value", SWING_MIN_VALUE, SWING_MAX_VALUE, SWING_MIN_VALUE),
+//    std::make_unique<AudioParameterInt>    ("basePitch", "Base Pitch", 36, 84, 60),
+//    std::make_unique<AudioParameterFloat>  ("portamento", "Portamento", 0.01f, 1.0f, 0.1f),
+//    std::make_unique<AudioParameterFloat>  ("lfoFrequency", "LFO Frequency",
+//                                           NormalisableRange<float>(0.01f, 10.0f, 0.001, 0.4),
+//                                           2.0f, "Hz"),
+//    std::make_unique<AudioParameterInt>    ("LfoLength", "LFO Length", 1, 32, 4, "Steps"),
+//    std::make_unique<AudioParameterFloat>  ("lfo2FMAmount", "LFO to FM Amount", 0.0f, 1.0f, 0.3f),
+//    std::make_unique<AudioParameterFloat>  ("lfo2ModMulti", "LFO to modulator multiplier", 0.0f, 1.0f, 0.0f),
+//    std::make_unique<AudioParameterFloat>  ("lfo2Panning", "LFO to panning", 0.0f, 1.0f, 0.0f),
+//    std::make_unique<AudioParameterChoice> ("lfoShape", "LFO Shape",LFO_SHAPES, 1),
+//    std::make_unique<AudioParameterFloat>  ("lfoPhase", "LFO Phase", 0.0f, 1.0f, 0.f),
+//    std::make_unique<AudioParameterChoice> ("lfoPolarity", "LFO Polarity", LFO_POLARITIES, 0),
+//    std::make_unique<AudioParameterBool>   ("lfoStepSync", "LFO Step Sync", false),
+//    std::make_unique<AudioParameterChoice> ("lfoRestart", "LFO Restart", LFO_RESTART_OPTIONS, 2),
+//
+//    std::make_unique<AudioParameterFloat>  ("mod1Amount"     , "Mod 1 Amount"     , -1.0f, 1.0f, 0.f),
+//    std::make_unique<AudioParameterChoice> ("mod1Source"     , "Mod 1 Source"     , MODULATION_SOURCES, 0),
+//    std::make_unique<AudioParameterChoice> ("mod1Destination", "Mod 1 Destination", MODULATION_DESTINATIONS, 0),
+//    std::make_unique<AudioParameterFloat>  ("mod2Amount"     , "Mod 2 Amount"     , -1.0f, 1.0f, 0.f),
+//    std::make_unique<AudioParameterChoice> ("mod2Source"     , "Mod 2 Source"     , MODULATION_SOURCES, 0),
+//    std::make_unique<AudioParameterChoice> ("mod2Destination", "Mod 2 Destination", MODULATION_DESTINATIONS, 0),
+//    std::make_unique<AudioParameterFloat>  ("mod3Amount"     , "Mod 3 Amount"     , -1.0f, 1.0f, 0.f),
+//    std::make_unique<AudioParameterChoice> ("mod3Source"     , "Mod 3 Source"     , MODULATION_SOURCES, 0),
+//    std::make_unique<AudioParameterChoice> ("mod3Destination", "Mod 3 Destination", MODULATION_DESTINATIONS, 0),
+//    std::make_unique<AudioParameterFloat>  ("mod4Amount"     , "Mod 4 Amount"     , -1.0f, 1.0f, 0.f),
+//    std::make_unique<AudioParameterChoice> ("mod4Source"     , "Mod 4 Source"     , MODULATION_SOURCES, 0),
+//    std::make_unique<AudioParameterChoice> ("mod4Destination", "Mod 4 Destination", MODULATION_DESTINATIONS, 0),
+//
+//    std::make_unique<AudioParameterFloat>  ("ampEnvAttack"     , "Amp Envelope Attack"      , 0.0f, 1.0f, 0.1f),
+//    std::make_unique<AudioParameterFloat>  ("ampEnvHold"       , "Amp Envelope Hold"        , 0.0f, 1.0f, 0.2f),
+//    std::make_unique<AudioParameterFloat>  ("ampEnvDecay"      , "Amp Envelope Decay"       , 0.0f, 1.0f, 0.4f),
+//    std::make_unique<AudioParameterFloat>  ("ampEnvLevel"      , "Amp Envelope Level"       , 0.0f, 1.0f, 1.0f),
+//    std::make_unique<AudioParameterFloat>  ("ampEnvAttackCurve", "Amp Envelope Attack Curve", 0.0f, 1.0f, 0.0f),
+//    std::make_unique<AudioParameterFloat>  ("ampEnvDecayCurve" , "Amp Envelope Decay Curve" , 0.0f, 1.0f, 0.7f),
+//
+//    std::make_unique<AudioParameterFloat>  ("modEnvAttack"     , "Mod Envelope Attack"      , 0.0f, 1.0f, 0.0f),
+//    std::make_unique<AudioParameterFloat>  ("modEnvHold"       , "Mod Envelope Hold"        , 0.0f, 1.0f, 0.0f),
+//    std::make_unique<AudioParameterFloat>  ("modEnvDecay"      , "Mod Envelope Decay"       , 0.0f, 1.0f, 0.4f),
+//    std::make_unique<AudioParameterFloat>  ("modEnvLevel"      , "Mod Envelope Level"       , 0.0f, 1.0f, 0.5f),
+//    std::make_unique<AudioParameterFloat>  ("modEnvAttackCurve", "Mod Envelope Attack Curve", 0.0f, 1.0f, 0.0f),
+//    std::make_unique<AudioParameterFloat>  ("modEnvDecayCurve" , "Mod Envelope Decay Curve" , 0.0f, 1.0f, 0.0f),
+//
+//
+//    std::make_unique<AudioParameterInt>    ("step1Pitch",  "Step 1 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step2Pitch",  "Step 2 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step3Pitch",  "Step 3 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step4Pitch",  "Step 4 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step5Pitch",  "Step 5 Pitch",  -12, 12, 5),
+//    std::make_unique<AudioParameterInt>    ("step6Pitch",  "Step 6 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step7Pitch",  "Step 7 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step8Pitch",  "Step 8 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step9Pitch",  "Step 9 Pitch",  -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step10Pitch", "Step 10 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step11Pitch", "Step 11 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step12Pitch", "Step 12 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step13Pitch", "Step 13 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step14Pitch", "Step 14 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step15Pitch", "Step 15 Pitch", -12, 12, 5),
+//    std::make_unique<AudioParameterInt>    ("step16Pitch", "Step 16 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step17Pitch", "Step 17 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step18Pitch", "Step 18 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step19Pitch", "Step 19 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step20Pitch", "Step 20 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step21Pitch", "Step 21 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step22Pitch", "Step 22 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step23Pitch", "Step 23 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step24Pitch", "Step 24 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step25Pitch", "Step 25 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step26Pitch", "Step 26 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step27Pitch", "Step 27 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step28Pitch", "Step 28 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step29Pitch", "Step 29 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step30Pitch", "Step 30 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step31Pitch", "Step 31 Pitch", -12, 12, 0),
+//    std::make_unique<AudioParameterInt>    ("step32Pitch", "Step 32 Pitch", -12, 12, 0),
     
-    std::make_unique<AudioParameterFloat>  ("mod1Amount"     , "Mod 1 Amount"     , -1.0f, 1.0f, 0.f),
-    std::make_unique<AudioParameterChoice> ("mod1Source"     , "Mod 1 Source"     , MODULATION_SOURCES, 0),
-    std::make_unique<AudioParameterChoice> ("mod1Destination", "Mod 1 Destination", MODULATION_DESTINATIONS, 0),
-    std::make_unique<AudioParameterFloat>  ("mod2Amount"     , "Mod 2 Amount"     , -1.0f, 1.0f, 0.f),
-    std::make_unique<AudioParameterChoice> ("mod2Source"     , "Mod 2 Source"     , MODULATION_SOURCES, 0),
-    std::make_unique<AudioParameterChoice> ("mod2Destination", "Mod 2 Destination", MODULATION_DESTINATIONS, 0),
-    std::make_unique<AudioParameterFloat>  ("mod3Amount"     , "Mod 3 Amount"     , -1.0f, 1.0f, 0.f),
-    std::make_unique<AudioParameterChoice> ("mod3Source"     , "Mod 3 Source"     , MODULATION_SOURCES, 0),
-    std::make_unique<AudioParameterChoice> ("mod3Destination", "Mod 3 Destination", MODULATION_DESTINATIONS, 0),
-    std::make_unique<AudioParameterFloat>  ("mod4Amount"     , "Mod 4 Amount"     , -1.0f, 1.0f, 0.f),
-    std::make_unique<AudioParameterChoice> ("mod4Source"     , "Mod 4 Source"     , MODULATION_SOURCES, 0),
-    std::make_unique<AudioParameterChoice> ("mod4Destination", "Mod 4 Destination", MODULATION_DESTINATIONS, 0),
-    
-    std::make_unique<AudioParameterFloat>  ("ampEnvAttack"     , "Amp Envelope Attack"      , 0.0f, 1.0f, 0.1f),
-    std::make_unique<AudioParameterFloat>  ("ampEnvHold"       , "Amp Envelope Hold"        , 0.0f, 1.0f, 0.2f),
-    std::make_unique<AudioParameterFloat>  ("ampEnvDecay"      , "Amp Envelope Decay"       , 0.0f, 1.0f, 0.4f),
-    std::make_unique<AudioParameterFloat>  ("ampEnvLevel"      , "Amp Envelope Level"       , 0.0f, 1.0f, 1.0f),
-    std::make_unique<AudioParameterFloat>  ("ampEnvAttackCurve", "Amp Envelope Attack Curve", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>  ("ampEnvDecayCurve" , "Amp Envelope Decay Curve" , 0.0f, 1.0f, 0.7f),
-    
-    std::make_unique<AudioParameterFloat>  ("modEnvAttack"     , "Mod Envelope Attack"      , 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>  ("modEnvHold"       , "Mod Envelope Hold"        , 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>  ("modEnvDecay"      , "Mod Envelope Decay"       , 0.0f, 1.0f, 0.4f),
-    std::make_unique<AudioParameterFloat>  ("modEnvLevel"      , "Mod Envelope Level"       , 0.0f, 1.0f, 0.5f),
-    std::make_unique<AudioParameterFloat>  ("modEnvAttackCurve", "Mod Envelope Attack Curve", 0.0f, 1.0f, 0.0f),
-    std::make_unique<AudioParameterFloat>  ("modEnvDecayCurve" , "Mod Envelope Decay Curve" , 0.0f, 1.0f, 0.0f),
-    
-    
-    
-    std::make_unique<AudioParameterInt>    ("step1Pitch",  "Step 1 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step2Pitch",  "Step 2 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step3Pitch",  "Step 3 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step4Pitch",  "Step 4 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step5Pitch",  "Step 5 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step6Pitch",  "Step 6 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step7Pitch",  "Step 7 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step8Pitch",  "Step 8 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step9Pitch",  "Step 9 Pitch",  -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step10Pitch", "Step 10 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step11Pitch", "Step 11 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step12Pitch", "Step 12 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step13Pitch", "Step 13 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step14Pitch", "Step 14 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step15Pitch", "Step 15 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step16Pitch", "Step 16 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step17Pitch", "Step 17 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step18Pitch", "Step 18 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step19Pitch", "Step 19 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step20Pitch", "Step 20 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step21Pitch", "Step 21 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step22Pitch", "Step 22 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step23Pitch", "Step 23 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step24Pitch", "Step 24 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step25Pitch", "Step 25 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step26Pitch", "Step 26 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step27Pitch", "Step 27 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step28Pitch", "Step 28 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step29Pitch", "Step 29 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step30Pitch", "Step 30 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step31Pitch", "Step 31 Pitch", -12, 12, 0),
-    std::make_unique<AudioParameterInt>    ("step32Pitch", "Step 32 Pitch", -12, 12, 0),
-    
-})
+//}
+             )
 {
     mStepperDataModel.reset ( new StepperSequencerDataModel() );
     addListener(&lfo);
     addListener(&sequencer);
     refreshEnvelopesModels();
     
-    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
-    {
-        String parameterName {"step"};
-        parameterName << stepIndex + 1 << "Pitch";
-        mStepperDataModel->pitchValues.values[stepIndex] = mParameters.getRawParameterValue(parameterName);
-    }
     
-    
+    matrixModelSetup();
 }
 
 FmseqnessAudioProcessor::~FmseqnessAudioProcessor()
@@ -139,29 +230,17 @@ const String FmseqnessAudioProcessor::getName() const
 
 bool FmseqnessAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
     return true;
-   #else
-    return false;
-   #endif
 }
 
 bool FmseqnessAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
     return false;
-   #endif
 }
 
 bool FmseqnessAudioProcessor::isMidiEffect() const
 {
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
     return false;
-   #endif
 }
 
 double FmseqnessAudioProcessor::getTailLengthSeconds() const
@@ -197,10 +276,15 @@ void FmseqnessAudioProcessor::changeProgramName (int index, const String& newNam
 void FmseqnessAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     currentSampleRate = sampleRate;
-    sequencer.setSampleRate(sampleRate);
-    sines.setSampleRate(sampleRate);
-    lfo.setSampleRate(sampleRate);
-    lfo.updateAngleDelta();
+    
+    ampAhdEnv.setSampleRate ( sampleRate );
+    modAhdEnv.setSampleRate ( sampleRate );
+    sequencer.setSampleRate ( sampleRate );
+    sines    .setSampleRate ( sampleRate );
+    lfo      .setSampleRate ( sampleRate );
+    
+    
+    
 }
 
 void FmseqnessAudioProcessor::releaseResources()
@@ -240,38 +324,39 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     auto* leftBuffer  = buffer.getWritePointer (0, buffer.getSample(0, 0));
     auto* rightBuffer = buffer.getWritePointer (1, buffer.getSample(1, 0));
     
+    //Stops sound when sequencer is stopped
+    if (isPlayingFloat->load() == 0.0f)
+    {
+        ampAhdEnv.startDecay();
+        modAhdEnv.startDecay();
+    }
+    
+    LFOShape shape = LFOShape (int(lfoShape->load()));
+    
     for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
     {
-        //Stops sound when sequencer is stopped
-        if (isPlayingFloat->load() == 0.0f)
-        {
-            ampAhdEnv.startDecay();
-            modAhdEnv.startDecay();
-        }
-        
-        lfo.generate();
-        
-        if (sequencer.processToGetTrigger())
+        if (sequencer.processToGetTrigger ( currentSwingValue ))
             trigger();
+        
+        lfoAmp = lfo.generate (shape);
         
         portamentoCountDown = portamentoCountDown > 0 ? portamentoCountDown - 1 : 0;
 
         if (isNextStepGlide && portamentoCountDown == 0)
             poratmentoAccumulator += portamentoPitchUnit;
 
-        ampEnv = ampAhdEnv.process(currentSampleRate);
-        modEnv = modAhdEnv.process(currentSampleRate);
+        ampEnv = ampAhdEnv.process();
+        modEnv = modAhdEnv.process();
  
-        LFOShape shape = LFOShape (int(lfoShape->load()));
-        lfoAmp = lfo.getAmp(shape);
-        
         processModMatrix(modEnv, lfoAmp, modSeqCurrentValue);
         
-        float calculatedPitch    = currentStepPitch + poratmentoAccumulator + modMatrix.pitch * 36.0f;
-        float calculatedFM       = currentStepFM + pow(modMatrix.fm * 2, 3);
-        float calculatedModMulti = currentStepModMulti + modMatrix.modMulti * 2.0f;
-        float calculatedVolume   = level * ampEnv * (modMatrix.volume + 1);
-        float calculatedPanMod   = modMatrix.pan / 2.0f;
+        auto calculatedPitch    = currentStepPitch + poratmentoAccumulator + modMatrix.pitch * 36.0f;
+        auto calculatedFM       = pow (currentStepFM + modMatrix.fm, 2);
+        auto calculatedModMulti = currentStepModMulti + modMatrix.modMulti * 2.0f;
+        auto calculatedVolume   = level * ampEnv * (modMatrix.volume + 1);
+        auto calculatedPanMod   = modMatrix.pan / 2.0f;
+        
+        currentSwingValue = jlimit ( 1.0f, 1.9f, *swingValue + modMatrix.swing );
         
         auto currentSample = sines.generate(calculatedPitch, calculatedFM, calculatedModMulti) * calculatedVolume;
         
@@ -298,12 +383,12 @@ void FmseqnessAudioProcessor::getStateInformation (MemoryBlock& destData)
     std::unique_ptr<XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
     
-    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
-    {
-        String parameterName {"step"};
-        parameterName << stepIndex + 1 << "Pitch";
-        DBG(*mParameters.getRawParameterValue(parameterName));
-    }
+//    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+//    {
+//        String parameterName {"step"};
+//        parameterName << stepIndex + 1 << "Pitch";
+//        DBG(*mParameters.getRawParameterValue(parameterName));
+//    }
 }
 
 void FmseqnessAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -315,12 +400,12 @@ void FmseqnessAudioProcessor::setStateInformation (const void* data, int sizeInB
     
     sendActionMessage ( "Preset Loaded" );
     
-    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
-    {
-        String parameterName {"step"};
-        parameterName << stepIndex + 1 << "Pitch";
-        DBG(*mParameters.getRawParameterValue(parameterName));
-    }
+//    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+//    {
+//        String parameterName {"step"};
+//        parameterName << stepIndex + 1 << "Pitch";
+//        DBG(*mParameters.getRawParameterValue(parameterName));
+//    }
 }
 
 //==============================================================================
@@ -345,7 +430,8 @@ void FmseqnessAudioProcessor::trigger()
 {
     const int stepIndex = sequencer.getCurrentStepIndex();
     currentStep->store(stepIndex);
-    currentStepPitch = mStepperDataModel->pitchValues.values[stepIndex]->load() + basePitch->load();
+//    currentStepPitch = (int)mStepperDataModel->pitchValues.values[stepIndex]->getValue() + basePitch->load();
+    currentStepPitch = *mParameters.getRawParameterValue(STEPS_PITCH[stepIndex]) + *basePitch;
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
     poratmentoAccumulator = 0.0f;
@@ -368,23 +454,19 @@ void FmseqnessAudioProcessor::trigger()
         if (int(stepLength) % 2 == 1)
             stepLength = stepLength -  1 + swingFactor;
         
-        ampAhdEnv.reset (ampEnv, currentSampleRate, isNextStepGlide, stepLength);
+        ampAhdEnv.reset (ampEnv, stepLength);
         ampAhdEnv.state = PlayState::play;
-        modAhdEnv.reset (ampEnv, currentSampleRate, isNextStepGlide, stepLength);
+        modAhdEnv.reset (ampEnv, stepLength);
         modAhdEnv.state = PlayState::play;
         currentStepFM = mStepperDataModel->fmValues.values[stepIndex];
-        currentStepFM = pow(currentStepFM * 2, 3);
         currentStepModMulti = mStepperDataModel->modMultiValues.values[stepIndex];
         currentStepModMulti = getModulatorMultiFrom01(currentStepModMulti);
         modSeqCurrentValue  = mStepperDataModel->seqModValues.values[stepIndex];
-
     }
     
-
     portamentoPitchUnit = (targetPitch - currentStepPitch ) / (portamento->load() * getNumberOfSamplesInStep());
     portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
     portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
-    
     
     if (lfo2Restart == 2 && stepIndex == firstStepIndex->load())
         lfo.restart();
@@ -409,13 +491,15 @@ int FmseqnessAudioProcessor::getNumberOfSamplesInStep()
 
 float FmseqnessAudioProcessor::getNextStepPitch()
 {
-    if (currentStep->load() == lastStepIndex->load())
-        return mStepperDataModel->pitchValues.values[int(firstStepIndex->load())]->load() + basePitch->load();
+    int step = *currentStep;
     
-    else if (currentStep->load() == MAX_NUM_OF_STEPS - 1)
-        return mStepperDataModel->pitchValues.values[0]->load() + basePitch->load();
-
-    return mStepperDataModel->pitchValues.values[int(currentStep->load()) + 1]->load() + basePitch->load();
+    if (step == lastStepIndex->load())
+        return *mParameters.getRawParameterValue(STEPS_PITCH[firstStepIndex->load()]) + basePitch->load();
+    
+    else if (step == MAX_NUM_OF_STEPS - 1)
+        return *mParameters.getRawParameterValue(STEPS_PITCH[0]) + basePitch->load();
+    
+    return *mParameters.getRawParameterValue(STEPS_PITCH[step + 1]) + basePitch->load();
 }
 
 bool FmseqnessAudioProcessor::getNextStepGlide()
@@ -472,32 +556,20 @@ float FmseqnessAudioProcessor::getModulatorMultiFrom01 (float value)
     return returnValue;
 }
 
+
 void FmseqnessAudioProcessor::processModMatrix(float env, float lfo, float modSeq)
 {
     float sources[3] {env, lfo, modSeq};
     float results[7] {0.0f};
     
-    for (int mod = 1; mod <= 4; mod++)
-    {
-        String code { "mod" };
-        code << mod << "Source";
-        std::atomic<float>* source { mParameters.getRawParameterValue (code) };
-        code = "mod";
-        code << mod << "Amount";
-        std::atomic<float>* amount { mParameters.getRawParameterValue (code) };
-        code = "mod";
-        code << mod << "Destination";
-        std::atomic<float>* destination { mParameters.getRawParameterValue (code) };
-        
-        results[int(destination->load())] += sources[int(source->load())] * amount->load();
-    }
-    
+    for (int mod = 0; mod <= 3; mod++)
+        results[ int ( *matrix.mods[mod].destination ) ] += sources[ int ( *matrix.mods[mod].source ) ] * *matrix.mods[mod].amount;
+
     modMatrix.fm         = isnan(results[0]) ? 0.0f : results[0];
     modMatrix.pitch      = isnan(results[1]) ? 0.0f : results[1];
     modMatrix.pan        = isnan(results[2]) ? 0.0f : results[2];
     modMatrix.volume     = isnan(results[3]) ? 0.0f : results[3];
     modMatrix.modMulti   = isnan(results[4]) ? 0.0f : results[4];
-    modMatrix.portamento = isnan(results[5]) ? 0.0f : results[5];
     modMatrix.swing      = isnan(results[6]) ? 0.0f : results[6];
 }
 
@@ -516,4 +588,24 @@ void FmseqnessAudioProcessor::refreshEnvelopesModels()
     mModAHDEnvModel.decay       = mParameters.getParameterAsValue ( "modEnvDecay" );
     mModAHDEnvModel.decayCurve  = mParameters.getParameterAsValue ( "modEnvDecayCurve" );
     mModAHDEnvModel.level       = mParameters.getParameterAsValue ( "modEnvLevel" );
+}
+
+void FmseqnessAudioProcessor::matrixModelSetup()
+{
+    for (int mod = 1; mod <= 4; mod++)
+    {
+        String code { "mod" };
+        code << mod << "Source";
+        std::atomic<float>* source { mParameters.getRawParameterValue (code) };
+        code = "mod";
+        code << mod << "Amount";
+        std::atomic<float>* amount { mParameters.getRawParameterValue (code) };
+        code = "mod";
+        code << mod << "Destination";
+        std::atomic<float>* destination { mParameters.getRawParameterValue (code) };
+        
+        ModulationInstancModel module {amount, source, destination};
+        
+        matrix.mods.push_back(module);
+    }
 }

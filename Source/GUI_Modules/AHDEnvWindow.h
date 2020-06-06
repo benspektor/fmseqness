@@ -19,7 +19,7 @@
 //==============================================================================
 /*
 */
-class AHDEnvWindow : public Component, public ActionBroadcaster
+class AHDEnvWindow : public Component
 {
 public:
     AHDEnvWindow (AHDEnvDataModel& mModel, String name);

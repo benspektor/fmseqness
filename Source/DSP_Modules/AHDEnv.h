@@ -15,28 +15,37 @@
 #include "../Supporting_Files/Constants.h"
 #include "../DataModels/AHDEnvDataModel.h"
 
-class AHDEnv
+class AHDEnv : Value::Listener, ActionListener
 {
     
 public:
     AHDEnv(AudioProcessorValueTreeState& parameters, AHDEnvDataModel& model);
     ~AHDEnv();
-    PlayState state = PlayState::stop;
-    double process (double currentSampleRate);
-    void reset (double currentSample, double currentSampleRate, bool isNextStepGlide, float length);
+    
+    double process();
+    void setSampleRate (double sampleRate);
+    void reset (float currentSample, float length);
     void startDecay();
+    void updateValues();
+    void valueChanged (Value& value) override;
+    void actionListenerCallback (const String& message) override;
+    PlayState state = PlayState::stop;
     
 private:
     AudioProcessorValueTreeState& mParameters;
     AHDEnvDataModel& mModel;
-    
-//    std::atomic<float>* attackTime {mParameters.getRawParameterValue("attack")};
-//    std::atomic<float>* holdTime {mParameters.getRawParameterValue("hold")};
-//    std::atomic<float>* decayTime {mParameters.getRawParameterValue("decay")};
     std::atomic<float>* tempo {mParameters.getRawParameterValue("tempo")};
-    
-    float restart = 0.0 ,attack = 0.0, hold = 0.0, decay = 0.0;
-    bool retrigger = true;
+    double sampleRate;
+    float attack = 0.0, hold = 0.0, decay = 0.0;
+//    bool retrigger = true;
     float currentStepLength = 1.0f;
-    bool isNextStepGlide = false;
+//    bool isNextStepGlide = false;
+    
+    float stepLength = 1.0f;
+    float restartDelta = 1.0f;
+    float attackDelta = 1.0f;
+    float holdDelta = 1.0f;
+    float decayDelta = 1.0f;
+    float attackCurve = 1.0f;
+    float decayCurve = 1.0f;
 };

@@ -43,7 +43,9 @@ void PitchController::resized()
     
     for (int stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        auto yPosition = -1 * (mPitchDataModel.values[stepNumber]->load() - OCTAVE) * barHeight + PADDING + 1;
+//        auto yPosition = -1 * ( (int)mPitchDataModel.values[stepNumber].getValue() - OCTAVE) * barHeight + PADDING + 1;
+//        auto yPosition = -1 * ( (int)mPitchDataModel.values[stepNumber]->getValue() - OCTAVE) * barHeight + PADDING + 1;
+        auto yPosition = -1 * ( (int)sliders[stepNumber].getValue() - OCTAVE) * barHeight + PADDING + 1;
         auto xPsition  = PADDING + stepNumber * barWidth;
         recs[stepNumber].setBounds  ( xPsition, yPosition, barWidth, barHeight);
         bars[stepNumber]->setBounds ( xPsition, yPosition, barWidth, barHeight);
@@ -106,25 +108,26 @@ void PitchController::actionListenerCallback(const String &message)
         value = jlimit(-11.99f, 12.0f, value * PIANO_ROLL_LENGTH - OCTAVE);
         int pitch = value < 0 ? value - 1 : value;
         
-        auto yPosition = -1 * (pitch - 12) * barHeight + PADDING + 1;
+//        auto yPosition = -1 * (pitch - 12) * barHeight + PADDING + 1;
         
         
         if (bar == MAX_NUM_OF_STEPS)
         {
             for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
             {
-                mPitchDataModel.values[stepIndex]->store (pitch);
-                auto xPsition  = PADDING + stepIndex * barWidth;
-                bars[stepIndex]->setBounds (xPsition, yPosition, barWidth, barHeight);
-                recs[stepIndex].setBounds  (xPsition, yPosition, barWidth, barHeight);
+//                mPitchDataModel.values[stepIndex]->setValue(pitch);
+                sliders[stepIndex].setValue(pitch);
+                calculateNoteLocation(stepIndex, pitch);
+//                auto xPsition  = PADDING + stepIndex * barWidth;
+//                bars[stepIndex]->setBounds (xPsition, yPosition, barWidth, barHeight);
+//                recs[stepIndex].setBounds  (xPsition, yPosition, barWidth, barHeight);
             }
         }
         else
         {
-            mPitchDataModel.values[bar]->store (pitch);
-            auto xPsition  = PADDING + bar * barWidth;
-            bars[bar]->setBounds (xPsition, yPosition, barWidth, barHeight);
-            recs[bar].setBounds  (xPsition, yPosition, barWidth, barHeight);
+//            mPitchDataModel.values[bar]->setValue(pitch);
+            sliders[bar].setValue(pitch);
+            calculateNoteLocation(bar, pitch);
         }
        
         lineScreen.repaint();
@@ -169,5 +172,28 @@ void PitchController::gateStateChanged (int stepNumber)
     }
     
     lineScreen.repaint();
+}
+
+Slider& PitchController::getSliderRef (int index)
+{
+    return sliders[index];
+}
+
+void PitchController::calculateNoteLocation (int step, int pitch)
+{
+    auto yPosition = -1 * (pitch - 12) * barHeight + PADDING + 1;
+    auto xPsition  = PADDING + step * barWidth;
+    bars[step]->setBounds (xPsition, yPosition, barWidth, barHeight);
+    recs[step].setBounds  (xPsition, yPosition, barWidth, barHeight);
+}
+
+void PitchController::refreshView()
+{
+    for (int step = 0; step < MAX_NUM_OF_STEPS; step++)
+    {
+        auto pitch = sliders[step].getValue();
+        calculateNoteLocation(step, pitch);
+    }
+    repaint();
 }
 
