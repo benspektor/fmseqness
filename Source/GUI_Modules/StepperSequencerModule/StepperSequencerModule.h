@@ -56,20 +56,29 @@ public:
 
 private:
     float width = 0.0f, height = 0.0f, barLength = 0.0f, leftScreenX = 0.0f, leftScreenWidth = 0.0f, rightScreenX = 0.0f, rightScreenWidth = 0.0f;
+    
     StepperSequencerDataModel& mDataModel;
     AudioProcessorValueTreeState& mParameters;
+    
     std::atomic<float>* currentStep     { mParameters.getRawParameterValue("currentStep") };
     std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue("firstStepIndex") };
     std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue("lastStepIndex") };
     
     std::unique_ptr<AnimatedSelector> selector;
     std::unique_ptr<PitchController> pitchController;
-    std::unique_ptr<BarsController> fMController, multiplyController, seqModController;
+    std::unique_ptr<BarsController> fMController, multiplyController, modSeqController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
     
-    std::unique_ptr<SliderAttachment> pitchAttachments[32];
+    std::unique_ptr<SliderAttachment> pitchAttachments [MAX_NUM_OF_STEPS];
+    std::unique_ptr<SliderAttachment> fmAttachments    [MAX_NUM_OF_STEPS];
+    std::unique_ptr<SliderAttachment> multiAttachments [MAX_NUM_OF_STEPS];
+    std::unique_ptr<SliderAttachment> modSeqAttachments[MAX_NUM_OF_STEPS];
+    std::unique_ptr<SliderAttachment> gateAttachments  [MAX_NUM_OF_STEPS];
+    
     int displayedController = 0;
     bool isPlaying = false;
+    
     GreyScreen leftGreyedOut, rightGreyedOut;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepperSequencerModule)
 };

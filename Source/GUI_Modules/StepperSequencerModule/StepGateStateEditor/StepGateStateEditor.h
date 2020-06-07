@@ -15,6 +15,10 @@
 #include "../StepperSequencerConstants.h"
 #include "../../../Supporting_Files/Constants.h"
 
+#define GATE_ON 0
+#define GATE_GLIDE 1
+#define GATE_OFF 2
+
 //==============================================================================
 /*
 */
@@ -38,16 +42,20 @@ public:
     void moveFirstStepMarker();
     void sendGateChangeMessage();
     void changeAllGates();
+    void refreshView();
+    Slider& getSliderRef (int index);
     
     void mouseDown (const MouseEvent& e) override;
     void mouseDrag (const MouseEvent& e) override;
 
 private:
+    
     AudioProcessorValueTreeState& mParameters;
     String messege = "";
     float width, height, recWidth, recHeight;
     juce::Point<float> clickLocation;
-    StepGateStateValuesModel& gateStatesDataModel;
+//    StepGateStateValuesModel& gateStatesDataModel;
+    Slider sliders[MAX_NUM_OF_STEPS];
     std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue ("firstStepIndex") };
     std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue ("lastStepIndex") };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepGateStateEditor)

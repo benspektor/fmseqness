@@ -76,7 +76,9 @@ void BarsController::resizeControllBar (int stepNumber)
 {
     auto height = barMaxHeight * abs(mDataModel.values[stepNumber]);
     auto y = barMaxHeight - height + PADDING;
-    y = mDataModel.values[stepNumber] >= 0 ? y : barMaxHeight + PADDING;
+//    y = mDataModel.values[stepNumber] >= 0 ? y : barMaxHeight + PADDING;
+    auto value = sliders[stepNumber].getValue();
+    y = value >= 0 ? y : barMaxHeight + PADDING;
     bars[stepNumber]->setBounds ( PADDING + stepNumber * barWidth, y, barWidth, height);
 }
 
@@ -117,12 +119,14 @@ void BarsController::actionListenerCallback(const String &message)
             for (int barIndex = 0; barIndex < MAX_NUM_OF_STEPS; barIndex++)
             {
                 mDataModel.values[barIndex] = value;
+                sliders[barIndex].setValue(value);
                 resizeControllBar (barIndex);
             }
         }
         else
         {
             mDataModel.values[barNumber] = value;
+            sliders[barNumber].setValue(value);
             resizeControllBar (barNumber);
         }
         
@@ -183,5 +187,19 @@ void BarsController::gateStateChanged (int step)
         case glide:
             bars[step]->setVisible(false);
     }
+}
+
+Slider& BarsController::getSliderRef (int index)
+{
+    return sliders[index];
+}
+
+void BarsController::refreshView()
+{
+    for (int step = 0; step < MAX_NUM_OF_STEPS; step++)
+    {
+        resizeControllBar(step);
+    }
+    repaint();
 }
 

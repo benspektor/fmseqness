@@ -12,7 +12,7 @@
 #include "StepGateStateEditor.h"
 
 //==============================================================================
-StepGateStateEditor::StepGateStateEditor (AudioProcessorValueTreeState& parameters, StepGateStateValuesModel& dataModel) : mParameters (parameters), gateStatesDataModel (dataModel)
+StepGateStateEditor::StepGateStateEditor (AudioProcessorValueTreeState& parameters, StepGateStateValuesModel& dataModel) : mParameters (parameters)
 {
 }
 
@@ -121,13 +121,14 @@ void StepGateStateEditor::mouseDown (const MouseEvent& e)
 void StepGateStateEditor::changeAllGates()
 {
     int stepNumber = (clickLocation.x - PADDING) / (width - PADDING * 2) * TOTAL_NUMBER_OF_STEPS;
-    StepGateState state = gateStatesDataModel.values[stepNumber];
-    state = state == 2 ? on : StepGateState (state + 1);
+//    StepGateState state = gateStatesDataModel.values[stepNumber];
+    int state = sliders[stepNumber].getValue();
+    state = state == GATE_OFF ? GATE_ON : state + 1;
     
-    if (state == glide)
-        gateStatesDataModel.values[0] = on;
+    if (state == GATE_GLIDE)
+        sliders[0].setValue(GATE_ON);
     else
-        gateStatesDataModel.values[0] = state;
+        sliders[0].setValue(state);
 
     resetMessage(0);
     sendActionMessage(messege);
@@ -135,7 +136,8 @@ void StepGateStateEditor::changeAllGates()
     for (int stepIndex = 1; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
     {
         resetMessage (stepIndex);
-        gateStatesDataModel.values[stepIndex] = state;
+//        gateStatesDataModel.values[stepIndex] = state;
+        sliders[stepIndex].setValue (state);
         sendActionMessage(messege);
     }
     repaint();
@@ -173,18 +175,20 @@ void StepGateStateEditor::drawGateStateIcons (Graphics &g)
     
     for (auto stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        switch (gateStatesDataModel.values[stepNumber])
+        int state = sliders[stepNumber].getValue();
+        
+        switch (state)
         {
-            case on:
+            case GATE_ON:
                 leftYPosition = gatedLevel;
                 break;
                 
-            case glide:
+            case GATE_GLIDE:
                 leftYPosition = glideLevel;
                 break;
                 
-            case off:
-                leftYPosition  = floorLevel;
+            case GATE_OFF:
+                leftYPosition = floorLevel;
                 break;
         }
         
@@ -192,7 +196,7 @@ void StepGateStateEditor::drawGateStateIcons (Graphics &g)
         if (stepNumber == TOTAL_NUMBER_OF_STEPS - 1)
             rightYPosition = floorLevel;
         else
-            rightYPosition = gateStatesDataModel.values[stepNumber + 1] == glide ? glideLevel : floorLevel;
+            rightYPosition = sliders[stepNumber + 1].getValue() == GATE_GLIDE ? glideLevel : floorLevel;
         
         
         path.lineTo(xStartPosition + stepNumber * recWidth, leftYPosition);
@@ -215,27 +219,30 @@ bool StepGateStateEditor::isClickInsideBody(juce::Point<float> clickLocation)
 
 void StepGateStateEditor::toggleStepGateState (int stepNumber)
 {
-    switch (gateStatesDataModel.values[stepNumber])
+    int state =  sliders[stepNumber].getValue();
+    
+    switch (state)
     {
-        case on:
-            if (stepNumber > 0 && gateStatesDataModel.values[stepNumber - 1] != off)
-                gateStatesDataModel.values[stepNumber] = glide;
+        case GATE_ON:
+            if (stepNumber > 0 && sliders[stepNumber - 1].getValue() != GATE_OFF)
+                sliders[stepNumber].setValue(GATE_GLIDE);
             else
-                gateStatesDataModel.values[stepNumber] = off;
+                sliders[stepNumber].setValue(GATE_OFF);
             break;
             
-        case glide:
-            gateStatesDataModel.values[stepNumber] = off;
+        case GATE_GLIDE:
+            sliders[stepNumber].setValue(GATE_OFF);
             break;
             
-        case off:
-            gateStatesDataModel.values[stepNumber] = on;
+        case GATE_OFF:
+            sliders[stepNumber].setValue(GATE_ON);
             break;
     }
     
-    if (stepNumber < TOTAL_NUMBER_OF_STEPS - 1 && gateStatesDataModel.values[stepNumber] == off && gateStatesDataModel.values[stepNumber + 1] == glide)
+    if (stepNumber < TOTAL_NUMBER_OF_STEPS - 1 && sliders[stepNumber].getValue() == GATE_OFF && sliders[stepNumber + 1].getValue() == GATE_GLIDE)
     {
-        gateStatesDataModel.values[stepNumber + 1] = on;
+//        gateStatesDataModel.values[stepNumber + 1] = on;
+        sliders[stepNumber + 1].setValue(GATE_ON);
         messege << "_" << stepNumber + 1;
     }
 }
@@ -245,4 +252,18 @@ void StepGateStateEditor::resetMessage(int stepNumber)
     messege = "";
     messege << "StepGateStateEditor_GateChanged_";
     messege << stepNumber;
+}
+
+Slider& StepGateStateEditor::getSliderRef (int index)
+{
+    return sliders[index];
+}
+
+void StepGateStateEditor::refreshView()
+{
+//    for (int step = 0; step < MAX_NUM_OF_STEPS; step++)
+//    {
+//        
+//    }
+    repaint();
 }

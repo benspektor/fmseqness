@@ -94,7 +94,10 @@ const StringArray LFO_POLARITIES          { "Bi-Polar", "Positive", "Negative" }
 const StringArray LFO_RESTART_OPTIONS     { "Never", "Step", "Pattern" };
 const StringArray MODULATION_SOURCES      { "Mod Env", "LFO", "Mod Seq" };
 const StringArray MODULATION_DESTINATIONS { "FM", "Pitch", "Pan", "Volume", "Mod Multi", "Portamento", "Swing" };
+const StringArray STEP_GATE_STATES        { "On", "Glide", "Off" };
 
 const StringArray STEPS_PITCH {"step1Pitch","step2Pitch","step3Pitch","step4Pitch","step5Pitch","step6Pitch","step7Pitch","step8Pitch","step9Pitch","step10Pitch","step11Pitch","step12Pitch","step13Pitch","step14Pitch","step15Pitch","step16Pitch","step17Pitch","step18Pitch","step19Pitch","step20Pitch","step21Pitch","step22Pitch","step23Pitch","step24Pitch","step25Pitch","step26Pitch","step27Pitch","step28Pitch","step29Pitch","step30Pitch","step31Pitch","step32Pitch"};
+
+const StringArray STEPS_GATE {"step1GateState","step2GateState","step3GateState","step4GateState","step5GateState","step6GateState","step7GateState","step8GateState","step9GateState","step10GateState","step11GateState","step12GateState","step13GateState","step14GateState","step15GateState","step16GateState","step17GateState","step18GateState","step19GateState","step20GateState","step21GateState","step22GateState","step23GateState","step24GateState","step25GateState","step26GateState","step27GateState","step28GateState","step29GateState","step30GateState","step31GateState","step32GateState"};
 
 

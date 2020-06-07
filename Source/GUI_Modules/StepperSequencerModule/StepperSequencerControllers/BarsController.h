@@ -39,6 +39,8 @@ public:
     void lightUpStep (int stepIndex);
     void turnOffSteps();
     void gateStateChanged (int step);
+    void refreshView();
+    Slider& getSliderRef (int index);
 
 private:
     float width = 0.0f, height = 0.0f;
@@ -51,6 +53,7 @@ private:
     StepGateStateValuesModel& mGateModel;
     BarsControllerValuesModel& mDataModel;
     BarsMouseArea mouseArea;
+    Slider sliders[MAX_NUM_OF_STEPS];
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BarsController)
 };

@@ -53,7 +53,8 @@ private:
     PitchControllerValuesModel& mPitchDataModel;
     StepGateStateValuesModel& mGateDataModel;
     BarsMouseArea mouseArea;
+    Slider sliders[MAX_NUM_OF_STEPS];
     PitchLineScreen lineScreen { mPitchDataModel, mGateDataModel, recs };
-    Slider sliders[32];
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchController)
 };

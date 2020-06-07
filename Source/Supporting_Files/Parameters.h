@@ -72,43 +72,52 @@ struct Parameters
         params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvLevel"      , "Mod Envelope Level"       , 0.0f, 1.0f, 0.5f));
         params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvAttackCurve", "Mod Envelope Attack Curve", 0.0f, 1.0f, 0.0f));
         params.push_back (std::make_unique<AudioParameterFloat>  ("modEnvDecayCurve" , "Mod Envelope Decay Curve" , 0.0f, 1.0f, 0.0f));
+ 
         
+        for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+        {
+            String parameterID {"step"};
+            parameterID << stepIndex + 1 << "Pitch";
+            String parameterName {"Step "};
+            parameterName << stepIndex + 1 << " Pitch";
+            params.push_back (std::make_unique<AudioParameterInt> (parameterID, parameterName, -12, 12, 0));
+        }
         
-        params.push_back (std::make_unique<AudioParameterInt>    ("step1Pitch",  "Step 1 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step2Pitch",  "Step 2 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step3Pitch",  "Step 3 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step4Pitch",  "Step 4 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step5Pitch",  "Step 5 Pitch",  -12, 12, 5));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step6Pitch",  "Step 6 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step7Pitch",  "Step 7 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step8Pitch",  "Step 8 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step9Pitch",  "Step 9 Pitch",  -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step10Pitch", "Step 10 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step11Pitch", "Step 11 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step12Pitch", "Step 12 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step13Pitch", "Step 13 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step14Pitch", "Step 14 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step15Pitch", "Step 15 Pitch", -12, 12, 5));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step16Pitch", "Step 16 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step17Pitch", "Step 17 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step18Pitch", "Step 18 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step19Pitch", "Step 19 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step20Pitch", "Step 20 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step21Pitch", "Step 21 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step22Pitch", "Step 22 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step23Pitch", "Step 23 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step24Pitch", "Step 24 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step25Pitch", "Step 25 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step26Pitch", "Step 26 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step27Pitch", "Step 27 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step28Pitch", "Step 28 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step29Pitch", "Step 29 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step30Pitch", "Step 30 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step31Pitch", "Step 31 Pitch", -12, 12, 0));
-        params.push_back (std::make_unique<AudioParameterInt>    ("step32Pitch", "Step 32 Pitch", -12, 12, 0));
+        for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+        {
+            String parameterID {"step"};
+            parameterID << stepIndex + 1 << "FM";
+            String parameterName {"Step "};
+            parameterName << stepIndex + 1 << " FM";
+            params.push_back (std::make_unique<AudioParameterFloat> (parameterID, parameterName, 0.0f, 1.0f, 0.0f));
+        }
         
-        //    for (int i = 1; i < 9; ++i)
-        //        params.push_back (std::make_unique<AudioParameterInt> (String (i), String (i), 0, i, 0));
+        for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+        {
+            String parameterID {"step"};
+            parameterID << stepIndex + 1 << "ModMulti";
+            String parameterName {"Step "};
+            parameterName << stepIndex + 1 << " Modulator Multiplier";
+            params.push_back (std::make_unique<AudioParameterFloat> (parameterID, parameterName, 0.0f, 64.0f, 0.5f));
+        }
+        
+        for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+        {
+            String parameterID {"step"};
+            parameterID << stepIndex + 1 << "ModSeq";
+            String parameterName {"Step "};
+            parameterName << stepIndex + 1 << " Modulatation Sequencer";
+            params.push_back (std::make_unique<AudioParameterFloat> (parameterID, parameterName, -1.0f, 1.0f, 0.0f));
+        }
+        
+        for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
+        {
+            String parameterID {"step"};
+            parameterID << stepIndex + 1 << "GateState";
+            String parameterName {"Step "};
+            parameterName << stepIndex + 1 << " Gate State";
+            params.push_back (std::make_unique<AudioParameterInt> (parameterID, parameterName, 0, 2, 0));
+        }
         
         return { params.begin(), params.end() };
     }
