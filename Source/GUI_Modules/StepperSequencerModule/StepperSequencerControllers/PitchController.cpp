@@ -14,7 +14,7 @@
 
 
 //==============================================================================
-PitchController::PitchController (PitchControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel) : mPitchDataModel(dataModel), mGateDataModel(gateModel)
+PitchController::PitchController (AudioProcessorValueTreeState& parameters) : mParameters(parameters)
 {
     addNoteBars();
     addAndMakeVisible (lineScreen);
@@ -90,7 +90,7 @@ void PitchController::addNoteBars()
         bars.push_back (bar);
         addChildComponent (bar);
         
-        if (mGateDataModel.values[stepNumber] != off)
+        if (*mParameters.getRawParameterValue(STEPS_GATE[stepNumber]) != GATE_OFF)
             bar->setVisible(true);
     }
 }
@@ -162,12 +162,12 @@ void PitchController::timerCallback ( int currentStep )
 
 void PitchController::gateStateChanged (int stepNumber)
 {
-    switch (mGateDataModel.values[stepNumber])
+    switch ((int)*mParameters.getRawParameterValue(STEPS_GATE[stepNumber]))
     {
-        case on: case glide:
+        case GATE_ON: case GATE_GLIDE:
             bars[stepNumber]->setVisible(true);
             break;
-        case off:
+        case GATE_OFF:
             bars[stepNumber]->setVisible(false);
     }
     

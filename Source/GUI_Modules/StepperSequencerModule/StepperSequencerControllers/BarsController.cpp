@@ -14,7 +14,7 @@
 
 
 //==============================================================================
-BarsController::BarsController(bool isBidirectional, BarsControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel, int numOfDiscreteValues) :  mGateModel(gateModel), mDataModel(dataModel)
+BarsController::BarsController(AudioProcessorValueTreeState& parameters, bool isBidirectional, int numOfDiscreteValues) : mParameters(parameters)
 {
     this->isBidirectional = isBidirectional;
     this->numOfDiscreteValues = numOfDiscreteValues;
@@ -59,7 +59,7 @@ void BarsController::addControllBars()
         SafePointer<Bar> bar = new Bar(isDownBeat);
         bars.push_back (bar);
         addChildComponent (bar);
-        if (mGateModel.values[stepNumber] == on)
+        if (*mParameters.getRawParameterValue(STEPS_GATE[stepNumber]) == GATE_ON) //mGateModel.values[stepNumber] == on
             bar->setVisible(true);
     }
 }
@@ -74,7 +74,7 @@ void BarsController::resizeControllBars()
 
 void BarsController::resizeControllBar (int stepNumber)
 {
-    auto height = barMaxHeight * abs(mDataModel.values[stepNumber]);
+    auto height = barMaxHeight * abs(sliders[stepNumber].getValue());
     auto y = barMaxHeight - height + PADDING;
 //    y = mDataModel.values[stepNumber] >= 0 ? y : barMaxHeight + PADDING;
     auto value = sliders[stepNumber].getValue();
@@ -108,8 +108,11 @@ void BarsController::actionListenerCallback(const String &message)
             else
             {
                 currentArea = (currentArea + 1) / 2;
-                value = float(currentArea) / float (numOfDiscreteValues - 1);
+                
+                value = double(currentArea) / double (numOfDiscreteValues - 1);
+//                DBG(value * (numOfDiscreteValues - 1) );
             }
+//            DBG(currentArea);  
         }
         
         value = isBidirectional ? value * 2 - 1 : value;
@@ -118,14 +121,14 @@ void BarsController::actionListenerCallback(const String &message)
         {
             for (int barIndex = 0; barIndex < MAX_NUM_OF_STEPS; barIndex++)
             {
-                mDataModel.values[barIndex] = value;
+//                mDataModel.values[barIndex] = value;
                 sliders[barIndex].setValue(value);
                 resizeControllBar (barIndex);
             }
         }
         else
         {
-            mDataModel.values[barNumber] = value;
+//            mDataModel.values[barNumber] = value;
             sliders[barNumber].setValue(value);
             resizeControllBar (barNumber);
         }
@@ -157,15 +160,15 @@ void BarsController::timerCallback ( int currentStep )
     {
         if (i == currentStep)
         {
-            if (mGateModel.values[i] == on)
+            if (*mParameters.getRawParameterValue(STEPS_GATE[i]) == GATE_ON)
             {
                 bars[i]->lightUp();
             }
-            else if (mGateModel.values[i] == glide)
+            else if (*mParameters.getRawParameterValue(STEPS_GATE[i]) == GATE_GLIDE)
             {
                 auto gate = i;
                 
-                while (mGateModel.values[gate] != on)
+                while (*mParameters.getRawParameterValue(STEPS_GATE[i]) != GATE_ON)
                     gate--;
                 
                 bars[gate]->lightUp();
@@ -177,14 +180,14 @@ void BarsController::timerCallback ( int currentStep )
 
 void BarsController::gateStateChanged (int step)
 {
-    switch (mGateModel.values[step])
+    switch ((int)*mParameters.getRawParameterValue(STEPS_GATE[step]))
     {
-        case on:
+        case GATE_ON:
             bars[step]->setVisible(true);
             break;
             
-        case off:
-        case glide:
+        case GATE_OFF:
+        case GATE_GLIDE:
             bars[step]->setVisible(false);
     }
 }

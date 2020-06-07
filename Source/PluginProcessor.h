@@ -94,11 +94,12 @@ public:
     float getLfoAmp();
     void updateSequncerNumberOfSteps();
     void updateLFOAngle();
-    float getModulatorMultiFrom01 (float value);
+    float getModulatorMultiFrom01 (double value);
     void processModMatrix(float env, float lfo, float modSeq);
     void refreshEnvelopesModels();
     void matrixModelSetup();
-    StepperSequencerDataModel& getStepperDataModel();
+    float getStepLength (int stepIndex);
+//    StepperSequencerDataModel& getStepperDataModel();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
@@ -111,7 +112,7 @@ private:
     StepSequencer sequencer { mParameters };
     FM2SineOscsGenerator sines;
     LFO lfo { mParameters };
-    std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
+//    std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     ModMatrixModel matrix;
     
     double currentSampleRate = 0.0;
@@ -120,7 +121,7 @@ private:
     float portamentoPitchUnit = 0.0f;
     float currentStepPitch = 0;
     float currentStepFM = 0.0f;
-    float currentStepModMulti = 0.0f;
+    double currentStepModMulti = 0.0f;
     float targetPitch = 0;
     float poratmentoAccumulator = 0.0f;
     int portamentoCountDown = 0;

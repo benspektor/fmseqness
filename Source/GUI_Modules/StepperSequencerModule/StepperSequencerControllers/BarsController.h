@@ -24,7 +24,7 @@ class BarsController    : public Component, public ActionListener, public Action
 public:
     void extracted();
     
-    BarsController(bool isBidirectional, BarsControllerValuesModel& model, StepGateStateValuesModel& gateModel, int numOfSteps = 0);
+    BarsController(AudioProcessorValueTreeState& parameters,  bool isBidirectional, int numOfSteps = 0);
     ~BarsController();
     
     void paint (Graphics&) override;
@@ -43,6 +43,7 @@ public:
     Slider& getSliderRef (int index);
 
 private:
+    AudioProcessorValueTreeState& mParameters;
     float width = 0.0f, height = 0.0f;
     float barWidth = 0.0f;
     float barMaxHeight = 0.0f;
@@ -50,8 +51,8 @@ private:
     int numOfDiscreteValues = 0;
     String message;
     std::vector<SafePointer<Bar>> bars;
-    StepGateStateValuesModel& mGateModel;
-    BarsControllerValuesModel& mDataModel;
+//    StepGateStateValuesModel& mGateModel;
+//    BarsControllerValuesModel& mDataModel;
     BarsMouseArea mouseArea;
     Slider sliders[MAX_NUM_OF_STEPS];
     

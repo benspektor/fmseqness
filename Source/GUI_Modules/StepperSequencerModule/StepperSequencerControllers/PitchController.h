@@ -26,9 +26,7 @@
 class PitchController    : public Component, public ActionListener,public ActionBroadcaster
 {
 public:
-    
-    
-    PitchController (PitchControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel);
+    PitchController (AudioProcessorValueTreeState& parameters);
     ~PitchController();
     
     void paint (Graphics&) override;
@@ -46,15 +44,16 @@ public:
     Slider& getSliderRef (int index);
     
 private:
+    AudioProcessorValueTreeState& mParameters;
     float width = 0.0f, height = 0.0f, barWidth = 0.0f, barHeight = 0.0f;
     Rectangle<float> recs[TOTAL_NUMBER_OF_STEPS];
     String message;
     std::vector<SafePointer<Bar>> bars;
-    PitchControllerValuesModel& mPitchDataModel;
-    StepGateStateValuesModel& mGateDataModel;
+//    PitchControllerValuesModel& mPitchDataModel;
+//    StepGateStateValuesModel& mGateDataModel;
     BarsMouseArea mouseArea;
     Slider sliders[MAX_NUM_OF_STEPS];
-    PitchLineScreen lineScreen { mPitchDataModel, mGateDataModel, recs };
+    PitchLineScreen lineScreen { mParameters, recs };
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchController)
 };

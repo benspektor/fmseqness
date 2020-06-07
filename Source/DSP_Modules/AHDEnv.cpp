@@ -52,6 +52,8 @@ void AHDEnv::reset (float currentSample, float length)
     attack = 0.0;
     decay  = 1.0;
     hold   = 1.0;
+    
+    updateValues();
 }
 
 void AHDEnv::startDecay()

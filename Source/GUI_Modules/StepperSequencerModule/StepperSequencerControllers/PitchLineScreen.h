@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../StepperSequencerConstants.h"
+#include "../../../Supporting_Files/SupportingFiles.h"
 
 //==============================================================================
 /*
@@ -19,7 +19,7 @@
 class PitchLineScreen    : public Component
 {
 public:
-    PitchLineScreen (PitchControllerValuesModel& dataModel, StepGateStateValuesModel& gateModel, Rectangle<float> (&recs)[TOTAL_NUMBER_OF_STEPS]) : mDataModel(dataModel), mGateModel(gateModel), mRecs(recs)
+    PitchLineScreen (AudioProcessorValueTreeState& parameters, Rectangle<float> (&recs)[TOTAL_NUMBER_OF_STEPS]) : mParameters (parameters), mRecs(recs)
     {
     }
 
@@ -33,7 +33,7 @@ public:
         
         for (auto stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
         {
-            if (mGateModel.values[stepNumber] == glide)
+            if (*mParameters.getRawParameterValue(STEPS_GATE[stepNumber]) == GATE_GLIDE)
             {
                 Path path;
                 path.startNewSubPath ( mRecs[stepNumber].getCentre() );
@@ -48,8 +48,9 @@ public:
     }
 
 private:
-    PitchControllerValuesModel& mDataModel;
-    StepGateStateValuesModel& mGateModel;
+    AudioProcessorValueTreeState& mParameters;
+//    PitchControllerValuesModel& mDataModel;
+//    StepGateStateValuesModel& mGateModel;
     Rectangle<float> (&mRecs)[TOTAL_NUMBER_OF_STEPS];
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchLineScreen)
 };

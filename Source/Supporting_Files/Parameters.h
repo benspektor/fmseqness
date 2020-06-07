@@ -98,7 +98,7 @@ struct Parameters
             parameterID << stepIndex + 1 << "ModMulti";
             String parameterName {"Step "};
             parameterName << stepIndex + 1 << " Modulator Multiplier";
-            params.push_back (std::make_unique<AudioParameterFloat> (parameterID, parameterName, 0.0f, 64.0f, 0.5f));
+            params.push_back (std::make_unique<AudioParameterFloat> (parameterID, parameterName, 0.0f, 1.0f, 0.0f));
         }
         
         for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)

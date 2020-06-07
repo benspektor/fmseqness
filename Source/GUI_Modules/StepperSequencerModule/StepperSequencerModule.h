@@ -30,7 +30,7 @@ enum Controller
 class StepperSequencerModule : public Component, public ActionListener, public AudioProcessorListener, public ActionBroadcaster
 {
 public:
-    StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters);
+    StepperSequencerModule(AudioProcessorValueTreeState& parameters);
     ~StepperSequencerModule();
 
     void paint (Graphics&) override;
@@ -57,16 +57,16 @@ public:
 private:
     float width = 0.0f, height = 0.0f, barLength = 0.0f, leftScreenX = 0.0f, leftScreenWidth = 0.0f, rightScreenX = 0.0f, rightScreenWidth = 0.0f;
     
-    StepperSequencerDataModel& mDataModel;
+//    StepperSequencerDataModel& mDataModel;
     AudioProcessorValueTreeState& mParameters;
     
     std::atomic<float>* currentStep     { mParameters.getRawParameterValue("currentStep") };
     std::atomic<float>* firstStepIndex  { mParameters.getRawParameterValue("firstStepIndex") };
     std::atomic<float>* lastStepIndex   { mParameters.getRawParameterValue("lastStepIndex") };
     
-    std::unique_ptr<AnimatedSelector> selector;
-    std::unique_ptr<PitchController> pitchController;
-    std::unique_ptr<BarsController> fMController, multiplyController, modSeqController;
+    std::unique_ptr<AnimatedSelector>    selector;
+    std::unique_ptr<PitchController>     pitchController;
+    std::unique_ptr<BarsController>      fMController, multiplyController, modSeqController;
     std::unique_ptr<StepGateStateEditor> gateStateEditor;
     
     std::unique_ptr<SliderAttachment> pitchAttachments [MAX_NUM_OF_STEPS];

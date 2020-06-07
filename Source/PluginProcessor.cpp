@@ -17,7 +17,7 @@ FmseqnessAudioProcessor::FmseqnessAudioProcessor()
 : AudioProcessor (BusesProperties().withOutput ("Output", AudioChannelSet::stereo(), true)),
 mParameters (*this, nullptr, Identifier ("FMSeqness"), Parameters::createParameterLayout())
 {
-    mStepperDataModel.reset ( new StepperSequencerDataModel() );
+//    mStepperDataModel.reset ( new StepperSequencerDataModel() );
     addListener(&lfo);
     addListener(&sequencer);
     refreshEnvelopesModels();
@@ -219,10 +219,10 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 
-StepperSequencerDataModel& FmseqnessAudioProcessor::getStepperDataModel()
-{
-    return *mStepperDataModel;
-}
+//StepperSequencerDataModel& FmseqnessAudioProcessor::getStepperDataModel()
+//{
+//    return *mStepperDataModel;
+//}
 
 AudioProcessorValueTreeState& FmseqnessAudioProcessor::getParametersTree()
 {
@@ -252,20 +252,25 @@ void FmseqnessAudioProcessor::trigger()
     
     if (gateState == GATE_ON)
     {
-        auto swingFactor = stepIndex % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
-        float stepLength = mStepperDataModel->getStepLength (stepIndex);
         
-        if (int(stepLength) % 2 == 1)
-            stepLength = stepLength -  1 + swingFactor;
+        float stepLength = getStepLength(stepIndex);
+//        DBG(stepLength);
+        
+//        if (int(stepLength) % 2 == 1)
+//            stepLength = stepLength -  1 + swingFactor;
         
         ampAhdEnv.reset (ampEnv, stepLength);
         ampAhdEnv.state = PlayState::play;
         modAhdEnv.reset (ampEnv, stepLength);
         modAhdEnv.state = PlayState::play;
-        currentStepFM = mStepperDataModel->fmValues.values[stepIndex];
-        currentStepModMulti = mStepperDataModel->modMultiValues.values[stepIndex];
+//        currentStepFM = mStepperDataModel->fmValues.values[stepIndex];
+        currentStepFM = *mParameters.getRawParameterValue(STEPS_FM[stepIndex]);
+//        currentStepModMulti = mStepperDataModel->modMultiValues.values[stepIndex];
+        currentStepModMulti = *mParameters.getRawParameterValue(STEPS_MOD_MULTI[stepIndex]);
         currentStepModMulti = getModulatorMultiFrom01(currentStepModMulti);
-        modSeqCurrentValue  = mStepperDataModel->seqModValues.values[stepIndex];
+//        DBG(currentStepModMulti);
+//        modSeqCurrentValue  = mStepperDataModel->seqModValues.values[stepIndex];
+        modSeqCurrentValue  = *mParameters.getRawParameterValue(STEPS_MOD_SEQ[stepIndex]);
     }
     
     portamentoPitchUnit = (targetPitch - currentStepPitch ) / (portamento->load() * getNumberOfSamplesInStep());
@@ -309,12 +314,12 @@ float FmseqnessAudioProcessor::getNextStepPitch()
 bool FmseqnessAudioProcessor::getNextStepGlide()
 {
     if (currentStep->load() == lastStepIndex->load())
-        return mStepperDataModel->gateStateValues.values[int(firstStepIndex->load())];
+        return mParameters.getRawParameterValue(STEPS_GATE[int(*firstStepIndex)]);
     
-    else if (currentStep->load() == MAX_NUM_OF_STEPS - 1)
-        return mStepperDataModel->gateStateValues.values[0] + basePitch->load();
+    else if (*currentStep == MAX_NUM_OF_STEPS - 1)
+        return *mParameters.getRawParameterValue(STEPS_GATE[0]) + *basePitch;
     
-    return mStepperDataModel->gateStateValues.values[int(currentStep->load()) + 1];
+    return *mParameters.getRawParameterValue(STEPS_GATE[int(*currentStep) + 1]);
 }
 
 float FmseqnessAudioProcessor::getLfoAmp()
@@ -332,32 +337,11 @@ void FmseqnessAudioProcessor::updateLFOAngle()
     lfo.updateAngleDelta();
 }
 
-float FmseqnessAudioProcessor::getModulatorMultiFrom01 (float value)
+float FmseqnessAudioProcessor::getModulatorMultiFrom01 (double value)
 {
-    float returnValue = 0.0f;
+    int valueIndex = value * (NUM_OF_MOD_VALUES - 1) + 0.1;
     
-    if (value == 0.0f)
-        returnValue = 0.25;
-    else if (value == 1.0f/9.0f )
-        returnValue = 0.5;
-    else if (value == 2.0f/9.0f )
-        returnValue = 1;
-    else if (value == 3.0f/9.0f )
-        returnValue = 2;
-    else if (value == 4.0f/9.0f )
-        returnValue = 3;
-    else if (value == 5.0f/9.0f )
-        returnValue = 4;
-    else if (value == 6.0f/9.0f )
-        returnValue = 5;
-    else if (value == 7.0f/9.0f )
-        returnValue = 6;
-    else if (value == 8.0f/9.0f )
-        returnValue = 7;
-    else if (value == 9.0f/9.0f )
-        returnValue = 8;
-    
-    return returnValue;
+    return MODULATOR_MULTI_VALUES[valueIndex];
 }
 
 
@@ -412,4 +396,20 @@ void FmseqnessAudioProcessor::matrixModelSetup()
         
         matrix.mods.push_back(module);
     }
+}
+
+float FmseqnessAudioProcessor::getStepLength (int stepIndex)
+{
+    int endIndex = stepIndex + 1;
+    
+    while (*mParameters.getRawParameterValue(STEPS_GATE[endIndex]) == GATE_GLIDE)
+        endIndex++;
+    
+    float length = endIndex - stepIndex;
+    float swingFactor = stepIndex % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
+    
+    if (int(length) % 2 == 1)
+        length = length -  1 + swingFactor;
+    
+    return length;
 }

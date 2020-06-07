@@ -15,9 +15,7 @@
 #include "../StepperSequencerConstants.h"
 #include "../../../Supporting_Files/Constants.h"
 
-#define GATE_ON 0
-#define GATE_GLIDE 1
-#define GATE_OFF 2
+
 
 //==============================================================================
 /*
@@ -25,7 +23,7 @@
 class StepGateStateEditor    : public Component, public ActionBroadcaster
 {
 public:
-    StepGateStateEditor (AudioProcessorValueTreeState& parameters, StepGateStateValuesModel& dataModel);
+    StepGateStateEditor (AudioProcessorValueTreeState& parameters);
     ~StepGateStateEditor();
 
     void paint (Graphics&) override;

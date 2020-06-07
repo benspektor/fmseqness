@@ -15,7 +15,7 @@
 FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    stepSeqModule  .reset ( new StepperSequencerModule ( processor.getStepperDataModel(), processor.getParametersTree()));
+    stepSeqModule  .reset ( new StepperSequencerModule ( processor.getParametersTree()));
     ampAhdEnvWindow.reset ( new AHDEnvWindow (processor.getAmpAHDEnvDataModel(), "Amp"));
     modAhdEnvWindow.reset ( new AHDEnvWindow (processor.getModAHDEnvDataModel(), "Mod"));
     seqPanel       .reset ( new SequencerPanelModule( processor.getParametersTree() ));

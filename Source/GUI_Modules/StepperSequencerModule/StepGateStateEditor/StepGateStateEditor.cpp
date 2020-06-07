@@ -12,7 +12,7 @@
 #include "StepGateStateEditor.h"
 
 //==============================================================================
-StepGateStateEditor::StepGateStateEditor (AudioProcessorValueTreeState& parameters, StepGateStateValuesModel& dataModel) : mParameters (parameters)
+StepGateStateEditor::StepGateStateEditor (AudioProcessorValueTreeState& parameters) : mParameters (parameters)
 {
 }
 

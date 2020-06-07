@@ -12,17 +12,17 @@
 #include "StepperSequencerModule.h"
 
 //==============================================================================
-StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataModel, AudioProcessorValueTreeState& parameters) : mDataModel(dataModel), mParameters(parameters)
+StepperSequencerModule::StepperSequencerModule(AudioProcessorValueTreeState& parameters) : mParameters(parameters)
 {
     String array[] = {"Pitch","FM","Modulator Multi", "Mod Seq"};
     selector.reset (new AnimatedSelector (array, 4, true));
     selector->addActionListener(this);
     
-    pitchController   .reset ( new PitchController     ( mDataModel.pitchValues, mDataModel.gateStateValues));
-    fMController      .reset ( new BarsController      ( false, mDataModel.fmValues, mDataModel.gateStateValues) );
-    multiplyController.reset ( new BarsController      ( false, mDataModel.modMultiValues, mDataModel.gateStateValues, 10));
-    modSeqController  .reset ( new BarsController      ( true, mDataModel.seqModValues, mDataModel.gateStateValues));
-    gateStateEditor   .reset ( new StepGateStateEditor ( mParameters, mDataModel.gateStateValues) );
+    pitchController   .reset ( new PitchController     ( mParameters ));
+    fMController      .reset ( new BarsController      ( mParameters, false) );
+    multiplyController.reset ( new BarsController      ( mParameters, false, 10));
+    modSeqController  .reset ( new BarsController      ( mParameters, true));
+    gateStateEditor   .reset ( new StepGateStateEditor ( mParameters ));
     
     gateStateEditor->addActionListener(this);
     
@@ -59,7 +59,7 @@ StepperSequencerModule::StepperSequencerModule(StepperSequencerDataModel& dataMo
     for (int i = 0; i < MAX_NUM_OF_STEPS; i++)
     {
         String parameterID {"step"};
-        parameterID << i + 1 << "Multi";
+        parameterID << i + 1 << "ModMulti";
         multiAttachments[i].reset ( new SliderAttachment (mParameters, parameterID, multiplyController->getSliderRef(i)));
     }
     
@@ -112,7 +112,6 @@ void StepperSequencerModule::actionListenerCallback (const String& message)
 {
     if (message == "Preset Loaded")
     {
-        DBG("Got it!");
         pitchController->refreshView();
     }
     

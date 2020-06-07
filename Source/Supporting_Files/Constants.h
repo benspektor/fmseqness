@@ -11,6 +11,10 @@
 #pragma once
 #include <JuceHeader.h>
 
+#define GATE_ON 0
+#define GATE_GLIDE 1
+#define GATE_OFF 2
+
 typedef AudioProcessorValueTreeState::SliderAttachment   SliderAttachment;
 typedef AudioProcessorValueTreeState::ButtonAttachment   ButtonAttachment;
 typedef AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
@@ -88,6 +92,9 @@ constexpr float SEQUENCER_PANEL_HEIGHT = 80;
 constexpr float ENVELOPE_WINDOW_HEIGHT = 180;
 constexpr float MOD_MATRIX_HEIGHT      = 60;
 
+constexpr int   NUM_OF_MOD_VALUES = 10;
+constexpr float MODULATOR_MULTI_VALUES[NUM_OF_MOD_VALUES] = { 0.25f, 0.5f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f };
+
 
 const StringArray LFO_SHAPES              { "Saw", "Sine", "Triangle", "Square" };
 const StringArray LFO_POLARITIES          { "Bi-Polar", "Positive", "Negative" };
@@ -97,6 +104,12 @@ const StringArray MODULATION_DESTINATIONS { "FM", "Pitch", "Pan", "Volume", "Mod
 const StringArray STEP_GATE_STATES        { "On", "Glide", "Off" };
 
 const StringArray STEPS_PITCH {"step1Pitch","step2Pitch","step3Pitch","step4Pitch","step5Pitch","step6Pitch","step7Pitch","step8Pitch","step9Pitch","step10Pitch","step11Pitch","step12Pitch","step13Pitch","step14Pitch","step15Pitch","step16Pitch","step17Pitch","step18Pitch","step19Pitch","step20Pitch","step21Pitch","step22Pitch","step23Pitch","step24Pitch","step25Pitch","step26Pitch","step27Pitch","step28Pitch","step29Pitch","step30Pitch","step31Pitch","step32Pitch"};
+
+const StringArray STEPS_FM {"step1FM","step2FM","step3FM","step4FM","step5FM","step6FM","step7FM","step8FM","step9FM","step10FM","step11FM","step12FM","step13FM","step14FM","step15FM","step16FM","step17FM","step18FM","step19FM","step20FM","step21FM","step22FM","step23FM","step24FM","step25FM","step26FM","step27FM","step28FM","step29FM","step30FM","step31FM","step32FM"};
+
+const StringArray STEPS_MOD_MULTI {"step1ModMulti","step2ModMulti","step3ModMulti","step4ModMulti","step5ModMulti","step6ModMulti","step7ModMulti","step8ModMulti","step9ModMulti","step10ModMulti","step11ModMulti","step12ModMulti","step13ModMulti","step14ModMulti","step15ModMulti","step16ModMulti","step17ModMulti","step18ModMulti","step19ModMulti","step20ModMulti","step21ModMulti","step22ModMulti","step23ModMulti","step24ModMulti","step25ModMulti","step26ModMulti","step27ModMulti","step28ModMulti","step29ModMulti","step30ModMulti","step31ModMulti","step32ModMulti"};
+
+const StringArray STEPS_MOD_SEQ {"step1ModSeq","step2ModSeq","step3ModSeq","step4ModSeq","step5ModSeq","step6ModSeq","step7ModSeq","step8ModSeq","step9ModSeq","step10ModSeq","step11ModSeq","step12ModSeq","step13ModSeq","step14ModSeq","step15ModSeq","step16ModSeq","step17ModSeq","step18ModSeq","step19ModSeq","step20ModSeq","step21ModSeq","step22ModSeq","step23ModSeq","step24ModSeq","step25ModSeq","step26ModSeq","step27ModSeq","step28ModSeq","step29ModSeq","step30ModSeq","step31ModSeq","step32ModSeq"};
 
 const StringArray STEPS_GATE {"step1GateState","step2GateState","step3GateState","step4GateState","step5GateState","step6GateState","step7GateState","step8GateState","step9GateState","step10GateState","step11GateState","step12GateState","step13GateState","step14GateState","step15GateState","step16GateState","step17GateState","step18GateState","step19GateState","step20GateState","step21GateState","step22GateState","step23GateState","step24GateState","step25GateState","step26GateState","step27GateState","step28GateState","step29GateState","step30GateState","step31GateState","step32GateState"};
 
