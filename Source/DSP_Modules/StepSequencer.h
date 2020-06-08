@@ -28,6 +28,7 @@ public:
     void setSampleRate ( double sampleRate );
     void updateStepDelte();
     void updateNumberOfSteps();
+    bool isCurrentStepSwinged();
     
     //AudioProcessorListener
     void audioProcessorParameterChanged (AudioProcessor* processor,
@@ -49,6 +50,6 @@ private:
     int prevStep = MAX_NUM_OF_STEPS;
     int currentNumOfSteps = 0;
     int currentStep = -1;
-    int count = 0;
+    int samplesCount = 0;
     int stepLengthInSamples = 0;
 };

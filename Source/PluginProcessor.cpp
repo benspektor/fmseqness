@@ -132,6 +132,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     {
         ampAhdEnv.startDecay();
         modAhdEnv.startDecay();
+        gateAmp = 0.0f;
     }
     
     LFOShape shape = LFOShape (int(lfoShape->load()));
@@ -147,16 +148,19 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 
         if (isNextStepGlide && portamentoCountDown == 0)
             poratmentoAccumulator += portamentoPitchUnit;
-
-        ampEnv = ampAhdEnv.process();
+        
+        
+        ampEnv =  ampAhdEnv.process();
         modEnv = modAhdEnv.process();
+        bool isEnvAmpControl = *ampControl == 0.0f;
+        float amp = isEnvAmpControl ? ampEnv : gateAmp;
  
         processModMatrix(modEnv, lfoAmp, modSeqCurrentValue);
         
         auto calculatedPitch    = currentStepPitch + poratmentoAccumulator + modMatrix.pitch * 36.0f;
-        auto calculatedFM       = pow (currentStepFM + modMatrix.fm, 2);
+        auto calculatedFM       = pow (jmax (currentStepFM + modMatrix.fm, 0.0f), 2);
         auto calculatedModMulti = currentStepModMulti + modMatrix.modMulti * 2.0f;
-        auto calculatedVolume   = level * ampEnv * (modMatrix.volume + 1);
+        auto calculatedVolume   = level * amp * (modMatrix.volume + 1);
         auto calculatedPanMod   = modMatrix.pan / 2.0f;
         
         currentSwingValue = jlimit ( 1.0f, 1.9f, *swingValue + modMatrix.swing );
@@ -185,13 +189,12 @@ void FmseqnessAudioProcessor::getStateInformation (MemoryBlock& destData)
     auto state = mParameters.copyState();
     std::unique_ptr<XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
-    
-//    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
-//    {
-//        String parameterName {"step"};
-//        parameterName << stepIndex + 1 << "Pitch";
-//        DBG(*mParameters.getRawParameterValue(parameterName));
-//    }
+}
+
+void FmseqnessAudioProcessor::handleLoadedPreset()
+{
+    sequencer.updateNumberOfSteps();
+    sendActionMessage ( "Preset Loaded" );
 }
 
 void FmseqnessAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -201,14 +204,7 @@ void FmseqnessAudioProcessor::setStateInformation (const void* data, int sizeInB
     if (xmlState.get() != nullptr && xmlState->hasTagName (mParameters.state.getType()))
         mParameters.replaceState (ValueTree::fromXml (*xmlState));
     
-    sendActionMessage ( "Preset Loaded" );
-    
-//    for (int stepIndex = 0; stepIndex < MAX_NUM_OF_STEPS; stepIndex++)
-//    {
-//        String parameterName {"step"};
-//        parameterName << stepIndex + 1 << "Pitch";
-//        DBG(*mParameters.getRawParameterValue(parameterName));
-//    }
+    handleLoadedPreset();
 }
 
 //==============================================================================
@@ -219,11 +215,6 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 
-//StepperSequencerDataModel& FmseqnessAudioProcessor::getStepperDataModel()
-//{
-//    return *mStepperDataModel;
-//}
-
 AudioProcessorValueTreeState& FmseqnessAudioProcessor::getParametersTree()
 {
     return mParameters;
@@ -233,52 +224,49 @@ void FmseqnessAudioProcessor::trigger()
 {
     const int stepIndex = sequencer.getCurrentStepIndex();
     currentStep->store(stepIndex);
-//    currentStepPitch = (int)mStepperDataModel->pitchValues.values[stepIndex]->getValue() + basePitch->load();
     currentStepPitch = *mParameters.getRawParameterValue(STEPS_PITCH[stepIndex]) + *basePitch;
     targetPitch = getNextStepPitch();
     isNextStepGlide = getNextStepGlide();
     poratmentoAccumulator = 0.0f;
     
-//    auto gateState = mStepperDataModel->gateStateValues.values[stepIndex];
-    auto gateState = (int)*mParameters.getRawParameterValue(STEPS_GATE[stepIndex]);
+    int gateState = *mParameters.getRawParameterValue(STEPS_GATE[stepIndex]);
     
-    int lfo2Restart = lfoRestart->load();
+    int restartLFO = lfoRestart->load();
     
-    if (lfo2Restart == 1)
+    if (LFO_RESTART_OPTIONS[restartLFO] == "Step")
+        lfo.restart();
+    
+    else if (LFO_RESTART_OPTIONS[restartLFO] == "Pattern" && stepIndex == firstStepIndex->load())
         lfo.restart();
     
     if (gateState == GATE_OFF)
+    {
+        gateAmp = 0.0f;
         return;
+    }
+        
     
     if (gateState == GATE_ON)
     {
-        
-        float stepLength = getStepLength(stepIndex);
-//        DBG(stepLength);
-        
-//        if (int(stepLength) % 2 == 1)
-//            stepLength = stepLength -  1 + swingFactor;
-        
+        gateAmp = 1.0f;
+        sines.restart();
+        float stepLength = getTotalStepLength(stepIndex);
         ampAhdEnv.reset (ampEnv, stepLength);
         ampAhdEnv.state = PlayState::play;
         modAhdEnv.reset (ampEnv, stepLength);
         modAhdEnv.state = PlayState::play;
-//        currentStepFM = mStepperDataModel->fmValues.values[stepIndex];
-        currentStepFM = *mParameters.getRawParameterValue(STEPS_FM[stepIndex]);
-//        currentStepModMulti = mStepperDataModel->modMultiValues.values[stepIndex];
+        
+        currentStepFM       = *mParameters.getRawParameterValue(STEPS_FM[stepIndex]);
         currentStepModMulti = *mParameters.getRawParameterValue(STEPS_MOD_MULTI[stepIndex]);
-        currentStepModMulti = getModulatorMultiFrom01(currentStepModMulti);
-//        DBG(currentStepModMulti);
-//        modSeqCurrentValue  = mStepperDataModel->seqModValues.values[stepIndex];
+        currentStepModMulti = getModulatorMultiFrom01 ( currentStepModMulti );
         modSeqCurrentValue  = *mParameters.getRawParameterValue(STEPS_MOD_SEQ[stepIndex]);
     }
     
-    portamentoPitchUnit = (targetPitch - currentStepPitch ) / (portamento->load() * getNumberOfSamplesInStep());
+    portamentoPitchUnit = (targetPitch - currentStepPitch ) / (portamento->load() * getNumberOfSamplesInStep(true));
     portamentoPitchUnit = isNextStepGlide ? portamentoPitchUnit : 0.0f;
-    portamentoCountDown = getNumberOfSamplesInStep() * (1.0 - portamento->load());
+    portamentoCountDown = getNumberOfSamplesInStep(true) * (1.0 - portamento->load());
     
-    if (lfo2Restart == 2 && stepIndex == firstStepIndex->load())
-        lfo.restart();
+    
 }
 
 AHDEnvDataModel& FmseqnessAudioProcessor::getAmpAHDEnvDataModel()
@@ -291,10 +279,13 @@ AHDEnvDataModel& FmseqnessAudioProcessor::getModAHDEnvDataModel()
     return mModAHDEnvModel;
 }
 
-int FmseqnessAudioProcessor::getNumberOfSamplesInStep()
+int FmseqnessAudioProcessor::getNumberOfSamplesInStep(bool considerSwing)
 {
-    int    step = currentStep->load();
-    float  swingFactor = step % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
+    auto swingFactor = 1.0f;
+    
+    if (considerSwing)
+        swingFactor = sequencer.isCurrentStepSwinged() ? 2.0f - swingValue->load() : swingValue->load();
+    
     return swingFactor * currentSampleRate * (60 / tempo->load()) / 4;
 }
 
@@ -398,18 +389,23 @@ void FmseqnessAudioProcessor::matrixModelSetup()
     }
 }
 
-float FmseqnessAudioProcessor::getStepLength (int stepIndex)
+float FmseqnessAudioProcessor::getTotalStepLength (int stepIndex)
 {
     int endIndex = stepIndex + 1;
     
-    while (*mParameters.getRawParameterValue(STEPS_GATE[endIndex]) == GATE_GLIDE)
+    while (endIndex < MAX_NUM_OF_STEPS && *mParameters.getRawParameterValue(STEPS_GATE[endIndex]) == GATE_GLIDE)
         endIndex++;
     
-    float length = endIndex - stepIndex;
-    float swingFactor = stepIndex % 2 == 0 ? swingValue->load() : 2.0f - swingValue->load();
+    float length = endIndex - stepIndex;    
     
     if (int(length) % 2 == 1)
-        length = length -  1 + swingFactor;
+    {        
+        if (sequencer.isCurrentStepSwinged())
+            length = length - (swingValue->load() - 1.0f);
+        else
+            length = length + (swingValue->load() - 1.0f);
+    }
+        
     
     return length;
 }

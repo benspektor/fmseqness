@@ -57,7 +57,6 @@ public:
 private:
     float width = 0.0f, height = 0.0f, barLength = 0.0f, leftScreenX = 0.0f, leftScreenWidth = 0.0f, rightScreenX = 0.0f, rightScreenWidth = 0.0f;
     
-//    StepperSequencerDataModel& mDataModel;
     AudioProcessorValueTreeState& mParameters;
     
     std::atomic<float>* currentStep     { mParameters.getRawParameterValue("currentStep") };
@@ -74,6 +73,7 @@ private:
     std::unique_ptr<SliderAttachment> multiAttachments [MAX_NUM_OF_STEPS];
     std::unique_ptr<SliderAttachment> modSeqAttachments[MAX_NUM_OF_STEPS];
     std::unique_ptr<SliderAttachment> gateAttachments  [MAX_NUM_OF_STEPS];
+    std::unique_ptr<SliderAttachment> firstStepAttachment, lastStepAttachment;
     
     int displayedController = 0;
     bool isPlaying = false;

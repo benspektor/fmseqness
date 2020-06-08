@@ -21,6 +21,7 @@ public:
     FM2SineOscsGenerator();
     ~FM2SineOscsGenerator();
     void setSampleRate (double sampleRate);
+    void restart();
     float generate(float pitch, float fmAmount, float modMulti);
 
 private:

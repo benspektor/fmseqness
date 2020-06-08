@@ -18,11 +18,11 @@ StepperSequencerModule::StepperSequencerModule(AudioProcessorValueTreeState& par
     selector.reset (new AnimatedSelector (array, 4, true));
     selector->addActionListener(this);
     
-    pitchController   .reset ( new PitchController     ( mParameters ));
-    fMController      .reset ( new BarsController      ( mParameters, false) );
-    multiplyController.reset ( new BarsController      ( mParameters, false, 10));
-    modSeqController  .reset ( new BarsController      ( mParameters, true));
-    gateStateEditor   .reset ( new StepGateStateEditor ( mParameters ));
+    pitchController   .reset ( new PitchController ( mParameters ));
+    fMController      .reset ( new BarsController  ( mParameters, false) );
+    multiplyController.reset ( new BarsController  ( mParameters, false, 10));
+    modSeqController  .reset ( new BarsController  ( mParameters, true));
+    gateStateEditor   .reset ( new StepGateStateEditor());
     
     gateStateEditor->addActionListener(this);
     
@@ -41,6 +41,10 @@ StepperSequencerModule::StepperSequencerModule(AudioProcessorValueTreeState& par
 
     leftGreyedOut .setAlpha(0.5);
     rightGreyedOut.setAlpha(0.5);
+    
+    firstStepAttachment.reset ( new SliderAttachment (mParameters, "firstStepIndex", gateStateEditor->getFirstStepSliderRef()));
+    lastStepAttachment.reset  ( new SliderAttachment (mParameters, "lastStepIndex",  gateStateEditor->getLastStepSliderRef()));
+
     
     for (int i = 0; i < MAX_NUM_OF_STEPS; i++)
     {
@@ -74,7 +78,7 @@ StepperSequencerModule::StepperSequencerModule(AudioProcessorValueTreeState& par
     {
         String parameterID {"step"};
         parameterID << i + 1 << "GateState";
-        gateAttachments[i].reset ( new SliderAttachment (mParameters, parameterID, gateStateEditor->getSliderRef(i)));
+        gateAttachments[i].reset ( new SliderAttachment (mParameters, parameterID, gateStateEditor->getGateSliderRef(i)));
     }
     
 }
@@ -112,7 +116,7 @@ void StepperSequencerModule::actionListenerCallback (const String& message)
 {
     if (message == "Preset Loaded")
     {
-        pitchController->refreshView();
+//        pitchController->refreshView();
     }
     
     const auto broadcaster = message.upToFirstOccurrenceOf("_", false, true);
@@ -290,6 +294,7 @@ void StepperSequencerModule::refreshViews()
     fMController       ->refreshView();
     multiplyController ->refreshView();
     modSeqController   ->refreshView();
+    gateStateEditor    ->refreshView();
 }
 
 void StepperSequencerModule::audioProcessorParameterChanged (AudioProcessor* processor,

@@ -88,7 +88,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     void trigger();
-    int getNumberOfSamplesInStep();
+    int getNumberOfSamplesInStep(bool considerSwing);
     float getNextStepPitch();
     bool getNextStepGlide();
     float getLfoAmp();
@@ -98,8 +98,8 @@ public:
     void processModMatrix(float env, float lfo, float modSeq);
     void refreshEnvelopesModels();
     void matrixModelSetup();
-    float getStepLength (int stepIndex);
-//    StepperSequencerDataModel& getStepperDataModel();
+    float getTotalStepLength (int stepIndex);
+    void handleLoadedPreset();
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
@@ -112,26 +112,25 @@ private:
     StepSequencer sequencer { mParameters };
     FM2SineOscsGenerator sines;
     LFO lfo { mParameters };
-//    std::unique_ptr<StepperSequencerDataModel> mStepperDataModel;
     ModMatrixModel matrix;
     
     double currentSampleRate = 0.0;
    
-    bool isNextStepGlide = false;
+    bool  isNextStepGlide = false;
     float portamentoPitchUnit = 0.0f;
     float currentStepPitch = 0;
     float currentStepFM = 0.0f;
-    double currentStepModMulti = 0.0f;
+    float currentStepModMulti = 0.0f;
     float targetPitch = 0;
     float poratmentoAccumulator = 0.0f;
-    int portamentoCountDown = 0;
+    int   portamentoCountDown = 0;
     float lfoAmp = 0.0;
     float currentSwingValue = 0.0f;
+    float gateAmp = 0.0;
    
     
     
     std::atomic<float>* currentStep    { mParameters.getRawParameterValue ("currentStep") };
-    std::atomic<float>* numberOfSteps  { mParameters.getRawParameterValue ("steps") };
     std::atomic<float>* isPlayingFloat { mParameters.getRawParameterValue ("play") };
     std::atomic<float>* basePitch      { mParameters.getRawParameterValue ("basePitch") };
     std::atomic<float>* tempo          { mParameters.getRawParameterValue ("tempo") };
@@ -139,14 +138,10 @@ private:
     std::atomic<float>* firstStepIndex { mParameters.getRawParameterValue ("firstStepIndex") };
     std::atomic<float>* lastStepIndex  { mParameters.getRawParameterValue ("lastStepIndex") };
     std::atomic<float>* swingValue     { mParameters.getRawParameterValue ("swingValue") };
-    std::atomic<float>* globalFMAmount { mParameters.getRawParameterValue ("globalFMAmount") };
-    std::atomic<float>* lfo2Panning    { mParameters.getRawParameterValue ("lfo2Panning") };
-    std::atomic<float>* lfo2FMAmount   { mParameters.getRawParameterValue ("lfo2FMAmount") };
-    std::atomic<float>* lfo2ModMulti   { mParameters.getRawParameterValue ("lfo2ModMulti") };
     std::atomic<float>* lfoShape       { mParameters.getRawParameterValue ("lfoShape") };
-    std::atomic<float>* fmAmount       { mParameters.getRawParameterValue ("globalFMAmount") };
     std::atomic<float>* modulatorMulti { mParameters.getRawParameterValue ("modulatorMultiplier") };
     std::atomic<float>* lfoRestart     { mParameters.getRawParameterValue ("lfoRestart") };
+    std::atomic<float>* ampControl     { mParameters.getRawParameterValue ("ampControl") };
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessor)

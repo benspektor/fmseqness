@@ -18,6 +18,12 @@ void FM2SineOscsGenerator::setSampleRate (double sampleRate)
     currentSampleRate = sampleRate;
 }
 
+void FM2SineOscsGenerator::restart()
+{
+    currentCarrierRamp   = 0.0f;
+    currentModulatorRamp = 0.0f;
+}
+
 float FM2SineOscsGenerator::generate(float pitch, float fmAmount, float modMulti)
 {
     if (currentSampleRate == 0.0)

@@ -22,7 +22,7 @@ public:
     AHDEnv(AudioProcessorValueTreeState& parameters, AHDEnvDataModel& model);
     ~AHDEnv();
     
-    double process();
+    float process();
     void setSampleRate (double sampleRate);
     void reset (float currentSample, float length);
     void startDecay();
@@ -35,11 +35,10 @@ private:
     AudioProcessorValueTreeState& mParameters;
     AHDEnvDataModel& mModel;
     std::atomic<float>* tempo {mParameters.getRawParameterValue("tempo")};
+    
     double sampleRate;
-    float attack = 0.0, hold = 0.0, decay = 0.0;
-//    bool retrigger = true;
+    float restart = 0.0 , attack = 0.0, hold = 0.0, decay = 0.0;
     float currentStepLength = 1.0f;
-//    bool isNextStepGlide = false;
     
     float stepLength = 1.0f;
     float restartDelta = 1.0f;

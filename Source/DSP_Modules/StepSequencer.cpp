@@ -25,29 +25,29 @@ bool StepSequencer::processToGetTrigger ( float swingValue )
     if ( ! *isPlaying)
     {
         currentStep = -1;
-        count = 0;
+        samplesCount = 0;
         return false;
     }
 
     
     if (currentStep % 2 == 0)
     {
-        if (count >= stepLengthInSamples * swingValue)
-            count = 0;
+        if (samplesCount >= stepLengthInSamples * swingValue)
+            samplesCount = 0;
     }
     else
     {
-        if (count >= stepLengthInSamples * (2.0f - swingValue))
-            count = 0;
+        if (samplesCount >= stepLengthInSamples * (2.0f - swingValue))
+            samplesCount = 0;
     }
     
-    if (count == 0)
+    if (samplesCount == 0)
     {
         isTrigger = true;
         currentStep++;
     }
     
-    count++;
+    samplesCount++;
     
     return isTrigger;
 }
@@ -77,6 +77,11 @@ void StepSequencer::updateNumberOfSteps()
     currentNumOfSteps = firstStepIndex->load() <= lastStepIndex->load() ?
                         lastStepIndex->load() - firstStepIndex->load() + 1 :
                         MAX_NUM_OF_STEPS - firstStepIndex->load() + lastStepIndex->load() + 1;
+}
+
+bool StepSequencer::isCurrentStepSwinged()
+{
+    return currentStep % 2 == 1;
 }
 
 void StepSequencer::audioProcessorParameterChanged (AudioProcessor* processor,

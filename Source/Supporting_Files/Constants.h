@@ -39,7 +39,7 @@ constexpr int DEF_NUM_OF_STEPS = 16;
 
 constexpr float MILLISECONDS_IN_SECOND = 1000.0;
 
-constexpr float RESTART_TIME = 0.01;
+constexpr float RESTART_TIME = 0.05;
 
 constexpr float FM_AMNT_MIN_VALUE = 0.0;
 constexpr float FM_AMNT_MAX_VALUE = 8.0;
@@ -85,8 +85,6 @@ constexpr float SWING_TRIPLET_VALUE = 1.3333333334;
 constexpr int MIN_PITCH_NOTE = 24;
 constexpr int MAX_PITCH_NOTE = 120;
 constexpr int RESET_PITCH_VALUE = 48;
-
-
  
 constexpr float SEQUENCER_PANEL_HEIGHT = 80;
 constexpr float ENVELOPE_WINDOW_HEIGHT = 180;
@@ -102,6 +100,7 @@ const StringArray LFO_RESTART_OPTIONS     { "Never", "Step", "Pattern" };
 const StringArray MODULATION_SOURCES      { "Mod Env", "LFO", "Mod Seq" };
 const StringArray MODULATION_DESTINATIONS { "FM", "Pitch", "Pan", "Volume", "Mod Multi", "Portamento", "Swing" };
 const StringArray STEP_GATE_STATES        { "On", "Glide", "Off" };
+const StringArray AMP_CONTROL_OPTIONS     { "Amp Env", "None"};
 
 const StringArray STEPS_PITCH {"step1Pitch","step2Pitch","step3Pitch","step4Pitch","step5Pitch","step6Pitch","step7Pitch","step8Pitch","step9Pitch","step10Pitch","step11Pitch","step12Pitch","step13Pitch","step14Pitch","step15Pitch","step16Pitch","step17Pitch","step18Pitch","step19Pitch","step20Pitch","step21Pitch","step22Pitch","step23Pitch","step24Pitch","step25Pitch","step26Pitch","step27Pitch","step28Pitch","step29Pitch","step30Pitch","step31Pitch","step32Pitch"};
 

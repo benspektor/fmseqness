@@ -49,8 +49,6 @@ private:
     Rectangle<float> recs[TOTAL_NUMBER_OF_STEPS];
     String message;
     std::vector<SafePointer<Bar>> bars;
-//    PitchControllerValuesModel& mPitchDataModel;
-//    StepGateStateValuesModel& mGateDataModel;
     BarsMouseArea mouseArea;
     Slider sliders[MAX_NUM_OF_STEPS];
     PitchLineScreen lineScreen { mParameters, recs };

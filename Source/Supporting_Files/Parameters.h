@@ -45,6 +45,7 @@ struct Parameters
         params.push_back (std::make_unique<AudioParameterChoice> ("lfoPolarity", "LFO Polarity", LFO_POLARITIES, 0));
         params.push_back (std::make_unique<AudioParameterBool>   ("lfoStepSync", "LFO Step Sync", false));
         params.push_back (std::make_unique<AudioParameterChoice> ("lfoRestart", "LFO Restart", LFO_RESTART_OPTIONS, 2));
+        params.push_back (std::make_unique<AudioParameterChoice> ("ampControl", "Amp Control", AMP_CONTROL_OPTIONS, 0));
         
         params.push_back (std::make_unique<AudioParameterFloat>  ("mod1Amount"     , "Mod 1 Amount"     , -1.0f, 1.0f, 0.f));
         params.push_back (std::make_unique<AudioParameterChoice> ("mod1Source"     , "Mod 1 Source"     , MODULATION_SOURCES, 0));
