@@ -37,8 +37,7 @@ public:
         g.fillAll();
     }
 
-    void resized() override
-    {}
+    void resized() override {}
     
     void lightUp()
     {

@@ -13,9 +13,7 @@
 #include <JuceHeader.h>
 #include "Bar.h"
 #include "BarsMouseArea.h"
-#include "../../../DataModels/StepperSequencerDataModel.h"
 #include "PitchLineScreen.h"
-#include "../StepperSequencerConstants.h"
 
 
 

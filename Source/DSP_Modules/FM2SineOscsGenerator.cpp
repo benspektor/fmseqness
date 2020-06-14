@@ -35,7 +35,7 @@ float FM2SineOscsGenerator::generate(float pitch, float fmAmount, float modMulti
     if (currentCarrierRamp >= 1)
         currentCarrierRamp -= 1;
     
-    auto hzValue             = 440.0f * std::pow (2.0, (pitch - 69) / 12.0);
+    auto hzValue             = FMUtilities::convertPitchToHz (pitch);
     auto carrierAngleDelta   = hzValue * 2 / currentSampleRate;
     auto modulatorAngleDelta = carrierAngleDelta * modMulti;
     

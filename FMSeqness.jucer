@@ -13,6 +13,7 @@
               file="Source/Supporting_Files/SupportingFiles.h"/>
       </GROUP>
       <GROUP id="{798E969C-B36A-2370-712D-89748EDFDAE6}" name="DSP_Modules">
+        <FILE id="Bdi0f4" name="DSPModules.h" compile="0" resource="0" file="Source/DSP_Modules/DSPModules.h"/>
         <FILE id="Tyud86" name="LFO.cpp" compile="1" resource="0" file="Source/DSP_Modules/LFO.cpp"/>
         <FILE id="yAP7yX" name="LFO.h" compile="0" resource="0" file="Source/DSP_Modules/LFO.h"/>
         <FILE id="ALIYgN" name="AHDEnv.cpp" compile="1" resource="0" file="Source/DSP_Modules/AHDEnv.cpp"/>
@@ -30,8 +31,6 @@
               file="Source/DataModels/AHDEnvDataModel.h"/>
         <FILE id="GM70Bd" name="ModMatrixDataModel.h" compile="0" resource="0"
               file="Source/DataModels/ModMatrixDataModel.h"/>
-        <FILE id="TbIvXD" name="StepperSequencerDataModel.h" compile="0" resource="0"
-              file="Source/DataModels/StepperSequencerDataModel.h"/>
       </GROUP>
       <GROUP id="{CD3EDA95-1AA2-AFE3-057A-27C30A7C1883}" name="GUI_Modules">
         <GROUP id="{0DBC6E52-A3D5-474F-97F5-B1676B7D27D0}" name="ModulationMatrix">
@@ -85,8 +84,6 @@
                   file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerControllers/PitchLineScreen.h"/>
           </GROUP>
           <FILE id="OK5rQ4" name="GreyScreen.h" compile="0" resource="0" file="Source/GUI_Modules/StepperSequencerModule/GreyScreen.h"/>
-          <FILE id="k3HQit" name="StepperSequencerConstants.h" compile="0" resource="0"
-                file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerConstants.h"/>
           <FILE id="n489Pm" name="StepperSequencerModule.cpp" compile="1" resource="0"
                 file="Source/GUI_Modules/StepperSequencerModule/StepperSequencerModule.cpp"/>
           <FILE id="AiU1P9" name="StepperSequencerModule.h" compile="0" resource="0"

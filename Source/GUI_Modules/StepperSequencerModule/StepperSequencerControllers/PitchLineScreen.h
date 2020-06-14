@@ -49,8 +49,6 @@ public:
 
 private:
     AudioProcessorValueTreeState& mParameters;
-//    PitchControllerValuesModel& mDataModel;
-//    StepGateStateValuesModel& mGateModel;
     Rectangle<float> (&mRecs)[TOTAL_NUMBER_OF_STEPS];
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchLineScreen)
 };

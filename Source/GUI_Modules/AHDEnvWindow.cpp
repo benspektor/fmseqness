@@ -199,6 +199,7 @@ void AHDEnvWindow::mouseDrag (const MouseEvent& e)
     {
         return;
     }
+    
     repaint();
     updateModel();
     
@@ -211,16 +212,26 @@ void AHDEnvWindow::updateModel()
     const float width  = getWidth() - (padding + frameWidth) * 2 - dotSize;
     const float height = getHeight() - (padding + frameWidth) * 2 - dotSize;
     
-    mModel.attack = (attackRect.getCentreX() - totalPadding) / width;
-    mModel.hold   = (holdRect.getCentreX() - totalPadding) / width - (float)mModel.attack.getValue();
-    mModel.decay  = (decayRect.getCentreX() - totalPadding) / width - (float)mModel.attack.getValue() - (float)mModel.hold.getValue();
-    mModel.level  = 1 - (attackRect.getCentreY() - totalPadding) / height;
-    
+    const float attackValue = (attackRect.getCentreX() - totalPadding) / width;
+    const float holdValue   = (holdRect.getCentreX() - totalPadding) / width - attackValue;
+    const float decayValue  = (decayRect.getCentreX() - totalPadding) / width - attackValue - holdValue;
+    const float levelValue  = 1 - (attackRect.getCentreY() - totalPadding) / height;
     const float attackCurve = (attackCurveRect.getCentreY() - totalPadding) / height;
     const float decayCurve  = (decayCurveRect.getCentreY()  - totalPadding) / height;
     
+    mModel.attack      = attackValue;
+    mModel.hold        = holdValue;
+    mModel.decay       = decayValue;
+    mModel.level       = levelValue;
     mModel.attackCurve = attackCurve;
     mModel.decayCurve  = decayCurve;
+    
+    sliders[ENVELOPE_ATTACK]      .setValue (attackValue);
+    sliders[ENVELOPE_HOLD]        .setValue (holdValue);
+    sliders[ENVELOPE_DECAY]       .setValue (decayValue);
+    sliders[ENVELOPE_LEVEL]       .setValue (levelValue);
+    sliders[ENVELOPE_ATTACK_CURVE].setValue (attackCurve);
+    sliders[ENVELOPE_DECAY_CURVE] .setValue (decayCurve);
     
     mModel.sendActionMessage("Model Changed");
 }
@@ -229,5 +240,10 @@ void AHDEnvWindow::loadState()
 {
     resized();
     repaint();
+}
+
+Slider& AHDEnvWindow::getSlider (int sliderIndex)
+{
+    return sliders[sliderIndex];
 }
 

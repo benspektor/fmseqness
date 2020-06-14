@@ -12,24 +12,12 @@
 #include <JuceHeader.h>
 
 
-struct AHDEnvDataModel : ActionBroadcaster
+struct AHDEnvDataModel
 {
-//    std::atomic<float>* attack;
-//    std::atomic<float>* hold;
-//    std::atomic<float>* decay;
-//    std::atomic<float>* level;
-//    std::atomic<float>* attackCurve;
-//    std::atomic<float>* decayCurve;
-    
     Value attack;
     Value hold;
     Value decay;
     Value level;
     Value attackCurve;
     Value decayCurve;
-    
-//    float getAttack()
-//    {
-//        return float(attack);
-//    }
 };

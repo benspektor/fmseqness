@@ -12,9 +12,8 @@
 
 #include <JuceHeader.h>
 #include "../DataModels/AHDEnvDataModel.h"
-#include "../Supporting_Files/Constants.h"
-#include "../Supporting_Files/Enums.h"
-#include "../Supporting_Files/FMUtilities.h"
+#include "../Supporting_Files/SupportingFiles.h"
+
 
 //==============================================================================
 /*
@@ -31,6 +30,7 @@ public:
     void updateModel();
     void loadState();
     
+    Slider& getSlider (int sliderIndex);
 
 private:
     void mouseDrag (const MouseEvent& e) override;
@@ -45,6 +45,9 @@ private:
     const float padding    = 16;
     
     AHDEnvDataModel& mModel;
+    
+    Slider sliders[6];
+    std::unique_ptr<SliderAttachment> attachments[6];
     
     Rectangle<float> startRect;
     Rectangle<float> attackRect;

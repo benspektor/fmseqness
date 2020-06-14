@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../DSP_Modules/FM2SineOscsGenerator.h"
+#include "../Supporting_Files/SupportingFiles.h"
 
 //==============================================================================
 /*

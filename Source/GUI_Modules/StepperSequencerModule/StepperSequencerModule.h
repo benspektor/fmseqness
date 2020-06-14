@@ -14,7 +14,6 @@
 #include "AnimatedSelector/AnimatedSelector.h"
 #include "StepperSequencerControllers/BarsController.h"
 #include "StepperSequencerControllers/PitchController.h"
-#include "../../DataModels/StepperSequencerDataModel.h"
 #include "StepGateStateEditor/StepGateStateEditor.h"
 #include "GreyScreen.h"
 

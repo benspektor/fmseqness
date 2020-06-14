@@ -134,9 +134,6 @@ LfoGUI::LfoGUI (AudioProcessorValueTreeState& parameters) : mParameters(paramete
     phaseLabel   .setJustificationType (Justification::centred);
     restartLabel .setJustificationType (Justification::centred);
     
-    
-    
-    
 
 }
 

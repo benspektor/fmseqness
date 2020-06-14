@@ -23,7 +23,6 @@ public:
         addAndMakeVisible (tempoKnob);
         tempoKnob.setSliderStyle(Slider::SliderStyle::IncDecButtons);
         tempoKnob.setTextBoxStyle(Slider::TextBoxAbove, false, 50.0, 20.0);
-//        tempoKnob.setIncDecButtonsMode (Slider::IncDecButtonMode::incDecButtonsDraggable_Vertical);
         tempoAttachment.reset (new SliderAttachment (mParameters, "tempo", tempoKnob));
     }
 
@@ -33,22 +32,11 @@ public:
 
     void paint (Graphics& g) override
     {
-        /* This demo code just fills the component's background and
-           draws some placeholder text to get you started.
-
-           You should replace everything in this method with your own
-           drawing code..
-        */
-
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
-
-//        g.setColour (Colours::grey);
-//        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
         g.setColour (Colours::white);
         g.setFont (14.0f);
-        g.drawText ("Tempo", Rectangle<float>(0, 0, getWidth(), getHeight() - PADDING / 2),
-                    Justification::centredBottom, true);   // draw some placeholder text
+        Rectangle<float> labelRect { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight() - PADDING / 2) };
+        g.drawText ("Tempo", labelRect, Justification::centredBottom, true);   // draw some placeholder text
     }
 
     void resized() override

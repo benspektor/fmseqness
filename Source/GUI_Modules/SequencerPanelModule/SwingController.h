@@ -44,16 +44,10 @@ public:
     void paint (Graphics& g) override
     {
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
-
-//        g.setColour (Colours::grey);
-//        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-        
-        
         g.setColour (Colours::white);
         g.setFont (14.0f);
-        g.drawText ("Swing!", Rectangle<float>(0, 0, getWidth(), getHeight() - PADDING / 2),
-                    Justification::centredBottom, true);   // draw some placeholder text
+        Rectangle<float> labelRect { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight() - PADDING / 2) };
+        g.drawText ("Swing!", labelRect, Justification::centredBottom, true);   // draw some placeholder text
     }
 
     void resized() override

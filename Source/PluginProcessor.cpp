@@ -17,7 +17,6 @@ FmseqnessAudioProcessor::FmseqnessAudioProcessor()
 : AudioProcessor (BusesProperties().withOutput ("Output", AudioChannelSet::stereo(), true)),
 mParameters (*this, nullptr, Identifier ("FMSeqness"), Parameters::createParameterLayout())
 {
-//    mStepperDataModel.reset ( new StepperSequencerDataModel() );
     addListener(&lfo);
     addListener(&sequencer);
     refreshEnvelopesModels();
@@ -150,7 +149,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
             poratmentoAccumulator += portamentoPitchUnit;
         
         
-        ampEnv =  ampAhdEnv.process();
+        ampEnv = ampAhdEnv.process();
         modEnv = modAhdEnv.process();
         bool isEnvAmpControl = *ampControl == 0.0f;
         float amp = isEnvAmpControl ? ampEnv : gateAmp;
@@ -249,12 +248,12 @@ void FmseqnessAudioProcessor::trigger()
     if (gateState == GATE_ON)
     {
         gateAmp = 1.0f;
-        sines.restart();
         float stepLength = getTotalStepLength(stepIndex);
-        ampAhdEnv.reset (ampEnv, stepLength);
+        ampAhdEnv.reset (stepLength);
         ampAhdEnv.state = PlayState::play;
-        modAhdEnv.reset (ampEnv, stepLength);
+        modAhdEnv.reset (stepLength);
         modAhdEnv.state = PlayState::play;
+        sines.restart();
         
         currentStepFM       = *mParameters.getRawParameterValue(STEPS_FM[stepIndex]);
         currentStepModMulti = *mParameters.getRawParameterValue(STEPS_MOD_MULTI[stepIndex]);
@@ -286,7 +285,7 @@ int FmseqnessAudioProcessor::getNumberOfSamplesInStep(bool considerSwing)
     if (considerSwing)
         swingFactor = sequencer.isCurrentStepSwinged() ? 2.0f - swingValue->load() : swingValue->load();
     
-    return swingFactor * currentSampleRate * (60 / tempo->load()) / 4;
+    return swingFactor * currentSampleRate * (60 / tempo->load()) / SIXTEEN_DIVEDER;
 }
 
 float FmseqnessAudioProcessor::getNextStepPitch()
@@ -338,10 +337,10 @@ float FmseqnessAudioProcessor::getModulatorMultiFrom01 (double value)
 
 void FmseqnessAudioProcessor::processModMatrix(float env, float lfo, float modSeq)
 {
-    float sources[3] {env, lfo, modSeq};
-    float results[7] {0.0f};
+    float sources[MOD_MATRIX_SOURCES]      {env, lfo, modSeq};
+    float results[MOD_MATRIX_DESTINATIONS] {0.0f};
     
-    for (int mod = 0; mod <= 3; mod++)
+    for (int mod = 0; mod < MOD_MATRIX_CHANNELS ; mod++)
         results[ int ( *matrix.mods[mod].destination ) ] += sources[ int ( *matrix.mods[mod].source ) ] * *matrix.mods[mod].amount;
 
     modMatrix.fm         = isnan(results[0]) ? 0.0f : results[0];
@@ -371,7 +370,7 @@ void FmseqnessAudioProcessor::refreshEnvelopesModels()
 
 void FmseqnessAudioProcessor::matrixModelSetup()
 {
-    for (int mod = 1; mod <= 4; mod++)
+    for (int mod = 1; mod <= MOD_MATRIX_CHANNELS; mod++)
     {
         String code { "mod" };
         code << mod << "Source";
@@ -406,6 +405,5 @@ float FmseqnessAudioProcessor::getTotalStepLength (int stepIndex)
             length = length + (swingValue->load() - 1.0f);
     }
         
-    
     return length;
 }

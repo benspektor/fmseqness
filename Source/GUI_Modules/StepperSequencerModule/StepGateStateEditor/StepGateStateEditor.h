@@ -11,8 +11,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../DataModels/StepperSequencerDataModel.h"
-#include "../StepperSequencerConstants.h"
 #include "../../../Supporting_Files/Constants.h"
 
 
@@ -50,7 +48,6 @@ public:
     void mouseDrag (const MouseEvent& e) override;
 
 private:
-//    AudioProcessorValueTreeState& mParameters;
     String messege = "";
     float width, height, recWidth, recHeight;
     juce::Point<float> clickLocation;

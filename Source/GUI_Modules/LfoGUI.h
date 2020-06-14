@@ -12,7 +12,7 @@
 
 #include <JuceHeader.h>
 #include "LFOMeterWindow.h"
-#include "../Supporting_Files/Constants.h"
+#include "../Supporting_Files/SupportingFiles.h"
 #include "SequencerPanelModule/LabelButton.h"
 
 //==============================================================================

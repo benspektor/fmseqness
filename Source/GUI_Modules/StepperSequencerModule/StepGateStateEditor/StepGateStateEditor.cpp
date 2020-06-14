@@ -66,7 +66,6 @@ bool StepGateStateEditor::isClickInEndMarkerZone()
 void StepGateStateEditor::moveFirstStepMarker()
 {
     int firstStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
-//    firstStepIndex->store(firstStep);
     firstStepSlider.setValue(firstStep);
     repaint();
     sendActionMessage("StepGateStateEditor_StepsChanged");
@@ -75,7 +74,6 @@ void StepGateStateEditor::moveFirstStepMarker()
 void StepGateStateEditor::moveLastStepMarker()
 {
     int lastStep = jmin (31.0f, TOTAL_NUMBER_OF_STEPS * (clickLocation.x - PADDING) / (width - PADDING * 2));
-//    lastStepIndex->store(lastStep);
     lastStepSlider.setValue(lastStep);
     repaint();
     sendActionMessage("StepGateStateEditor_StepsChanged");
@@ -148,7 +146,7 @@ void StepGateStateEditor::drawStepRectangles(Graphics &g)
     
     for (auto stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        if ( stepNumber % QUARTER_DIVEDER == 0 )
+        if ( stepNumber % SIXTEEN_DIVEDER == 0 )
             g.setColour (Colours::lightgrey);
         else
             g.setColour (Colours::grey);
@@ -171,7 +169,7 @@ void StepGateStateEditor::drawGateStateIcons (Graphics &g)
     
     g.setColour(Colours::black);
     Path path;
-    path.startNewSubPath(xStartPosition, gatedLevel);
+    path.startNewSubPath (xStartPosition, gatedLevel);
     
     for (auto stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
@@ -199,8 +197,8 @@ void StepGateStateEditor::drawGateStateIcons (Graphics &g)
             rightYPosition = gateSliders[stepNumber + 1].getValue() == GATE_GLIDE ? glideLevel : floorLevel;
         
         
-        path.lineTo(xStartPosition + stepNumber * recWidth, leftYPosition);
-        path.lineTo(xStartPosition + (stepNumber + 1) * recWidth, rightYPosition);
+        path.lineTo (xStartPosition + stepNumber * recWidth, leftYPosition);
+        path.lineTo (xStartPosition + (stepNumber + 1) * recWidth, rightYPosition);
     }
     
     path.lineTo (xStartPosition + TOTAL_NUMBER_OF_STEPS * recWidth, floorLevel);
@@ -212,9 +210,9 @@ void StepGateStateEditor::drawGateStateIcons (Graphics &g)
 bool StepGateStateEditor::isClickInsideBody(juce::Point<float> clickLocation)
 {
     return clickLocation.y > PADDING &&
-    clickLocation.y < height - PADDING &&
-    clickLocation.x > PADDING &&
-    clickLocation.x < width - PADDING;
+           clickLocation.y < height - PADDING &&
+           clickLocation.x > PADDING &&
+           clickLocation.x < width - PADDING;
 }
 
 void StepGateStateEditor::toggleStepGateState (int stepNumber)
@@ -241,7 +239,6 @@ void StepGateStateEditor::toggleStepGateState (int stepNumber)
     
     if (stepNumber < TOTAL_NUMBER_OF_STEPS - 1 && gateSliders[stepNumber].getValue() == GATE_OFF && gateSliders[stepNumber + 1].getValue() == GATE_GLIDE)
     {
-//        gateStatesDataModel.values[stepNumber + 1] = on;
         gateSliders[stepNumber + 1].setValue(GATE_ON);
         messege << "_" << stepNumber + 1;
     }
@@ -261,10 +258,6 @@ Slider& StepGateStateEditor::getGateSliderRef (int index)
 
 void StepGateStateEditor::refreshView()
 {
-//    for (int step = 0; step < MAX_NUM_OF_STEPS; step++)
-//    {
-//        
-//    }
     repaint();
 }
 

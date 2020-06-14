@@ -24,7 +24,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
-    void mouseDown  (const MouseEvent&) override;
+    void mouseDown (const MouseEvent&) override;
     
     void startAnimation();
     void stopAnimation();
@@ -32,14 +32,9 @@ public:
     
     bool shouldAnimationFinish();
     void sendMessage();
-    void setColours (Colour backgroundColour,
-                     Colour labelColour,
-                     Colour highlightColour,
-                     Colour fontColour,
-                     Colour borderColour);
+    void setColours (Colour backgroundColour, Colour labelColour, Colour highlightColour, Colour fontColour, Colour borderColour);
     void setFontSize (float size);
     
-
 private:
     bool isHorizontal = false;
     int currentOption = 0;
@@ -49,6 +44,8 @@ private:
     float labelHeight = 1.0f;
     float animationUnit = 0.0f;
     float animationSign = 1.0f;
+    int animationsSteps = 30;
+    int animationsFrequency = 60;
     std::vector<String> mLabels;
     std::vector<Rectangle<float>> labelsRectangles;
     Rectangle<float> highlightRectangle;

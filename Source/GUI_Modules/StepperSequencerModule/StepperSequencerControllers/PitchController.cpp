@@ -84,7 +84,7 @@ void PitchController::addNoteBars()
 {
     for (int stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        bool isDownBeat = stepNumber % QUARTER_DIVEDER == 0 ? true : false;
+        bool isDownBeat = stepNumber % SIXTEEN_DIVEDER == 0 ? true : false;
         SafePointer<Bar> bar = new Bar(isDownBeat);
         bars.push_back (bar);
         addChildComponent (bar);

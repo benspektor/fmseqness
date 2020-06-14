@@ -23,6 +23,11 @@ public:
     {
         return value <= 0.5 ? value + 0.5 : 1.0 + (value - 0.5) * 14.0;
     }
+    
+    static float convertPitchToHz (float pitch)
+    {
+        return 440.0f * std::pow (2.0, (pitch - 69) / 12.0);
+    }
 };
 
 

@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class LabelButton    : public Component, public Value::Listener
+class LabelButton    : public Component
 {
 public:
     LabelButton(const String& buttonName) : name (buttonName)
@@ -70,11 +70,6 @@ public:
     {
         colour = Colour(200,171,0);
         repaint();
-    }
-    
-    void valueChanged ( Value& value ) override
-    {
-        DBG("changed");
     }
     
     std::function<void()> onClick;

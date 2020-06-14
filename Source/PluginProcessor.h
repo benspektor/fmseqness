@@ -11,13 +11,9 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "DataModels/StepperSequencerDataModel.h"
 #include "DataModels/AHDEnvDataModel.h"
 #include "DataModels/ModMatrixDataModel.h"
-#include "DSP_Modules/FM2SineOscsGenerator.h"
-#include "DSP_Modules/AHDEnv.h"
-#include "DSP_Modules/StepSequencer.h"
-#include "DSP_Modules/LFO.h"
+#include "DSP_Modules/DSPModules.h"
 #include "Supporting_Files/SupportingFiles.h"
 
 

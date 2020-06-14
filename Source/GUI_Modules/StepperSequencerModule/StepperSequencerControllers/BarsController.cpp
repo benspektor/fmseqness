@@ -55,13 +55,10 @@ void BarsController::addControllBars()
 {
     for (int stepNumber = 0; stepNumber < TOTAL_NUMBER_OF_STEPS; ++stepNumber)
     {
-        bool isDownBeat = stepNumber % QUARTER_DIVEDER == 0 ? true : false;
+        bool isDownBeat = stepNumber % SIXTEEN_DIVEDER == 0 ? true : false;
         SafePointer<Bar> bar = new Bar(isDownBeat);
         bars.push_back (bar);
         addChildComponent (bar);
-        
-//        if (*mParameters.getRawParameterValue(STEPS_GATE[stepNumber]) == GATE_ON) //mGateModel.values[stepNumber] == on
-//            bar->setVisible(true);
     }
 }
 
@@ -76,8 +73,9 @@ void BarsController::resizeControllBars()
 void BarsController::resizeControllBar (int stepNumber)
 {
     auto height = barMaxHeight * abs(sliders[stepNumber].getValue());
-    auto y = barMaxHeight - height + PADDING;
-    auto value = sliders[stepNumber].getValue();
+    auto y      = barMaxHeight - height + PADDING;
+    auto value  = sliders[stepNumber].getValue();
+    
     y = value >= 0 ? y : barMaxHeight + PADDING;
     bars[stepNumber]->setBounds ( PADDING + stepNumber * barWidth, y, barWidth, height);
     

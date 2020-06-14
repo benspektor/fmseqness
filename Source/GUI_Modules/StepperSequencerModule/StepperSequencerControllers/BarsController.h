@@ -13,8 +13,6 @@
 #include <JuceHeader.h>
 #include "Bar.h"
 #include "BarsMouseArea.h"
-#include "../../../DataModels/StepperSequencerDataModel.h"
-#include "../StepperSequencerConstants.h"
 
 //==============================================================================
 /*
@@ -51,8 +49,6 @@ private:
     int numOfDiscreteValues = 0;
     String message;
     std::vector<SafePointer<Bar>> bars;
-//    StepGateStateValuesModel& mGateModel;
-//    BarsControllerValuesModel& mDataModel;
     BarsMouseArea mouseArea;
     Slider sliders[MAX_NUM_OF_STEPS];
     

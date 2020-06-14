@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    Enums.h
-    Created: 6 Feb 2020 10:10:01am
+    DSPModules.h
+    Created: 14 Jun 2020 11:15:08am
     Author:  Ben Spector
 
   ==============================================================================
@@ -10,8 +10,8 @@
 
 #pragma once
 
-enum class PlayState { play, stop };
-
-enum class EnvelopeControl { attack = 0, hold, decay, attackCurve, decayCurve, none };
-
-
+#include "LFO.h"
+#include "AHDEnv.h"
+#include "AHDEnv.h"
+#include "StepSequencer.h"
+#include "FM2SineOscsGenerator.h"

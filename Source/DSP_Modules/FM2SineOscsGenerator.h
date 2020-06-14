@@ -11,9 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "../Supporting_Files/Constants.h"
-#include "../Supporting_Files/FMUtilities.h"
-
+#include "../Supporting_Files/SupportingFiles.h"
 
 class FM2SineOscsGenerator
 {

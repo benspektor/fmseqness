@@ -74,7 +74,7 @@ void AnimatedSelector::resized()
     
     highlightRectangle.setBounds(labelsRectangles[currentOption].getX(), labelsRectangles[currentOption].getY(), labelWidth, labelHeight);
     
-    animationUnit = isHorizontal ? getWidth() / 30 : getHeight() / 30;
+    animationUnit = isHorizontal ? getWidth() / animationsSteps : getHeight() / animationsSteps;
 }
 
 void AnimatedSelector::mouseDown  (const MouseEvent& event)
@@ -110,7 +110,7 @@ void AnimatedSelector::startAnimation()
             animationSign = -1.0f;
     }
     
-    startTimerHz (60);
+    startTimerHz (animationsFrequency);
 }
 
 void AnimatedSelector::stopAnimation()
@@ -141,10 +141,10 @@ bool AnimatedSelector::shouldAnimationFinish()
 {
     if (isHorizontal)
         return (animationSign == 1.0f && labelsRectangles[currentOption].getX() <= highlightRectangle.getX()) ||
-        (animationSign == -1.0f && labelsRectangles[currentOption].getX() >= highlightRectangle.getX());
+               (animationSign == -1.0f && labelsRectangles[currentOption].getX() >= highlightRectangle.getX());
     else
         return (animationSign == 1.0f && labelsRectangles[currentOption].getY() <= highlightRectangle.getY()) ||
-        (animationSign == -1.0f && labelsRectangles[currentOption].getY() >= highlightRectangle.getY());
+               (animationSign == -1.0f && labelsRectangles[currentOption].getY() >= highlightRectangle.getY());
 }
 
 void AnimatedSelector::sendMessage()

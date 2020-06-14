@@ -68,7 +68,7 @@ void StepSequencer::updateStepDelte()
     if (currentSampleRate == 0.0)
         return;
 
-    stepDelta = tempo->load() / 60 * 4 / currentSampleRate;
+    stepDelta = tempo->load() / 60 * SIXTEEN_DIVEDER / currentSampleRate;
     stepLengthInSamples = 1 / stepDelta;
 }
 

@@ -37,8 +37,8 @@ public:
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
         g.setColour (Colours::white);
         g.setFont (14.0f);
-        g.drawText ("Portamento", Rectangle<float>(0, 0, getWidth(), getHeight() - PADDING / 2),
-                           Justification::centredBottom, true);   // draw some placeholder text
+        Rectangle<float> labelRect { 0, 0, static_cast<float>(getWidth()), static_cast<float>(getHeight() - PADDING / 2) };
+        g.drawText ("Portamento", labelRect, Justification::centredBottom, true);   // draw some placeholder text
     }
 
     void resized() override

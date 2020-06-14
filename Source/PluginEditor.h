@@ -42,7 +42,6 @@ public:
 private:
     
     std::unique_ptr<StepperSequencerModule> stepSeqModule;
-//    std::unique_ptr<FMSinesGUI> sinesGUI;
     std::unique_ptr<AHDEnvWindow> ampAhdEnvWindow, modAhdEnvWindow;
     std::unique_ptr<SequencerPanelModule> seqPanel;
     std::unique_ptr<LfoGUI> lfoGUI;
@@ -51,8 +50,6 @@ private:
     TooltipWindow tooltipWindow { this }; // instance required for ToolTips to work
 
     
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     FmseqnessAudioProcessor& processor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessorEditor)

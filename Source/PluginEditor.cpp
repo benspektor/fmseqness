@@ -50,8 +50,6 @@ void FmseqnessAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-   
 }
 
 void FmseqnessAudioProcessorEditor::resized()
@@ -63,7 +61,6 @@ void FmseqnessAudioProcessorEditor::resized()
     float envWindowWidth      = (innerWidth - PADDING * 2) * (2.0 / 7.0);
     float lfoWindowWidth      = (innerWidth - PADDING * 2) * (3.0 / 7.0);
     float modMatrixY          = PADDING * 2 + ENVELOPE_WINDOW_HEIGHT;
-//    sinesGUI->setBounds(PADDING, PADDING, 230, ENVELOPE_WINDOW_HEIGHT);
     
     ampAhdEnvWindow->setBounds (PADDING, PADDING, envWindowWidth, ENVELOPE_WINDOW_HEIGHT);
     lfoGUI         ->setBounds (PADDING * 2 + envWindowWidth , PADDING, lfoWindowWidth, ENVELOPE_WINDOW_HEIGHT);
@@ -78,21 +75,6 @@ void FmseqnessAudioProcessorEditor::timerCallback()
 {
     stepSeqModule->timerTic();
     lfoGUI->timerTic (processor.getLfoAmp());
-//    String message = "CountDown: ";
-//    message << processor.portamentoCountDown;
-//    DBG(message);
-//    String message2 = "Pitch: ";
-//    message2 << processor.calculatedPitch;
-//    DBG(message2);
-//    String message3 = "Env:       ";
-//    message3 << processor.modEnv;
-//    DBG(message3);
-//    String message4 = "Pitch mod: ";
-//    message4 << processor.modMatrix.pitch;
-//    DBG(message4);
-//    String message5 = "FM mod: ";
-//    message5 << processor.modMatrix.fm;
-//    DBG(message5);
 }
 
 void FmseqnessAudioProcessorEditor::actionListenerCallback (const String& message)

@@ -12,7 +12,7 @@
 
 #include <JuceHeader.h>
 #include "PlayStopButton.h"
-#include "../../Supporting_Files/Constants.h"
+#include "../../Supporting_Files/SupportingFiles.h"
 #include "SwingController.h"
 #include "TempoController.h"
 #include "BasePitchPicker.h"
