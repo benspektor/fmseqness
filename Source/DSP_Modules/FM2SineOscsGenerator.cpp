@@ -36,13 +36,14 @@ float FM2SineOscsGenerator::generate(float pitch, float fmAmount, float modMulti
         currentCarrierRamp -= 1;
     
     auto hzValue             = FMUtilities::convertPitchToHz (pitch);
-    auto carrierAngleDelta   = hzValue * 2 / currentSampleRate;
+    auto carrierAngleDelta   = hzValue / currentSampleRate;
     auto modulatorAngleDelta = carrierAngleDelta * modMulti;
     
     fmAmount = jmax (fmAmount, 0.0f);
     
-    currentModulatorRamp += modulatorAngleDelta;
-    currentCarrierRamp   += carrierAngleDelta + std::sin (currentModulatorRamp * 2 * MathConstants<float>::pi) * fmAmount;
+    currentModulatorRamp  += modulatorAngleDelta;
+    auto currentModulation = std::sin (currentModulatorRamp * 2 * MathConstants<float>::pi) * fmAmount;
+    currentCarrierRamp    += carrierAngleDelta + currentModulation;
     
     return std::sin (currentCarrierRamp * 2 * MathConstants<float>::pi);;
 }

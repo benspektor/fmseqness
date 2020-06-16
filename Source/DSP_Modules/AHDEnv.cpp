@@ -95,4 +95,14 @@ void AHDEnv::actionListenerCallback (const String& message)
     updateValues();
 }
 
+void AHDEnv::start()
+{
+    state = PlayState::play;
+}
+
+void AHDEnv::stop()
+{
+    state = PlayState::stop;
+}
+
 

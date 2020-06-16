@@ -17,8 +17,8 @@ FmseqnessAudioProcessor::FmseqnessAudioProcessor()
 : AudioProcessor (BusesProperties().withOutput ("Output", AudioChannelSet::stereo(), true)),
 mParameters (*this, nullptr, Identifier ("FMSeqness"), Parameters::createParameterLayout())
 {
-    addListener(&lfo);
-    addListener(&sequencer);
+    addListener ( &lfo ) ;
+    addListener ( &sequencer );
     refreshEnvelopesModels();
     matrixModelSetup();
 }
@@ -160,9 +160,7 @@ void FmseqnessAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         auto calculatedModMulti = currentStepModMulti + modMatrix.modMulti * 2.0f;
         auto calculatedVolume   = level * amp * (modMatrix.volume + 1);
         auto calculatedPanMod   = modMatrix.pan / 2.0f;
-        
-//        currentSwingValue = jlimit ( 1.0f, 1.9f, *swingValue + modMatrix.swing );
-        
+                
         auto currentSample = sines.generate(calculatedPitch, calculatedFM, calculatedModMulti) * calculatedVolume;
         
         leftBuffer[sample]  = currentSample * (0.5 + calculatedPanMod);
@@ -192,6 +190,7 @@ void FmseqnessAudioProcessor::getStateInformation (MemoryBlock& destData)
 void FmseqnessAudioProcessor::handleLoadedPreset()
 {
     sequencer.updateNumberOfSteps();
+    currentSwingValue = *swingValue;
     sendActionMessage ( "Preset Loaded" );
 }
 
@@ -255,9 +254,9 @@ void FmseqnessAudioProcessor::trigger()
         gateAmp = 1.0f;
         float stepLength = getTotalStepLength(stepIndex);
         ampAhdEnv.reset (stepLength);
-        ampAhdEnv.state = PlayState::play;
         modAhdEnv.reset (stepLength);
-        modAhdEnv.state = PlayState::play;
+        ampAhdEnv.start();
+        modAhdEnv.start();
         sines.restart();
         
         currentStepFM       = *mParameters.getRawParameterValue ( STEPS_FM[stepIndex] );
@@ -287,7 +286,7 @@ int FmseqnessAudioProcessor::getNumberOfSamplesInStep(bool considerSwing)
     auto swingFactor = 1.0f;
     
     if (considerSwing)
-        swingFactor = sequencer.isCurrentStepSwinged() ? 2.0f - swingValue->load() : swingValue->load();
+        swingFactor = sequencer.isCurrentStepSwinged() ? 2.0f - currentSwingValue : currentSwingValue;
     
     return swingFactor * currentSampleRate * (60 / tempo->load()) / SIXTEEN_DIVEDER;
 }

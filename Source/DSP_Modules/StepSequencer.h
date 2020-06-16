@@ -11,10 +11,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "../Supporting_Files/SupportingFiles.h"
 
-#include "../Supporting_Files/Enums.h"
-#include "../Supporting_Files/FMUtilities.h"
-#include "../Supporting_Files/Constants.h"
 
 class StepSequencer : public AudioProcessorListener
 {

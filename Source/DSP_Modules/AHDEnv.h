@@ -27,10 +27,11 @@ public:
     void updateValues();
     void valueChanged (Value& value) override;
     void actionListenerCallback (const String& message) override;
-    
-    PlayState state = PlayState::stop;
-    
+    void start();
+    void stop();
+  
 private:
+    PlayState state = PlayState::stop;
     AudioProcessorValueTreeState& mParameters;
     AHDEnvDataModel& mModel;
     std::atomic<float>* tempo {mParameters.getRawParameterValue("tempo")};

@@ -49,7 +49,6 @@ private:
     
     TooltipWindow tooltipWindow { this }; // instance required for ToolTips to work
 
-    
     FmseqnessAudioProcessor& processor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FmseqnessAudioProcessorEditor)
