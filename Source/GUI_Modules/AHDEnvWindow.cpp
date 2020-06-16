@@ -232,8 +232,6 @@ void AHDEnvWindow::updateModel()
     sliders[ENVELOPE_LEVEL]       .setValue (levelValue);
     sliders[ENVELOPE_ATTACK_CURVE].setValue (attackCurve);
     sliders[ENVELOPE_DECAY_CURVE] .setValue (decayCurve);
-    
-    mModel.sendActionMessage("Model Changed");
 }
 
 void AHDEnvWindow::loadState()

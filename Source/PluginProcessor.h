@@ -44,7 +44,6 @@ public:
             swing      = 0.0f;
         }
     };
-    void extracted();
     
 //==============================================================================
     FmseqnessAudioProcessor();
@@ -84,14 +83,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     void trigger();
-    int getNumberOfSamplesInStep(bool considerSwing);
+    int getNumberOfSamplesInStep (bool considerSwing);
     float getNextStepPitch();
     bool getNextStepGlide();
     float getLfoAmp();
     void updateSequncerNumberOfSteps();
     void updateLFOAngle();
     float getModulatorMultiFrom01 (double value);
-    void processModMatrix(float env, float lfo, float modSeq);
+    void processModMatrix (float env, float lfo, float modSeq);
     void refreshEnvelopesModels();
     void matrixModelSetup();
     float getTotalStepLength (int stepIndex);
@@ -99,9 +98,9 @@ public:
     AudioProcessorValueTreeState& getParametersTree();
     AHDEnvDataModel& getAmpAHDEnvDataModel();
     AHDEnvDataModel& getModAHDEnvDataModel();
-    ModMatrixProcessResults modMatrix;
-    float ampEnv = 0.0, modEnv = 0.0, modSeqCurrentValue = 0.0;
+    
 private:
+    ModMatrixProcessResults modMatrix;
     AudioProcessorValueTreeState mParameters;
     AHDEnvDataModel mAmpAHDEnvModel, mModAHDEnvModel;
     AHDEnv ampAhdEnv { mParameters, mAmpAHDEnvModel }, modAhdEnv { mParameters, mModAHDEnvModel };
@@ -112,6 +111,7 @@ private:
     
     double currentSampleRate = 0.0;
    
+    float ampEnv = 0.0, modEnv = 0.0, modSeqCurrentValue = 0.0;
     bool  isNextStepGlide = false;
     float portamentoPitchUnit = 0.0f;
     float currentStepPitch = 0;

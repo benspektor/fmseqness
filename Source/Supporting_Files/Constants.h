@@ -112,7 +112,7 @@ const StringArray LFO_SHAPES              { "Saw", "Sine", "Triangle", "Square" 
 const StringArray LFO_POLARITIES          { "Bi-Polar", "Positive", "Negative" };
 const StringArray LFO_RESTART_OPTIONS     { "Never", "Step", "Pattern" };
 const StringArray MODULATION_SOURCES      { "Mod Env", "LFO", "Mod Seq" };
-const StringArray MODULATION_DESTINATIONS { "FM", "Pitch", "Pan", "Volume", "Mod Multi", "Portamento", "Swing" };
+const StringArray MODULATION_DESTINATIONS { "FM", "Pitch", "Pan", "Volume", "Mod Multi", "Swing" };
 const StringArray STEP_GATE_STATES        { "On", "Glide", "Off" };
 const StringArray AMP_CONTROL_OPTIONS     { "Amp Env", "None"};
 
