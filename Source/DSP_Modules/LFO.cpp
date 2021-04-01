@@ -113,6 +113,6 @@ void LFO::audioProcessorParameterChanged (AudioProcessor* processor,
     }
 }
 
-void LFO::audioProcessorChanged (AudioProcessor* processor) {}
+void LFO::audioProcessorChanged (AudioProcessor* processor, const ChangeDetails& details) {}
 
 

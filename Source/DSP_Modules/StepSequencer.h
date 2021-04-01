@@ -32,7 +32,8 @@ public:
     void audioProcessorParameterChanged (AudioProcessor* processor,
                                          int parameterIndex,
                                          float newValue) override;
-    void audioProcessorChanged (AudioProcessor* processor) override;
+    
+    void audioProcessorChanged (AudioProcessor* processor, const ChangeDetails& details) override;
     
 private:
     AudioProcessorValueTreeState& mParameters;

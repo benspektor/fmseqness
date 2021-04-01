@@ -99,4 +99,4 @@ void StepSequencer::audioProcessorParameterChanged (AudioProcessor* processor,
     }
 }
 
-void StepSequencer::audioProcessorChanged (AudioProcessor* processor) {}
+void StepSequencer::audioProcessorChanged (AudioProcessor* processor, const ChangeDetails& details) {}

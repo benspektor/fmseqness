@@ -35,7 +35,7 @@ public:
                                                     float newValue) override;
 
      
-    void audioProcessorChanged (AudioProcessor* processor) override;
+    void audioProcessorChanged (AudioProcessor* processor, const ChangeDetails& details) override;
     
     void actionListenerCallback (const String& message) override;
     

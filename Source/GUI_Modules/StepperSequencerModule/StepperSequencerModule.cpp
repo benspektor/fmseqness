@@ -311,5 +311,5 @@ void StepperSequencerModule::audioProcessorParameterChanged (AudioProcessor* pro
     }
 }
 
-void StepperSequencerModule::audioProcessorChanged (AudioProcessor* processor) {}
+void StepperSequencerModule::audioProcessorChanged (AudioProcessor* processor, const ChangeDetails& details) {}
 
