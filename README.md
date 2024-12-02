@@ -41,7 +41,6 @@ To run FM SeqNess, you will need Xcode and JUCE installed on your machine.
 3. Once exported, open the project in Xcode and choose your desired target (Standalone Plugin or iPad app).
 4. Build and run the project directly in Xcode.
 5. You can load the ```start``` preset located at the main directorty for demonstration.
-6. םו 
 
 ## Usage
 
