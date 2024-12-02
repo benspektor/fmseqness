@@ -30,7 +30,7 @@ FmseqnessAudioProcessorEditor::FmseqnessAudioProcessorEditor (FmseqnessAudioProc
     addAndMakeVisible ( *lfoGUI );
     
     setResizable (true, true);
-    setSize (800, 400);
+    setSize (1200, 800);
     
     processor.addListener (this);
     processor.addListener (stepSeqModule.get());
